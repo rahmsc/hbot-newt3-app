@@ -1,0 +1,130 @@
+export interface ResearchItem {
+  id: number;
+  category: string;
+  condition: string;
+}
+
+export const researchItems: ResearchItem[] = [
+  {
+    id: 1,
+    category: "Neurological",
+    condition: "Alzheimer's Disease",
+  },
+  { id: 2, category: "Neurological", condition: "Autism" },
+  { id: 3, category: "Neurological", condition: "Brain health" },
+  { id: 4, category: "Neurological", condition: "Cerebral Palsy" },
+  { id: 5, category: "Neurological", condition: "Concussion" },
+  {
+    id: 6,
+    category: "Neurological",
+    condition: "Traumatic Brain Injury (TBI)",
+  },
+  {
+    id: 7,
+    category: "Neurological",
+    condition: "Parkinson's Disease",
+  },
+  { id: 8, category: "Neurological", condition: "Stroke" },
+  {
+    id: 9,
+    category: "Neurological",
+    condition: "Spinal Cord Injury",
+  },
+  { id: 10, category: "Mental Health", condition: "Anxiety" },
+  { id: 11, category: "Mental Health", condition: "Depression" },
+  { id: 12, category: "Mental Health", condition: "PTSD" },
+  { id: 13, category: "Mental Health", condition: "Drug & Alcohol" },
+  {
+    id: 14,
+    category: "Cardiovascular and Blood",
+    condition: "High Blood Pressure",
+  },
+  {
+    id: 15,
+    category: "Cardiovascular and Blood",
+    condition: "Heart",
+  },
+  { id: 16, category: "Immune and Chronic", condition: "Aging" },
+  { id: 17, category: "Immune and Chronic", condition: "Cancer" },
+  { id: 18, category: "Immune and Chronic", condition: "COVID-19" },
+  {
+    id: 19,
+    category: "Immune and Chronic",
+    condition: "Chronic infection",
+  },
+  { id: 20, category: "Immune and Chronic", condition: "Diabetes" },
+  {
+    id: 21,
+    category: "Immune and Chronic",
+    condition: "HIV infection",
+  },
+  {
+    id: 22,
+    category: "Immune and Chronic",
+    condition: "Inflammation",
+  },
+  {
+    id: 23,
+    category: "Immune and Chronic",
+    condition: "Liver Disease",
+  },
+  {
+    id: 24,
+    category: "Immune and Chronic",
+    condition: "Pulmonary Fibrosis",
+  },
+  { id: 25, category: "Immune and Chronic", condition: "Eczema" },
+  { id: 26, category: "Bone and Tissue Health", condition: "Bone Healing" },
+  { id: 27, category: "Bone and Tissue Health", condition: "Cellular Energy" },
+  {
+    id: 28,
+    category: "Bone and Tissue Health",
+    condition: "Degenerative Disc Disease",
+  },
+  { id: 29, category: "Bone and Tissue Health", condition: "Osteoporosis" },
+  {
+    id: 30,
+    category: "Bone and Tissue Health",
+    condition: "Tissue & Nerve Regeneration",
+  },
+  {
+    id: 31,
+    category: "Bone and Tissue Health",
+    condition: "Surgery (plastic/reconstructive)",
+  },
+  {
+    id: 32,
+    category: "Bone and Tissue Health",
+    condition: "Hyperbaric Ambient Air Pressure",
+  },
+  {
+    id: 33,
+    category: "Bone and Tissue Health",
+    condition: "Mild Hyperbarics (m-HBOT)",
+  },
+  { id: 34, category: "Sensory", condition: "Hearing" },
+  { id: 35, category: "Sensory", condition: "Vision" },
+  { id: 36, category: "Sensory", condition: "Macular Degeneration" },
+  { id: 37, category: "Pain Management", condition: "Pain (chronic)" },
+  { id: 38, category: "Pain Management", condition: "Migraine Headaches" },
+  { id: 39, category: "Pain Management", condition: "Fatigue (chronic)" },
+  { id: 40, category: "Specific Syndromes", condition: "Endometriosis" },
+  { id: 41, category: "Specific Syndromes", condition: "Erectile Dysfunction" },
+  {
+    id: 42,
+    category: "Specific Syndromes",
+    condition: "Fetal Alcohol Syndrome",
+  },
+  { id: 43, category: "Specific Syndromes", condition: "Fragile X Syndome" },
+  { id: 44, category: "Specific Syndromes", condition: "Fibromyalgia" },
+  { id: 45, category: "Specific Syndromes", condition: "GI Tract" },
+  { id: 46, category: "Specific Syndromes", condition: "Multiple Sclerosis" },
+  { id: 47, category: "Specific Syndromes", condition: "Obesity" },
+  { id: 48, category: "Specific Syndromes", condition: "Overactive Bladder" },
+  { id: 49, category: "Specific Syndromes", condition: "Athletes" },
+  { id: 50, category: "Specific Syndromes", condition: "Arthritis" },
+  { id: 51, category: "Specific Syndromes", condition: "Mold" },
+  { id: 52, category: "Specific Syndromes", condition: "Organ Transplant" },
+  { id: 53, category: "Specific Syndromes", condition: "Stem Cells" },
+  { id: 54, category: "Specific Syndromes", condition: "Protection" },
+];
