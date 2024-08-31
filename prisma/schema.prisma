@@ -10,3 +10,48 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model Emails {
+    id        Int      @id @default(autoincrement())
+    email     String
+    createdAt DateTime @default(now())
+}
+
+model Articles{
+    id        Int      @id @default(autoincrement())
+    category  String
+    heading   String
+    condition String
+    pressureUsed String
+    numberOfTreatments String
+    outcomes String
+    studyLink String
+    publishedDate String
+    authors String
+    introduction String
+    results String
+    conclusion String
+    faqs String
+    conflictsOfInterest String
+    funding String
+    keywords String
+}
+
+model Blogs{
+    id        Int      @id @default(autoincrement())
+    title   String
+    subtitle String
+    category1  String
+    category2  String
+    author String
+    introduction   String
+    subheading1 String
+    body1 String
+    subheading2 String
+    body2 String
+    subheading3 String
+    body3 String
+    subheading4 String
+    body4 String
+    conclusion String
+    faqs String
+}
