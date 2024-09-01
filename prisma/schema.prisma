@@ -44,6 +44,7 @@ model Blogs{
     category2  String
     author String
     introduction   String
+    subIntroduction String
     subheading1 String
     body1 String
     subheading2 String
