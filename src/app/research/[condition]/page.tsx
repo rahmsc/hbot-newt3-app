@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import { articleDatabase, type ArticleItemProps } from "../../../data/article";
+import { api } from "~/trpc/react";
 
 const ConditionPage = ({
   params,
@@ -8,9 +10,10 @@ const ConditionPage = ({
     condition: string;
   };
 }) => {
-  const filteredArticles: Array<ArticleItemProps> = articleDatabase.filter(
-    (article) => article.condition === params.condition,
-  );
+  const { data: filteredArticles } =
+    api.article.getArticlesByCondition.useQuery({
+      condition: params.condition,
+    });
 
   return (
     <section className="flex w-full flex-row items-center justify-center pt-32">
@@ -19,7 +22,7 @@ const ConditionPage = ({
           Articles on {params.condition}
         </h2>
         <div className="grid grid-cols-1 gap-8 pt-16 md:grid-cols-3">
-          {filteredArticles.map((article) => (
+          {filteredArticles?.map((article) => (
             <div key={article.id} className="flex flex-col items-center">
               <Link href={`/research/${params.condition}/${article.id}`}>
                 <div className="relative h-72 w-72 overflow-hidden rounded-lg border bg-gray-300" />
