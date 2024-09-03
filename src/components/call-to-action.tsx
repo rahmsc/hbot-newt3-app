@@ -1,15 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "../components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../components/ui/form";
+import { Input } from "../components/ui/input";
+import { api } from "~/trpc/react";
+
+const formSchema = z.object({
+  email: z.string().email(),
+});
 
 const CallToAction = () => {
-  const [email, setEmail] = useState("");
+  const subscribeToGuides = api.guides.subscribeToProviderGuides.useMutation();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
 
-    console.log("Email submitted:", email);
-  };
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    subscribeToGuides.mutate({
+      email: values.email,
+    });
+    console.log(values);
+    console.log("Email has been subscribed");
+  }
 
   return (
     <div className="bg-gray-100 py-8">
@@ -18,29 +46,28 @@ const CallToAction = () => {
           <h2 className="text-2xl font-bold text-gray-800">
             Want to receive our guides?
           </h2>
-          <p className="text-gray-600">
-            Enter your email below to get them directly in your inbox.
-          </p>
         </div>
-        <form
-          onSubmit={handleSubmit}
-          className="flex w-full max-w-lg flex-col items-center sm:flex-row"
-        >
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            placeholder="Your email address"
-            className="mb-4 w-full rounded-md border px-4 py-2 sm:mb-0 sm:mr-4 sm:w-auto"
-          />
-          <button
-            type="submit"
-            className="rounded-md bg-orange-500 px-6 py-2 text-white transition-colors hover:bg-orange-600"
-          >
-            Get Guides
-          </button>
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="shadcn" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Enter your email below to get them directly in your inbox.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
       </div>
     </div>
   );
