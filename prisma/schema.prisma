@@ -21,6 +21,7 @@ model Articles{
     category  String
     heading   String
     condition String
+    conditionTag String
     pressureUsed String
     numberOfTreatments String
     outcomes String
