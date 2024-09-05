@@ -44,11 +44,11 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className={`bg-custom-bg fixed left-0 right-0 top-0 z-50 border-b-2 border-black transition-transform duration-300 ease-in-out ${
+        className={`bg-custom-bg fixed left-0 right-0 top-0 z-50 border-b-2 border-black bg-background transition-transform duration-300 ease-in-out ${
           show ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <div className="container mx-auto flex items-center justify-between px-6 py-12">
+        <div className="container mx-auto flex items-center justify-between bg-background px-6 py-12">
           <div className="flex items-center">
             <Link href="/">
               <span className="text-xl font-semibold">Logo</span>
