@@ -3,16 +3,16 @@ import { api } from "~/trpc/server";
 import { cache } from "react";
 import Image from "next/image";
 
-const getArticlesByCondition = cache(async (condition: string) => {
-  return await api.article.getArticlesByCondition({ condition });
+const getArticlesByCondition = cache(async (conditionTag: string) => {
+  return await api.article.getArticlesByCondition({ conditionTag });
 });
 
 export default async function ConditionContent({
-  condition,
+  conditionTag,
 }: {
-  condition: string;
+  conditionTag: string;
 }) {
-  const filteredArticles = await getArticlesByCondition(condition);
+  const filteredArticles = await getArticlesByCondition(conditionTag);
 
   if (!filteredArticles || filteredArticles.length === 0) {
     return <div>No articles found for this condition.</div>;
@@ -22,7 +22,7 @@ export default async function ConditionContent({
     <div className="grid grid-cols-1 gap-8 pt-16 md:grid-cols-3">
       {filteredArticles.map((article) => (
         <div key={article.id} className="flex flex-col items-center">
-          <Link href={`/research/${condition}/${article.id}`}>
+          <Link href={`/research/${conditionTag}/${article.id}`}>
             <div className="relative h-72 w-72 overflow-hidden rounded-lg border bg-gray-300">
               <Image
                 src="/placeholder.svg"

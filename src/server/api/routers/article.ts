@@ -12,10 +12,10 @@ export const articleRouter = createTRPCRouter({
       return ctx.db.articles.findUnique({ where: { id: input.id } });
     }),
   getArticlesByCondition: publicProcedure
-    .input(z.object({ condition: z.string() }))
+    .input(z.object({ conditionTag: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.db.articles.findMany({
-        where: { condition: input.condition },
+        where: { conditionTag: input.conditionTag },
       });
     }),
 });

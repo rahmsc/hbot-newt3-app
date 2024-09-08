@@ -18,5 +18,3 @@ export interface ArticleItemProps {
   funding?: string;
   keywords: string;
 }
-
-export const conditions = ["All", "Neurological"];
