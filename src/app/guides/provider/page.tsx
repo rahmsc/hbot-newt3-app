@@ -1,4 +1,4 @@
-import CallToAction from "../../../components/call-to-action";
+// import CallToAction from "../../../components/call-to-action";
 import OneImageGuideCarousel from "../../../components/guides/carousels/one-image-guide-carousel";
 import CategoriesComponent from "../../../components/guides/categories-component";
 import GuidesListing from "../../../components/guides/guide-listings";
@@ -18,7 +18,7 @@ const ProviderGuides = () => {
       <div className="w-full bg-gray-100">
         {" "}
         {/* Adjust background color as needed */}
-        <CallToAction />
+        {/* <CallToAction /> */}
       </div>
       <div className="flex w-full max-w-4xl flex-col gap-8 px-4 md:flex-row">
         <GuidesListing />

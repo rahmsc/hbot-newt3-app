@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import CallToAction from "~/components/call-to-action";
+// import CallToAction from "~/components/call-to-action";
 import ThreeImageGuideCarousel from "~/components/guides/carousels/three-image-guide-carousel";
 import UserGuideComponent from "~/components/guides/user-guide-component";
 import { userGuideConditions } from "~/data/guidesDemo";
@@ -20,9 +20,7 @@ const UserGuides = () => {
       <div className="flex w-full items-center justify-center">
         <ThreeImageGuideCarousel />
       </div>
-      <div className="w-full">
-        <CallToAction />
-      </div>
+      <div className="w-full">{/* <CallToAction /> */}</div>
 
       <div className="mb-6 flex justify-center space-x-4">
         {userGuideConditions.map((category) => (
