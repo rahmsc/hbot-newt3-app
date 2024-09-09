@@ -52,17 +52,16 @@ const Chambers = () => {
           ))}
         </div>
         <div className="mb-8 border-t border-gray-300" />
-        <div className="flex justify-center">
-          <ChamberMasonryGrid />
-        </div>
+        <div className="container mx-auto px-4">
+          <div className="mb-10 text-center">
+            <h1 className="mt-2 text-4xl font-bold text-gray-900">
+              Photo Gallery
+            </h1>
+          </div>
 
-        <div className="mb-10 flex justify-center">
-          <Link href="/explore" passHref>
-            <div className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-gray-300 border-opacity-75 text-black transition-colors duration-300 hover:border-orange-500 hover:text-orange-500">
-              <span className="text-md">Explore</span>
-              <ArrowRightIcon className="ml-2 text-2xl" />
-            </div>
-          </Link>
+          <div className="flex justify-center">
+            <ChamberMasonryGrid />
+          </div>
         </div>
       </div>
 

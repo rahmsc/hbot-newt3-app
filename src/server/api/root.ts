@@ -1,6 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { articleRouter } from "./routers/article";
-import { guidesRouter } from "./routers/guides";
+// import { guidesRouter } from "./routers/guides";
 import { blogRouter } from "./routers/blog";
 
 /**
@@ -10,7 +10,7 @@ import { blogRouter } from "./routers/blog";
  */
 export const appRouter = createTRPCRouter({
   article: articleRouter,
-  guides: guidesRouter,
+  // guides: guidesRouter,
   blogs: blogRouter,
 });
 
