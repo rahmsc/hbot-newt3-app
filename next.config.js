@@ -5,6 +5,10 @@
 await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  images: {
+    domains: ["hbothq-bucket.s3.ap-southeast-2.amazonaws.com"],
+  },
+};
 
 export default config;

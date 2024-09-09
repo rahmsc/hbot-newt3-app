@@ -4,7 +4,7 @@ import { useState } from "react";
 import CallToAction from "~/components/call-to-action";
 import ThreeImageGuideCarousel from "~/components/guides/carousels/three-image-guide-carousel";
 import UserGuideComponent from "~/components/guides/user-guide-component";
-import { conditions } from "~/data/article";
+import { userGuideConditions } from "~/data/guidesDemo";
 
 const UserGuides = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -25,7 +25,7 @@ const UserGuides = () => {
       </div>
 
       <div className="mb-6 flex justify-center space-x-4">
-        {conditions.map((category) => (
+        {userGuideConditions.map((category) => (
           <button
             key={category}
             className={`px-3 py-1 ${

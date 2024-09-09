@@ -27,7 +27,7 @@ const Research = () => {
 
   return (
     <section className="flex w-full flex-row items-center justify-center pt-32">
-      <div className="container mx-auto px-4 py-8">
+      <div className="px-4 py-8">
         <h1 className="mb-8 text-4xl font-bold">Portfolio</h1>
         <div className="mb-6 flex space-x-4">
           {conditions.map((category) => (

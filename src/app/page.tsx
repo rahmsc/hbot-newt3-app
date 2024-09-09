@@ -14,7 +14,7 @@ export default async function Home() {
       <main className="flex w-full flex-row items-center justify-center pt-32">
         <div>
           <HeroSection />
-          <LinkSection />
+          {/* <LinkSection /> */}
           <ArticleSection />
           <EmailInputForm />
           <BlogSection />

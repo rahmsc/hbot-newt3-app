@@ -1,7 +1,7 @@
 const EmailInputForm = () => {
   return (
-    <section className="w-full bg-white py-16">
-      <div className="mx-64 mb-12 text-center">
+    <section className="bg-white py-16">
+      <div className="mb-12 text-center">
         <p className="text-4xl text-gray-700">
           DISCOVER THE BEST IN HYPERBARIC OXYGEN THERAPY. BY ENTERING <br />
           YOUR EMAIL BELOW, YOU&rsquo;LL BE THE FIRST TO <br />

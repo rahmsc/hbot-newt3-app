@@ -1,3 +1,15 @@
+export const userGuideConditions = [
+  "All",
+  "Neurological",
+  "Mental Health",
+  "Cardiovascular and Blood",
+  "Immune and Chronic",
+  "Bone and Tissue",
+  "Sensory",
+  "Pain Management",
+  "Specific Syndromes",
+];
+
 export const guidesData = [
   {
     title: "10 Tips for a Healthier Lifestyle",

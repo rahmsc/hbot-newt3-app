@@ -13,6 +13,9 @@ const breakpointColumnsObj = {
 };
 
 const ChamberMasonryGrid: React.FC = () => {
+  const imageUrl =
+    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/gallery/";
+
   return (
     <Masonry
       breakpointCols={breakpointColumnsObj}
@@ -25,11 +28,12 @@ const ChamberMasonryGrid: React.FC = () => {
             <div className="relative">
               <Image
                 width={400}
-                height={item.height} // Ensure the height is being set here
-                src={item.img}
+                height={item.height}
+                src={`${imageUrl}${item.id}.png`}
                 alt="post"
                 loading="lazy"
-                style={{ height: item.height }} // Apply dynamic height using inline style
+                style={{ height: item.height }}
+                className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50" />
             </div>
