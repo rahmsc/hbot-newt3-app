@@ -9,7 +9,9 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
     RESEND_API_KEY: z.string(),
-
+    AIRTABLE_API_KEY: z.string(),
+    AIRTABLE_BASE_ID: z.string(),
+    AIRTABLE_TABLE_NAME: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -31,6 +33,11 @@ export const env = createEnv({
   runtimeEnv: {
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     DATABASE_URL: process.env.DATABASE_URL,
+
+    AIRTABLE_API_KEY: process.env.AIRTABLE_API_KEY,
+    AIRTABLE_BASE_ID: process.env.AIRTABLE_BASE_ID,
+    AIRTABLE_TABLE_NAME: process.env.AIRTABLE_TABLE_NAME,
+
     NODE_ENV: process.env.NODE_ENV,
 
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,

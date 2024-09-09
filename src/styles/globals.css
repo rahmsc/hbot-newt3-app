@@ -64,3 +64,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+.prose a {
+  color: #2563eb; /* blue-600 */
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  color: #3b82f6; /* blue-500 */
+}
+
+.prose p {
+  margin-bottom: 1rem;
+}
