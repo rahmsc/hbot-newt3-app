@@ -46,9 +46,13 @@ export default async function BlogPostPage({
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-6 text-3xl font-bold">{post.fields["Content Idea"]}</h1>
-      <RichTextDisplay data={post} />
-    </div>
+    <section className="flex w-full flex-col items-center justify-center pt-32">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="mb-6 text-3xl font-bold">
+          {post.fields["Content Idea"]}
+        </h1>
+        <RichTextDisplay data={post} />
+      </div>
+    </section>
   );
 }

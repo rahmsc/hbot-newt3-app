@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Airtable from "airtable";
 
+import image from "../../../public/placeholder.png";
+
 interface BlogPost {
   id: string;
   fields: {
@@ -44,36 +46,44 @@ export default async function BlogPage() {
   const blogPosts = await getAirtableData();
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-6 text-3xl font-bold">Latest Blog Posts</h1>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {blogPosts.map((post) => (
-          <div
-            key={post.id}
-            className="overflow-hidden rounded-lg border shadow-lg"
-          >
-            <Image
-              src={`/images/${post.fields["URL Slug"]}.jpg`}
-              alt={post.fields["Content Idea"]}
-              width={400}
-              height={200}
-              className="h-48 w-full object-cover"
-            />
-            <div className="p-4">
-              <h2 className="mb-2 text-xl font-semibold">
-                {post.fields["Content Idea"]}
-              </h2>
-              <p className="mb-4 text-gray-600">{post.fields.Description}</p>
-              <Link
-                href={`/blog/${post.id}`}
-                className="text-blue-500 hover:underline"
-              >
-                Read more
-              </Link>
+    <section className="flex w-full flex-col items-center justify-center pt-32">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="mb-8 text-3xl font-bold">Latest Blog Posts</h1>
+        <div className="space-y-8">
+          {blogPosts.map((post) => (
+            <div
+              key={post.id}
+              className="flex flex-col overflow-hidden rounded-lg border shadow-lg sm:flex-row"
+            >
+              <div className="w-full sm:w-1/4 lg:w-1/5">
+                <Image
+                  src={image}
+                  alt={post.fields["Content Idea"]}
+                  width={400}
+                  height={300}
+                  className="h-48 w-full object-cover sm:h-full"
+                />
+              </div>
+              <div className="flex flex-1 flex-col justify-between p-4 sm:p-6">
+                <div>
+                  <h2 className="mb-2 text-xl font-bold underline sm:text-2xl">
+                    {post.fields["Content Idea"]}
+                  </h2>
+                  <p className="mb-4 text-gray-600">
+                    {post.fields.Description}
+                  </p>
+                </div>
+                <Link
+                  href={`/blog/${post.id}`}
+                  className="text-blue-500 hover:underline"
+                >
+                  Read more
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
