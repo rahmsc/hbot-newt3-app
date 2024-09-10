@@ -1,46 +1,22 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import Image from "next/image";
+
+import { motion } from "framer-motion";
+
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 import placeHolder from "../../../public/placeholder.png";
 
-export default function HeroSection() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      {
-        threshold: 0.1,
-      },
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
-
+const HeroSection = () => {
   return (
-    <section ref={sectionRef}>
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="container mx-auto flex flex-col items-center px-4 py-12 md:flex-row md:py-24">
-        <div
-          className={`flex-1 transition-all duration-1000 ease-out md:pr-8 ${
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-          }`}
-        >
+        <div className="flex-1 md:pr-8">
           <h1 className="mb-6 text-2xl font-bold capitalize md:text-6xl">
             LEARN <br />
             AND FIND THE <br />
@@ -58,11 +34,7 @@ export default function HeroSection() {
           <ArrowTopRightIcon className="h-48 w-48 text-gray-500 opacity-60 hover:text-gray-600" />
         </div>
 
-        <div
-          className={`mt-8 flex-1 transition-all delay-300 duration-1000 ease-out md:mt-0 md:pl-8 ${
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-          }`}
-        >
+        <div className="mt-8 flex-1 md:mt-0 md:pl-8">
           <div className="relative">
             <div className="absolute inset-0 skew-y-12 transform bg-red-400" />
             <Image
@@ -75,6 +47,8 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
-}
+};
+
+export default HeroSection;

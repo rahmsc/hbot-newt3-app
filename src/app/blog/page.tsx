@@ -1,40 +1,79 @@
-"use client";
-
 import Image from "next/image";
-import image from "../../../public/placeholder.png";
-import { blogContent } from "../../data/articlesDemo";
-import { type ArticleItemProps } from "../../components/sections/article-section";
-import { api } from "~/trpc/react";
+import Link from "next/link";
+import Airtable from "airtable";
 
-const BlogPage = () => {
-  const { data: blogPosts } = api.blogs.getBlogs.useQuery();
+interface BlogPost {
+  id: string;
+  fields: {
+    "Content Idea": string;
+    Description: string;
+    "URL Slug": string;
+  };
+}
 
-  console.log(blogPosts);
+async function getAirtableData(): Promise<BlogPost[]> {
+  const base = new Airtable({
+    apiKey: process.env.AIRTABLE_API_KEY,
+  }).base(process.env.AIRTABLE_BASE_ID ?? "");
+
+  return new Promise((resolve, reject) => {
+    base("Blogs")
+      .select({
+        view: "Grid view",
+        maxRecords: 10, // Limit to 10 records
+      })
+      .all((err, records) => {
+        if (err) {
+          console.error("Error fetching data:", err);
+          reject(new Error(String(err)));
+          return;
+        }
+
+        const blogPosts =
+          records?.map((record) => ({
+            id: record.id,
+            fields: record.fields as BlogPost["fields"],
+          })) ?? [];
+
+        resolve(blogPosts);
+      });
+  });
+}
+
+export default async function BlogPage() {
+  const blogPosts = await getAirtableData();
 
   return (
-    <section className="flex w-full flex-col items-center justify-center pt-32">
-      <div className="container mx-auto px-4">
-        Blogs
-        <div className="grid grid-cols-1 gap-8 pt-16 md:grid-cols-3">
-          {blogPosts?.map((post) => (
-            <div key={post.id} className="flex flex-col items-center">
-              <div className="relative h-72 w-72 overflow-hidden rounded-lg border">
-                <Image
-                  src={image}
-                  alt={post.title}
-                  className="absolute inset-0"
-                />
-              </div>
-              <div className="p-4 text-center">
-                <h4 className="mb-2 text-xl font-semibold">{post.title}</h4>
-                <p className="text-gray-600">{post.subtitle}</p>
-              </div>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="mb-6 text-3xl font-bold">Latest Blog Posts</h1>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {blogPosts.map((post) => (
+          <div
+            key={post.id}
+            className="overflow-hidden rounded-lg border shadow-lg"
+          >
+            <Image
+              src={`/images/${post.fields["URL Slug"]}.jpg`}
+              alt={post.fields["Content Idea"]}
+              width={400}
+              height={200}
+              className="h-48 w-full object-cover"
+            />
+            <div className="p-4">
+              <h2 className="mb-2 text-xl font-semibold">
+                {post.fields["Content Idea"]}
+              </h2>
+              <p className="mb-4 text-gray-600">{post.fields.Description}</p>
+              <Link
+                href={`/blog/${post.id}`}
+                className="text-blue-500 hover:underline"
+              >
+                Read more
+              </Link>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
-};
-
-export default BlogPage;
+}
