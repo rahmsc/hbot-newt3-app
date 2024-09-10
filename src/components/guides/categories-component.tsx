@@ -10,9 +10,9 @@ const cateContent = [
 const CategoriesComponent = () => {
   return (
     <div>
-      <h3 className="text-xl font-bold mb-4">Categories</h3>
+      <h3 className="mb-4 text-xl font-bold">Categories</h3>
       <ul>
-        {cateContent.map((val, i) => (
+        {cateContent.map((val) => (
           <li key={val.id} className="mb-2">
             <a
               href="/"

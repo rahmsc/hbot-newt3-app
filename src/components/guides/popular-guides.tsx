@@ -30,12 +30,12 @@ export const popularPostContent = [
 const PopularPosts = () => {
   return (
     <div className="mb-8">
-      <h3 className="text-xl font-bold mb-4">Popular Posts</h3>
-      {popularPostContent.map((val, i) => (
-        <Link key={val.id} href={`/blog/${val.id}`} className="flex mb-4">
-          <div className="font-bold text-gray-700 mr-4">{val.postNumber}</div>
+      <h3 className="mb-4 text-xl font-bold">Popular Posts</h3>
+      {popularPostContent.map((val) => (
+        <Link key={val.id} href={`/blog/${val.id}`} className="mb-4 flex">
+          <div className="mr-4 font-bold text-gray-700">{val.postNumber}</div>
           <div>
-            <span className="text-gray-500 text-sm">{val.catName}</span>
+            <span className="text-sm text-gray-500">{val.catName}</span>
             <h6 className="text-gray-800">{val.title}</h6>
           </div>
         </Link>

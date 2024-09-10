@@ -25,8 +25,12 @@ const EmailInputForm = () => {
         setMessage("Thank you for subscribing!");
         setEmail("");
       } else {
-        const data = await response.json();
-        throw new Error(data.message || "Something went wrong");
+        interface ResponseData {
+          message?: string;
+        }
+
+        const data: ResponseData = (await response.json()) as ResponseData;
+        throw new Error(data.message ?? "Something went wrong");
       }
     } catch (error) {
       setStatus("error");

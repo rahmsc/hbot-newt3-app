@@ -1,7 +1,7 @@
 "use client";
+
 import ChamberMasonryGrid from "~/components/chambers/chamber-masonry-grid";
-import Link from "next/link";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+
 import { chamberData } from "~/data/chamberData";
 
 import Image from "next/image";
