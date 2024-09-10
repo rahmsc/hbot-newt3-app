@@ -9,9 +9,6 @@ const getArticlesByCondition = cache(async (conditionTag: string) => {
   return await api.article.getArticlesByCondition({ conditionTag });
 });
 
-const imageUrl =
-  "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
-
 export default async function ConditionContent({
   conditionTag,
 }: {
