@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Airtable from "airtable";
 
-import image from "../../../public/placeholder.png";
+import image from "../../../public/logo/logo_bg_trans.png";
 
 interface BlogPost {
   id: string;
