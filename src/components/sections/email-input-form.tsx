@@ -1,87 +1,106 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "~/trpc/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Button } from "../../components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../../components/ui/form";
+import { Input } from "../../components/ui/input";
+import { useToast } from "../../hooks/use-toast";
 
-const EmailInputForm = () => {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
-  const [message, setMessage] = useState("");
+const formSchema = z.object({
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+});
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("loading");
+export default function EmailSubscriptionForm() {
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
-    try {
-      const response = await fetch("/api/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  const emailMutation = api.email.saveEmail.useMutation({
+    onSuccess: () => {
+      toast({
+        title: "Subscribed!",
+        description: "Thank you for subscribing to our newsletter.",
       });
+      form.reset();
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
-      if (response.ok) {
-        setStatus("success");
-        setMessage("Thank you for subscribing!");
-        setEmail("");
-      } else {
-        interface ResponseData {
-          message?: string;
-        }
-
-        const data: ResponseData = (await response.json()) as ResponseData;
-        throw new Error(data.message ?? "Something went wrong");
-      }
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    try {
+      await emailMutation.mutateAsync(values);
     } catch (error) {
-      setStatus("error");
-      setMessage(error instanceof Error ? error.message : "An error occurred");
+      // Error is handled in the onError callback of the mutation
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }
 
   return (
     <section className="bg-white py-16">
-      <div className="mb-12 text-center">
-        <p className="text-4xl text-gray-700">
-          DISCOVER THE BEST IN HYPERBARIC OXYGEN THERAPY. BY ENTERING <br />
-          YOUR EMAIL BELOW, YOU&rsquo;LL BE THE FIRST TO <br />
-          RECEIVE EXCLUSIVE INSIDER UPDATES, <br />
-          DELIVERED DIRECTLY TO YOUR INBOX.
-        </p>
-      </div>
+      <div className="container mx-auto px-4">
+        <div className="mb-12 text-center">
+          <p className="text-4xl text-gray-700">
+            DISCOVER THE BEST IN HYPERBARIC OXYGEN THERAPY. BY ENTERING <br />
+            YOUR EMAIL BELOW, YOU&apos;LL BE THE FIRST TO <br />
+            RECEIVE EXCLUSIVE INSIDER UPDATES, <br />
+            DELIVERED DIRECTLY TO YOUR INBOX.
+          </p>
+        </div>
 
-      <div className="flex justify-center">
-        <div className="w-full max-w-md">
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col items-center space-y-4"
-          >
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-            <button
-              type="submit"
-              disabled={status === "loading"}
-              className="w-full rounded-lg bg-black px-4 py-2 text-white hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-400"
-            >
-              {status === "loading" ? "Subscribing..." : "Subscribe"}
-            </button>
-          </form>
-          {status === "success" && (
-            <p className="mt-4 text-center text-green-600">{message}</p>
-          )}
-          {status === "error" && (
-            <p className="mt-4 text-center text-red-600">{message}</p>
-          )}
+        <div className="mx-auto max-w-md">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your email" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      We&apos;ll never share your email with anyone else.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Subscribing..." : "Subscribe"}
+              </Button>
+            </form>
+          </Form>
         </div>
       </div>
     </section>
   );
-};
-
-export default EmailInputForm;
+}
