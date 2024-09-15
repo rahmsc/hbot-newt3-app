@@ -28,7 +28,15 @@ export default async function ConditionContent({
           href={`/research/${conditionTag}/${article.id}`}
           className="group"
         >
-          <ArticleRow article={article} />
+          <ArticleRow
+            article={{
+              ...article,
+              faqsArray: article.faqsArray as {
+                question: string;
+                answer: string;
+              }[],
+            }}
+          />
         </Link>
       ))}
     </div>

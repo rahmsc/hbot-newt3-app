@@ -18,6 +18,7 @@ model Emails {
 
 model Articles{
     id        Int      @id @default(autoincrement())
+    imgLink  String
     category  String
     heading   String
     condition String
@@ -35,25 +36,5 @@ model Articles{
     conflictsOfInterest String
     funding String
     keywords String
-}
-
-model Blogs{
-    id        Int      @id @default(autoincrement())
-    title   String
-    subtitle String
-    category1  String
-    category2  String
-    author String
-    introduction   String
-    subIntroduction String
-    subheading1 String
-    body1 String
-    subheading2 String
-    body2 String
-    subheading3 String
-    body3 String
-    subheading4 String
-    body4 String
-    conclusion String
-    faqs String
+    faqsArray Json[]
 }

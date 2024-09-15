@@ -17,4 +17,5 @@ export interface ArticleItemProps {
   conflictsOfInterest: string;
   funding: string;
   keywords: string;
+  faqsArray: { question: string; answer: string }[];
 }
