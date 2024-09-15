@@ -1,3 +1,5 @@
+import { type JsonValue } from "@prisma/client/runtime/library";
+
 export interface ArticleItemProps {
   id: number;
   category: string;
@@ -17,5 +19,5 @@ export interface ArticleItemProps {
   conflictsOfInterest: string;
   funding: string;
   keywords: string;
-  faqsArray: { question: string; answer: string }[];
+  faqsArray: (JsonValue & { question: string; answer: string })[];
 }

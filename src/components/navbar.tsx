@@ -5,7 +5,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import RolePopup from "./guides/guide-popup";
 
-import logo from "../../public/logo/hbothq_final_logo.png";
+import logo from "../../public/logo/LOGO.png";
 import Image from "next/image";
 
 const Navbar = () => {
@@ -51,18 +51,13 @@ const Navbar = () => {
           show ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <div className="container mx-auto flex items-center justify-between bg-background px-6 py-12">
+        <div className="container mx-auto flex items-center justify-between bg-background py-4 pt-6">
           <div className="flex items-center">
             <Link href="/">
-              <Image src={logo} alt="Logo" width={65} height={65} />
+              <Image src={logo} alt="Logo" width={150} height={50} />
             </Link>
           </div>
           <div className="flex items-center space-x-8 text-xl">
-            <Link href="/">
-              <span className="hover:text-selected-text text-gray-700">
-                Home
-              </span>
-            </Link>
             <Link href="/research">
               <span className="hover:text-selected-text text-gray-700">
                 Research
@@ -90,12 +85,12 @@ const Navbar = () => {
                 Join HQ
               </span>
             </Link>
-            <button
+            {/* <button
               className="hover:text-selected-text text-gray-700"
               type="button"
             >
               <MagnifyingGlassIcon className="h-5 w-5" />
-            </button>
+            </button> */}
           </div>
         </div>
       </nav>

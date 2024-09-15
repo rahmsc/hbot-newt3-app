@@ -1,22 +1,27 @@
+"use client";
 import Image from "next/image";
-import backgroundImage from "../../../public/womanBreathing.jpg";
+import logoImage from "../../../public/logo/logo_bg_trans.png";
 
-const ImageSection = () => {
+import { motion } from "framer-motion";
+
+export default function ImageSection() {
   return (
-    <section className="relative h-[600px] w-full">
-      <div className="absolute inset-0">
-        <Image src={backgroundImage} alt="Background Image" className="z-0" />
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+      className="flex h-[500px] items-center justify-center pt-32"
+    >
+      <div className="aspect-[16/9] px-10 sm:aspect-[21/9] md:aspect-[3/1] lg:aspect-[3.5/1] xl:aspect-[4/1]">
+        <Image
+          src={logoImage}
+          alt="Logo Image"
+          fill
+          className="flex items-center justify-center object-cover"
+          sizes="100vw"
+          priority
+        />
       </div>
-      <div className="relative z-10 flex h-full w-full items-center justify-center bg-black bg-opacity-50 text-white">
-        <div className="px-4 py-8 text-center">
-          <p className="text-4xl">
-            Experience a new level of wellness - with <br />
-            Oxygen
-          </p>
-        </div>
-      </div>
-    </section>
+    </motion.section>
   );
-};
-
-export default ImageSection;
+}

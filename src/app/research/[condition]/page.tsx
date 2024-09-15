@@ -1,9 +1,14 @@
 import { Suspense } from "react";
 import ConditionContent from "~/components/article/condition-content";
+import Spinner from "~/components/spinner";
 import { conditions } from "~/data/researchDataDemo";
 
 function ArticlesLoading() {
-  return <div>Loading articles...</div>;
+  return (
+    <div>
+      <Spinner size={100} className="text-orange-500" />
+    </div>
+  );
 }
 
 export default function ConditionPage({

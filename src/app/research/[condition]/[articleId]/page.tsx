@@ -1,8 +1,13 @@
 import { Suspense } from "react";
 import ArticleContent from "~/components/article/article-content";
+import Spinner from "~/components/spinner";
 
 function ArticleLoading() {
-  return <div>Loading article...</div>;
+  return (
+    <div>
+      <Spinner size={100} className="text-orange-500" />
+    </div>
+  );
 }
 
 const StudyPage = ({

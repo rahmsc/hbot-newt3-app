@@ -6,14 +6,13 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
-import placeHolder from "../../../public/placeholder.png";
 
 const HeroSection = () => {
   return (
     <motion.section
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 1.5 }}
     >
       <div className="container mx-auto flex flex-col items-center px-4 py-12 md:flex-row md:py-24">
         <div className="flex-1 md:pr-8">
@@ -38,7 +37,9 @@ const HeroSection = () => {
           <div className="relative">
             <div className="absolute inset-0 skew-y-12 transform bg-red-400" />
             <Image
-              src={placeHolder}
+              src={
+                "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/gallery/1.png"
+              }
               alt="Creative Studio"
               width={800}
               height={600}
