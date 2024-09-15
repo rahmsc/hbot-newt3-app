@@ -3,7 +3,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import RolePopup from "./guides/guide-popup"; // Import the RolePopup component
+import RolePopup from "./guides/guide-popup";
+
+import logo from "../../public/logo/hbothq_final_logo.png";
+import Image from "next/image";
 
 const Navbar = () => {
   const [show, setShow] = useState(true);
@@ -51,7 +54,7 @@ const Navbar = () => {
         <div className="container mx-auto flex items-center justify-between bg-background px-6 py-12">
           <div className="flex items-center">
             <Link href="/">
-              <span className="text-xl font-semibold">Logo</span>
+              <Image src={logo} alt="Logo" width={65} height={65} />
             </Link>
           </div>
           <div className="flex items-center space-x-8 text-xl">

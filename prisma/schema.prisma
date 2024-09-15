@@ -12,7 +12,7 @@ datasource db {
 
 model Emails {
     id        Int      @id @default(autoincrement())
-    email     String
+    email     String   @unique
     createdAt DateTime @default(now())
 }
 
