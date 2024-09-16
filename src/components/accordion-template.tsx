@@ -16,9 +16,7 @@ export default function AccordionTemplate({ trigger, content }: AccordionProp) {
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="item-1">
         <AccordionTrigger>{trigger}</AccordionTrigger>
-        <AccordionContent className="flex justify-center pt-6">
-          {content}
-        </AccordionContent>
+        <AccordionContent className="pt-6">{content}</AccordionContent>
       </AccordionItem>
     </Accordion>
   );

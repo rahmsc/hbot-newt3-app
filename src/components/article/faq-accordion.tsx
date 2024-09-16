@@ -19,11 +19,12 @@ export default function FaqAccordion({ faqData }: FaqAccordionProps) {
         <AccordionItem
           key={`${item.question}-${index}`}
           value={`item-${index + 1}`}
+          className="border-b-0"
         >
-          <AccordionTrigger className="text-lg font-semibold">
+          <AccordionTrigger className="text-md justify-start border-b-0 text-left font-semibold !no-underline hover:text-orange-500 hover:no-underline">
             {item.question}
           </AccordionTrigger>
-          <AccordionContent className="font p-4 text-lg">
+          <AccordionContent className="font text-thin p-4 text-left">
             {item.answer}
           </AccordionContent>
         </AccordionItem>

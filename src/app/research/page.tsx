@@ -32,7 +32,7 @@ export default function Research() {
               key={category}
               className={`rounded-full px-3 py-1 ${
                 selectedCategory === category
-                  ? "bg-primary text-primary-foreground"
+                  ? "text-orange-500"
                   : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
               }`}
               onClick={() => handleCategoryClick(category)}
@@ -46,7 +46,7 @@ export default function Research() {
           {filteredConditions.map((item) => (
             <div
               key={item.id}
-              className="flex cursor-pointer items-center justify-between border-t border-border p-4 hover:bg-accent"
+              className="flex cursor-pointer items-center justify-between border-t border-border p-4 hover:text-orange-500"
               onClick={() => handleConditionClick(item.conditionTag)}
               onKeyDown={(e) =>
                 e.key === "Enter" && handleConditionClick(item.conditionTag)

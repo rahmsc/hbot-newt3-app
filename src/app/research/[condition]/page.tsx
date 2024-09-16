@@ -6,7 +6,10 @@ import { conditions } from "~/data/researchDataDemo";
 function ArticlesLoading() {
   return (
     <div>
-      <Spinner size={100} className="text-orange-500" />
+      <Spinner size={75} className="text-orange-500" />
+      <h3 className="flex items-center justify-center text-orange-500">
+        Loading...
+      </h3>
     </div>
   );
 }

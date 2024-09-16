@@ -11,7 +11,7 @@ export default function Spinner({
 }: SpinnerProps = {}) {
   return (
     <div
-      className={`flex animate-spin items-center justify-center ${className}`}
+      className={`flex animate-spin items-center justify-center p-4 ${className}`}
       aria-label="Loading"
     >
       <Loader2 size={size} />
