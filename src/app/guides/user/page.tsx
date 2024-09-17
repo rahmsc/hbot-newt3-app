@@ -1,55 +1,66 @@
-"use client";
+import Airtable from "airtable";
+import PopularPosts from "~/components/guides/popular-guides";
+import UserGuideCarousel from "~/components/guides/user-guide-carousel";
+import GuidesListing from "~/components/guides/guide-listings";
+import CategoriesComponent from "~/components/guides/categories-component";
+import PopularGuidesAlternative from "~/components/guides/popular-guides-alternative";
 
-import { useState } from "react";
-// import CallToAction from "~/components/call-to-action";
-import ThreeImageGuideCarousel from "~/components/guides/carousels/three-image-guide-carousel";
-import UserGuideComponent from "~/components/guides/user-guide-component";
-import { userGuideConditions } from "~/data/guidesDemo";
-
-const UserGuides = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
+export interface GuideProp {
+  id: string;
+  fields: {
+    "Guide Title": string;
+    Guide: string;
+    // Add an "Image" field if you have image URLs in your Airtable
+    Image?: string;
   };
+}
+
+async function getAirtableData(): Promise<GuideProp[]> {
+  const base = new Airtable({
+    apiKey: process.env.AIRTABLE_API_KEY,
+  }).base(process.env.AIRTABLE_BASE_ID ?? "");
+
+  return new Promise((resolve, reject) => {
+    base("Guides")
+      .select({
+        view: "Grid view",
+        maxRecords: 10, // Limit to 10 records
+      })
+      .all((err, records) => {
+        if (err) {
+          console.error("Error fetching data:", err);
+          reject(new Error(String(err)));
+          return;
+        }
+
+        const guidePosts =
+          records?.map((record) => ({
+            id: record.id,
+            fields: record.fields as GuideProp["fields"],
+          })) ?? [];
+
+        resolve(guidePosts);
+      });
+  });
+}
+
+export default async function UserGuides() {
+  const guides = await getAirtableData();
 
   return (
     <section className="flex w-full flex-col items-center justify-center space-y-12 pt-32">
       <h1 className="text-center text-3xl font-bold">Home User Guides</h1>
-
-      <div className="flex w-full items-center justify-center">
-        <ThreeImageGuideCarousel />
+      <div className="mx-auto mb-8 w-full max-w-lg">
+        <UserGuideCarousel guides={guides} />
       </div>
-      <div className="w-full">{/* <CallToAction /> */}</div>
-
-      <div className="mb-6 flex justify-center space-x-4">
-        {userGuideConditions.map((category) => (
-          <button
-            key={category}
-            className={`px-3 py-1 ${
-              selectedCategory === category
-                ? "text-selected-text font-semibold"
-                : "text-gray-700"
-            }`}
-            onClick={() => handleCategoryClick(category)}
-            type="button"
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      <div className="w-full px-6 md:px-12">
-        <UserGuideComponent />
-      </div>
-
-      <div className="mt-6 grid w-full grid-cols-1 gap-6 px-6 md:grid-cols-2 md:px-12 lg:grid-cols-3">
-        <UserGuideComponent />
-        <UserGuideComponent />
-        <UserGuideComponent />
+      <PopularPosts guides={[...guides]} />
+      <div className="flex w-full max-w-4xl flex-col gap-8 px-4 md:flex-row">
+        <GuidesListing guides={[...guides]} />
+        <div className="w-full md:w-1/3">
+          <PopularGuidesAlternative guides={[...guides]} />
+          <CategoriesComponent />
+        </div>
       </div>
     </section>
   );
-};
-
-export default UserGuides;
+}

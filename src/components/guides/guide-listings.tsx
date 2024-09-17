@@ -1,49 +1,87 @@
 "use client";
+
 import React, { useState } from "react";
+import { Button } from "../ui/button";
+import { GuideDialog } from "./guide-dialog";
 
-import { guidesData } from "../../data/guidesDemo";
+export interface GuideData {
+  id: string;
+  fields: {
+    "Guide Title": string;
+    Guide: string;
+  };
+}
 
-const GuidesListing = () => {
+interface GuidesListingProps {
+  guides: GuideData[];
+}
+
+const GuidesListing: React.FC<GuidesListingProps> = ({ guides }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedGuide, setSelectedGuide] = useState<GuideData | null>(null);
   const guidesPerPage = 6;
 
   const indexOfLastGuide = currentPage * guidesPerPage;
   const indexOfFirstGuide = indexOfLastGuide - guidesPerPage;
-  const currentGuides = guidesData.slice(indexOfFirstGuide, indexOfLastGuide);
+  const currentGuides = guides.slice(indexOfFirstGuide, indexOfLastGuide);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) setSelectedGuide(null);
+  };
 
   return (
     <div className="w-2/3">
       <div className="grid grid-cols-1 gap-6">
-        {currentGuides.map((guide, _) => (
-          <div key={guide.id} className="rounded-lg border p-4 shadow">
-            <h3 className="text-xl font-bold">{guide.title}</h3>
-            <p className="text-gray-600">{guide.description}</p>
+        {currentGuides.map((guide) => (
+          <div
+            key={guide.id}
+            className="cursor-pointer rounded-lg border p-4 shadow transition-colors hover:bg-gray-50"
+            onClick={() => setSelectedGuide(guide)}
+            onKeyDown={() => setSelectedGuide(guide)}
+          >
+            <h3 className="text-xl font-bold">{guide.fields["Guide Title"]}</h3>
+            <p className="text-gray-600">
+              {guide.fields.Guide?.length > 150
+                ? `${guide.fields.Guide.substring(0, 150)}...`
+                : guide.fields.Guide}
+            </p>
           </div>
         ))}
       </div>
 
       {/* Pagination */}
       <div className="mt-8 flex justify-center">
-        {Array.from(Array(Math.ceil(guidesData.length / guidesPerPage))).map(
+        {Array.from(Array(Math.ceil(guides.length / guidesPerPage))).map(
           (_, i) => (
-            <button
+            <Button
               type="button"
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              key={i}
+              key={`page-${
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                i
+              }`}
               onClick={() => paginate(i + 1)}
-              className={`mx-1 rounded border px-4 py-2 ${
+              className={`mx-1 rounded border bg-transparent px-4 py-2 hover:bg-orange-300/30 ${
                 currentPage === i + 1
                   ? "border-rounded text-orange-500"
                   : "text-gray-600"
               }`}
             >
               {i + 1}
-            </button>
+            </Button>
           ),
         )}
       </div>
+
+      {selectedGuide && (
+        <GuideDialog
+          isOpen={!!selectedGuide}
+          onOpenChange={handleOpenChange}
+          title={selectedGuide.fields["Guide Title"]}
+          guideId={selectedGuide.id}
+        />
+      )}
     </div>
   );
 };
