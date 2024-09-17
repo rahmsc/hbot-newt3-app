@@ -4,6 +4,7 @@ import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useState } from "react";
 
 import { Button } from "../../components/ui/button";
 import {
@@ -17,6 +18,13 @@ import {
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { useToast } from "~/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -33,8 +41,28 @@ const formSchema = z.object({
   }),
 });
 
+const messageTemplates = [
+  { id: "custom", label: "Custom Message", content: "" },
+  {
+    id: "quote",
+    label: "Get a Quote",
+    content: "I would like to request a price list of the products.",
+  },
+  {
+    id: "info",
+    label: "More Information",
+    content: "I would like more information about Hyperbaric Oxygen Chambers.",
+  },
+  {
+    id: "trial",
+    label: "Try a Chamber",
+    content: "I would like to try out one of the chambers.",
+  },
+];
+
 export default function ContactPage() {
   const { toast } = useToast();
+  const [selectedTemplate, setSelectedTemplate] = useState("custom");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,7 +75,6 @@ export default function ContactPage() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Here you would typically send the form data to your backend
     console.log(values);
     toast({
       title: "Message Sent",
@@ -55,6 +82,14 @@ export default function ContactPage() {
     });
     form.reset();
   }
+
+  const handleTemplateChange = (templateId: string) => {
+    setSelectedTemplate(templateId);
+    const template = messageTemplates.find((t) => t.id === templateId);
+    if (template) {
+      form.setValue("message", template.content);
+    }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background pt-32">
@@ -102,6 +137,26 @@ export default function ContactPage() {
                   </FormItem>
                 )}
               />
+              <FormItem>
+                <FormLabel>Message Template</FormLabel>
+                <Select
+                  onValueChange={handleTemplateChange}
+                  defaultValue={selectedTemplate}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a message template" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {messageTemplates.map((template) => (
+                      <SelectItem key={template.id} value={template.id}>
+                        {template.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormItem>
               <FormField
                 control={form.control}
                 name="message"
@@ -109,7 +164,21 @@ export default function ContactPage() {
                   <FormItem>
                     <FormLabel>Message</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Your message" {...field} />
+                      <Textarea
+                        placeholder="Your message"
+                        {...field}
+                        value={
+                          selectedTemplate === "custom"
+                            ? field.value
+                            : (messageTemplates.find(
+                                (t) => t.id === selectedTemplate,
+                              )?.content ?? "")
+                        }
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSelectedTemplate("custom");
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -123,9 +192,7 @@ export default function ContactPage() {
         </div>
         <div className="relative hidden md:block md:w-1/2">
           <Image
-            src={
-              "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/gallery/3.png"
-            }
+            src="https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/gallery/3.png"
             alt="Contact Us"
             layout="fill"
             objectFit="cover"
