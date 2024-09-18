@@ -1,17 +1,15 @@
 import Airtable from "airtable";
 
-import UserGuideCarousel from "~/components/guides/user-guide-carousel";
 import GuidesListing from "~/components/guides/guide-listings";
 import CategoriesComponent from "~/components/guides/categories-component";
 import PopularGuidesAlternative from "~/components/guides/popular-guides-alternative";
+import ProviderGuideCarousel from "~/components/guides/provider-guide-carousel";
 
 export interface GuideProp {
   id: string;
   fields: {
     "Guide Title": string;
     Guide: string;
-    // Add an "Image" field if you have image URLs in your Airtable
-    Image?: string;
   };
 }
 
@@ -24,7 +22,7 @@ async function getAirtableData(): Promise<GuideProp[]> {
     base("Guides")
       .select({
         view: "Grid view",
-        maxRecords: 10, // Limit to 10 records
+        maxRecords: 10,
       })
       .all((err, records) => {
         if (err) {
@@ -53,9 +51,8 @@ export default async function UserGuides() {
         Wellness Provider Guides
       </h1>
       <div className="mx-auto mb-8 w-full max-w-lg">
-        <UserGuideCarousel guides={guides} />
+        <ProviderGuideCarousel guides={guides} />
       </div>
-      {/* <PopularPosts guides={[...guides]} /> */}
       <div className="flex w-full max-w-4xl flex-col gap-8 px-4 md:flex-row">
         <GuidesListing guides={[...guides]} />
         <div className="w-full md:w-1/3">
