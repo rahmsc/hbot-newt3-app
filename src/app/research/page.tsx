@@ -24,11 +24,18 @@ export default async function ResearchPage() {
   const conditionListData: FilteredArticleItemProps[] =
     await getConditionListData();
 
-  const conditionList: UniqueCondition[] = conditionListData.map((item) => ({
-    condition: item.fields.condition,
-    category: item.fields.category,
-    conditionTag: item.fields.conditionTag,
-  }));
+  const conditionList: UniqueCondition[] = conditionListData
+    .filter(
+      (item) =>
+        item.fields.condition &&
+        item.fields.category &&
+        item.fields.conditionTag,
+    )
+    .map((item) => ({
+      condition: item.fields.condition,
+      category: item.fields.category,
+      conditionTag: item.fields.conditionTag,
+    }));
 
   const uniqueConditionsMap = new Map<string, UniqueCondition>();
 
@@ -42,6 +49,7 @@ export default async function ResearchPage() {
     }
   }
 
+  // Convert the Map to an array of UniqueCondition objects
   const uniqueConditions = Array.from(uniqueConditionsMap.values());
 
   return (
