@@ -1,73 +1,56 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+// app/research/page.tsx
+import { Suspense } from "react";
+import getConditionListData, {
+  type FilteredArticleItemProps,
+} from "~/utils/airtable/getConditionListData";
+import ResearchClient from "../../components/article/research-client";
+import Spinner from "~/components/spinner";
 
-import { conditionCategories } from "../../data/researchDataDemo";
-import { conditions } from "../../data/researchDataDemo";
+function ResearchLoading() {
+  return (
+    <div className="flex h-64 items-center justify-center">
+      <Spinner size={75} className="text-orange-500" />
+    </div>
+  );
+}
 
-export default function Research() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const router = useRouter();
+interface UniqueCondition {
+  condition: string;
+  category: string;
+  conditionTag: string;
+}
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-  };
+export default async function ResearchPage() {
+  const conditionListData: FilteredArticleItemProps[] =
+    await getConditionListData();
 
-  const handleConditionClick = (conditionTag: string) => {
-    router.push(`/research/${conditionTag}`);
-  };
+  const conditionList: UniqueCondition[] = conditionListData.map((item) => ({
+    condition: item.fields.condition,
+    category: item.fields.category,
+    conditionTag: item.fields.conditionTag,
+  }));
 
-  const filteredConditions =
-    selectedCategory === "All"
-      ? conditions
-      : conditions.filter((item) => item.category === selectedCategory);
+  const uniqueConditionsMap = new Map<string, UniqueCondition>();
+
+  for (const item of conditionList) {
+    if (!uniqueConditionsMap.has(item.condition)) {
+      uniqueConditionsMap.set(item.condition, {
+        condition: item.condition,
+        category: item.category,
+        conditionTag: item.conditionTag,
+      });
+    }
+  }
+
+  const uniqueConditions = Array.from(uniqueConditionsMap.values());
 
   return (
     <section className="flex w-full flex-col items-center justify-center pt-32">
       <div className="container mx-auto px-4 py-8">
         <h1 className="mb-8 text-4xl font-bold">Research Articles</h1>
-        <div className="mb-6 flex flex-wrap gap-2">
-          {conditionCategories.map((category) => (
-            <button
-              key={category}
-              className={`rounded-full px-3 py-1 ${
-                selectedCategory === category
-                  ? "text-orange-500"
-                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-              }`}
-              onClick={() => handleCategoryClick(category)}
-              type="button"
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-        <div className="space-y-4">
-          {filteredConditions.map((item) => (
-            <div
-              key={item.id}
-              className="flex cursor-pointer items-center justify-between border-t border-border p-4 hover:text-orange-500"
-              onClick={() => handleConditionClick(item.conditionTag)}
-              onKeyDown={(e) =>
-                e.key === "Enter" && handleConditionClick(item.conditionTag)
-              }
-              role="button"
-              tabIndex={0}
-            >
-              <div className="flex-1 text-left">
-                <p className="text-sm text-muted-foreground">{item.category}</p>
-              </div>
-              <div className="flex-1 text-center">
-                <h2 className="text-xl font-semibold">{item.condition}</h2>
-              </div>
-              <div className="flex-1 text-right">
-                <p className="text-sm text-muted-foreground">
-                  {filteredConditions.length}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Suspense fallback={<ResearchLoading />}>
+          <ResearchClient uniqueConditions={uniqueConditions} />
+        </Suspense>
       </div>
     </section>
   );

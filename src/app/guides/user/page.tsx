@@ -10,8 +10,6 @@ export interface GuideProp {
   fields: {
     "Guide Title": string;
     Guide: string;
-    // Add an "Image" field if you have image URLs in your Airtable
-    Image?: string;
   };
 }
 

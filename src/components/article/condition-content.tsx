@@ -1,13 +1,6 @@
 import Link from "next/link";
-
-import { api } from "~/trpc/server";
-import { cache } from "react";
-
+import getArticlesByCondition from "~/utils/airtable/getArticlesByCondition";
 import ArticleRow from "./article-preview";
-
-const getArticlesByCondition = cache(async (conditionTag: string) => {
-  return await api.article.getArticlesByCondition({ conditionTag });
-});
 
 export default async function ConditionContent({
   conditionTag,
@@ -28,15 +21,7 @@ export default async function ConditionContent({
           href={`/research/${conditionTag}/${article.id}`}
           className="group"
         >
-          <ArticleRow
-            article={{
-              ...article,
-              faqsArray: article.faqsArray as {
-                question: string;
-                answer: string;
-              }[],
-            }}
-          />
+          <ArticleRow article={article} />
         </Link>
       ))}
     </div>

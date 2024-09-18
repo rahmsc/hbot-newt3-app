@@ -1,38 +1,17 @@
-"use client";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
-import { api } from "~/trpc/react";
 import Spinner from "../spinner";
+import getRandomArticles, {
+  type RandomArticleItemProps,
+} from "~/utils/airtable/getRandomArticles";
 
-interface ArticleItemPreviewProps {
-  id: number;
-  heading: string;
-  conditionTag: string;
-}
-
-export default function ArticleSection() {
-  const [randomArticles, setRandomArticles] = useState<
-    ArticleItemPreviewProps[]
-  >([]);
-  const { data: articles, isLoading } = api.article.getArticles.useQuery();
+export default async function ArticleSection() {
   const imgUrl =
     "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
 
-  useEffect(() => {
-    if (articles && articles.length > 0) {
-      const random = getRandomArticles(articles, 6);
-      setRandomArticles(random);
-    }
-  }, [articles]);
+  const randomArticles: RandomArticleItemProps[] = await getRandomArticles(6);
 
-  const getRandomArticles = (arr: ArticleItemPreviewProps[], n: number) => {
-    const shuffled = [...arr].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, n);
-  };
-
-  if (isLoading) {
+  if (!randomArticles) {
     return (
       <div className="py-8 text-center">
         <Spinner size={100} className="text-orange-500" />
@@ -48,22 +27,22 @@ export default function ArticleSection() {
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {randomArticles.map((article) => (
           <Link
-            key={article.id}
-            href={`/research/${article.conditionTag}/${article.id}`}
+            key={article.fields.id}
+            href={`/research/${article.fields.conditionTag}/${article.id}`}
             className="group"
           >
             <div className="flex flex-col items-center">
               <div className="relative h-48 w-full overflow-hidden rounded-lg">
                 <Image
-                  src={`${imgUrl}${article.id}.png`}
-                  alt={article.heading}
+                  src={`${imgUrl}${article.fields.id}.png`}
+                  alt={article.fields.heading}
                   layout="fill"
                   objectFit="cover"
                   className="transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
               <h3 className="mt-4 text-center text-lg font-semibold transition-colors duration-300 group-hover:text-orange-500">
-                {article.heading}
+                {article.fields.heading}
               </h3>
             </div>
           </Link>

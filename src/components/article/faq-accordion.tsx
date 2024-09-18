@@ -4,15 +4,21 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../components/ui/accordion";
-import { type ArticleItemProps } from "./article-content";
 
-type FaqItem = ArticleItemProps["faqsArray"][number];
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
 
 interface FaqAccordionProps {
   faqData: FaqItem[];
 }
 
 export default function FaqAccordion({ faqData }: FaqAccordionProps) {
+  if (!Array.isArray(faqData) || faqData.length === 0) {
+    return <p>No FAQs available.</p>;
+  }
+
   return (
     <Accordion type="single" collapsible className="w-full">
       {faqData.map((item, index) => (
