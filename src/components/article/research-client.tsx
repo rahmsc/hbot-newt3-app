@@ -65,6 +65,7 @@ export default function ResearchClient({
             onKeyDown={(e) =>
               e.key === "Enter" && handleConditionClick(item.conditionTag)
             }
+            // biome-ignore lint/a11y/useSemanticElements: <explanation>
             role="button"
             tabIndex={0}
           >

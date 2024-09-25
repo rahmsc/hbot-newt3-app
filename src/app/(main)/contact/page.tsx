@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useState } from "react";
 
-import { Button } from "../../components/ui/button";
+import { Button } from "~/components/ui/button";
 import {
   Form,
   FormControl,
@@ -14,9 +14,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../components/ui/form";
-import { Input } from "../../components/ui/input";
-import { Textarea } from "../../components/ui/textarea";
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { useToast } from "~/hooks/use-toast";
 import {
   Select,
@@ -24,7 +24,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
+} from "~/components/ui/select";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -194,8 +194,8 @@ export default function ContactPage() {
           <Image
             src="https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/gallery/3.png"
             alt="Contact Us"
-            layout="fill"
-            objectFit="cover"
+            width={700}
+            height={700}
           />
         </div>
       </div>

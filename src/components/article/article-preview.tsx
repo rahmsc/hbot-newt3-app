@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { type FilteredArticleByConditionItemProps } from "~/utils/airtable/getArticlesByCondition";
+import type { FilteredArticleByConditionItemProps } from "~/utils/airtable/getArticlesByCondition";
 
 export default function ArticleRow({
   article,

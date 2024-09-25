@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import type React from "react";
 import Masonry from "react-masonry-css";
 import Image from "next/image";
 import { blogContentmansorygrid } from "../../data/chamberData";

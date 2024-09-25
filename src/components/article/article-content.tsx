@@ -1,6 +1,6 @@
-import { type ArticleByIdFieldsItemProps } from "~/utils/airtable/getArticleById";
+import type { ArticleByIdFieldsItemProps } from "~/utils/airtable/getArticleById";
 import RichText from "../rich-text";
-import FaqAccordion, { FaqItem } from "./faq-accordion";
+import FaqAccordion, { type FaqItem } from "./faq-accordion";
 import ParallaxImage from "../parralex-image";
 import AccordionTemplate from "../accordion-template";
 

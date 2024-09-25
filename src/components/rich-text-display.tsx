@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 "use client";
 
 import React from "react";
@@ -10,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
-import { type BlogPost } from "~/app/blog/[id]/page";
+import type { BlogPost } from "~/app/(main)/blog/[id]/page";
 
 export function RichTextDisplay({ data }: { data: BlogPost | BlogPost[] }) {
   const posts = Array.isArray(data) ? data : [data];

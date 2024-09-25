@@ -2,15 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import Airtable from "airtable";
 
-import image from "../../../public/logo/logo_bg_trans.png";
+import image from "../../../../public/logo/logo_bg_trans.png";
 
-interface BlogPost {
+interface BlogPostFields {
+  "Content Idea": string;
+  Description: string;
+  "URL Slug": string;
+}
+
+export interface BlogPost {
   id: string;
-  fields: {
-    "Content Idea": string;
-    Description: string;
-    "URL Slug": string;
-  };
+  fields: BlogPostFields;
 }
 
 async function getAirtableData(): Promise<BlogPost[]> {
@@ -34,7 +36,7 @@ async function getAirtableData(): Promise<BlogPost[]> {
         const blogPosts =
           records?.map((record) => ({
             id: record.id,
-            fields: record.fields as BlogPost["fields"],
+            fields: record.fields as unknown as BlogPost["fields"],
           })) ?? [];
 
         resolve(blogPosts);

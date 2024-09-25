@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import getConditionListData, {
   type FilteredArticleItemProps,
 } from "~/utils/airtable/getConditionListData";
-import ResearchClient from "../../components/article/research-client";
+import ResearchClient from "../../../components/article/research-client";
 import Spinner from "~/components/spinner";
 
 function ResearchLoading() {
