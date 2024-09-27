@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
-import type { BlogPost } from "~/app/(main)/blog/[id]/page";
+import type { BlogPost } from "~/app/(main)/blog/[slug]/page";
 
 export function RichTextDisplay({ data }: { data: BlogPost | BlogPost[] }) {
   const posts = Array.isArray(data) ? data : [data];

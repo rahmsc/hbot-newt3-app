@@ -10,36 +10,46 @@ export interface BlogPost {
   };
 }
 
-async function getBlogPost(id: string): Promise<BlogPost | null> {
+async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   const base = new Airtable({
     apiKey: process.env.AIRTABLE_API_KEY,
   }).base(process.env.AIRTABLE_BASE_ID ?? "");
 
   return new Promise((resolve, reject) => {
-    base("Blogs").find(id, (err, record) => {
-      if (err) {
-        console.error("Error fetching blog post:", err);
-        reject(new Error(String(err)));
-        return;
-      }
-      if (!record) {
-        resolve(null);
-        return;
-      }
-      resolve({
-        id: record.id,
-        fields: record.fields as BlogPost["fields"],
+    base("Blogs")
+      .select({
+        filterByFormula: `{URL Slug} = '${slug}'`,
+        maxRecords: 1,
+      })
+      .firstPage((err, records) => {
+        if (err) {
+          console.error("Error fetching blog post:", err);
+          reject(new Error(String(err)));
+          return;
+        }
+        if (!records || records.length === 0) {
+          resolve(null);
+          return;
+        }
+        const record = records[0];
+        if (record) {
+          resolve({
+            id: record.id,
+            fields: record.fields as BlogPost["fields"],
+          });
+        } else {
+          resolve(null);
+        }
       });
-    });
   });
 }
 
 export default async function BlogPostPage({
   params,
 }: {
-  params: { id: string };
+  params: { slug: string };
 }) {
-  const post = await getBlogPost(params.id);
+  const post = await getBlogPostBySlug(params.slug);
 
   if (!post) {
     notFound();

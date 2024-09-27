@@ -76,7 +76,7 @@ export default async function BlogPage() {
                   </p>
                 </div>
                 <Link
-                  href={`/blog/${post.id}`}
+                  href={`/blog/${post.fields["URL Slug"]}`}
                   className="text-orange-500 hover:underline"
                 >
                   Read more
