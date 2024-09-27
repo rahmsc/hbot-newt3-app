@@ -192,7 +192,7 @@ export default function ContactPage() {
         </div>
         <div className="relative hidden md:block md:w-1/2">
           <Image
-            src="https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/gallery/3.png"
+            src="https://d144dqt8e4woe2.cloudfront.net/chambers/gallery/3.png"
             alt="Contact Us"
             width={700}
             height={700}

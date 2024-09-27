@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
 import { GuideDialog } from "./guide-dialog";

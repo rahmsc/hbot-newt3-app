@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+
 import { useRouter } from "next/navigation";
 import RolePopup from "./guides/guide-popup";
 

@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function CallToAction() {
   const imageUrl =
-    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/gallery/6.png";
+    "https://d144dqt8e4woe2.cloudfront.net/chambers/gallery/6.png";
   return (
     <section className="relative mb-0 h-[600px] overflow-hidden">
       <div className="absolute inset-0">

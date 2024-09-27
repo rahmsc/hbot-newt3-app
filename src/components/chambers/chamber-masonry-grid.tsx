@@ -13,8 +13,7 @@ const breakpointColumnsObj = {
 };
 
 const ChamberMasonryGrid: React.FC = () => {
-  const imageUrl =
-    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/gallery/";
+  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/chambers/gallery/";
 
   return (
     <Masonry

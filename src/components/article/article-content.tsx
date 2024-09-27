@@ -9,8 +9,7 @@ function ArticleContent({
 }: {
   foundArticle: ArticleByIdFieldsItemProps;
 }) {
-  const imageUrl =
-    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
+  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/research-articles/";
 
   const parseFaqArray = (faqString: string): FaqItem[] => {
     try {

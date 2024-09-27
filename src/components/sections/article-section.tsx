@@ -6,8 +6,7 @@ import getRandomArticles, {
 } from "~/utils/airtable/getRandomArticles";
 
 export default async function ArticleSection() {
-  const imgUrl =
-    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
+  const imgUrl = "https://d144dqt8e4woe2.cloudfront.net/research-articles/";
 
   const randomArticles: RandomArticleItemProps[] = await getRandomArticles(6);
 

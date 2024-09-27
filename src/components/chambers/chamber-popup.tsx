@@ -10,7 +10,7 @@ interface ImagePopupProps {
 
 export default function ImagePopup({ chamberId, onClose }: ImagePopupProps) {
   const chamberImageUrl =
-    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/products/";
+    "https://d144dqt8e4woe2.cloudfront.net/chambers/products/";
 
   const [currentChamberId, setCurrentChamberId] = useState(chamberId);
 

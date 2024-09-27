@@ -6,8 +6,7 @@ export default function ArticleRow({
 }: {
   article: FilteredArticleByConditionItemProps;
 }) {
-  const imageUrl =
-    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
+  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/research-articles/";
 
   return (
     <div className="mx-2 flex max-w-7xl items-start space-x-6 border-b border-gray-400 py-8">
