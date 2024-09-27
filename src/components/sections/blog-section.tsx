@@ -46,7 +46,7 @@ const BlogSection = async () => {
   const blogPosts = await getAirtableData();
 
   return (
-    <section className="relative w-full bg-white">
+    <section className="relative w-full">
       <div className="container mx-auto px-4 py-8">
         <h2 className="mb-8 text-3xl font-semibold uppercase">Blog Section</h2>
 

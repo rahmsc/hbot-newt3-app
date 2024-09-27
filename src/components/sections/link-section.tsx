@@ -6,12 +6,12 @@ import { motion } from "framer-motion";
 const links = [
   { name: "Research", number: 17, link: "/research" },
   { name: "Guides", number: 54, link: "/guides" },
-  { name: "Join HQ", number: 6, link: "/hq" },
+  { name: "Join HQ", number: 6, link: "/contact" },
   { name: "Chambers", number: 9, link: "/chambers" },
-  { name: "News", number: 25, link: "/news" },
+  { name: "Blogs", number: 25, link: "/blog" },
 ];
 
-const LinkSection = () => {
+export default function LinkSection() {
   return (
     <div className="py-12">
       <div className="mb-8 border-t border-gray-300" />
@@ -19,19 +19,18 @@ const LinkSection = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="container mx-auto flex items-center justify-center px-6"
+        className="container mx-auto px-6"
       >
-        <div className="my-12 flex flex-wrap space-x-4 text-4xl font-light text-gray-400 lg:text-5xl">
+        <div className="my-12 flex flex-wrap justify-center gap-x-2 gap-y-4 text-2xl font-light text-gray-400 sm:text-3xl md:text-4xl lg:flex-nowrap lg:gap-x-4 lg:text-5xl">
           {links.map((link, index) => (
             <div
               key={link.name}
-              className="hover:text-selected-text flex items-baseline"
+              className="hover:text-selected-text flex items-baseline space-x-4"
             >
-              {index !== 0 && <span className="mx-2 text-gray-400">/</span>}
+              {index !== 0 && <span className="mr-2 text-gray-400">/</span>}
               <Link href={link.link}>
-                <span className="hover:underline">
-                  {link.name}
-                  <sup className="ml-1 text-sm">{link.number}</sup>
+                <span className="whitespace-nowrap hover:underline">
+                  {link.name.replace(" ", "\u00A0")}
                 </span>
               </Link>
             </div>
@@ -41,6 +40,4 @@ const LinkSection = () => {
       <div className="mt-8 border-t border-gray-300" />
     </div>
   );
-};
-
-export default LinkSection;
+}

@@ -8,8 +8,8 @@ await import("./src/env.js");
 const config = {
   images: {
     domains: [
-      "hbothq-bucket.s3.ap-southeast-2.amazonaws.com",
       "d144dqt8e4woe2.cloudfront.net",
+      "hbothq-bucket.s3.ap-southeast-2.amazonaws.com",
     ],
   },
   experimental: {

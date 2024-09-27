@@ -39,11 +39,19 @@ export default async function getRandomArticles(
             },
           })) ?? [];
 
-        // Shuffle the array
-        const shuffled = articles.sort(() => 0.5 - Math.random());
+        // Filter out articles with id > 99
+        const filteredArticles = articles.filter(
+          (article) => article.fields.id <= 99,
+        );
 
-        // Get the first 'count' elements
-        const randomArticles = shuffled.slice(0, count);
+        // Shuffle the filtered array
+        const shuffled = filteredArticles.sort(() => 0.5 - Math.random());
+
+        // Get the first 'count' elements, or all if there are fewer than 'count'
+        const randomArticles = shuffled.slice(
+          0,
+          Math.min(count, shuffled.length),
+        );
 
         resolve(randomArticles);
       });
