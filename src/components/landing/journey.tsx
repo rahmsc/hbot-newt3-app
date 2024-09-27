@@ -217,7 +217,7 @@ export default function JourneySection() {
 
         <div className="mt-16 flex justify-center">
           <Image
-            src="https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/gallery/1.png"
+            src="https://d144dqt8e4woe2.cloudfront.net/landing/img1.jpeg"
             alt="HBOT Chamber"
             width={1200}
             height={400}

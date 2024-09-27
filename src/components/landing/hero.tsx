@@ -1,28 +1,14 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
-import { Check, Play, Pause } from "lucide-react";
+import { Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { EmailPopup } from "./email-popup";
+import VideoPlayer from "./video-player";
 
 export default function Hero() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play().catch((error) => {
-          console.error("Error attempting to play video:", error);
-        });
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
 
   const handleGuideButtonClick = () => {
     setIsPopupOpen(true);
@@ -88,37 +74,7 @@ export default function Hero() {
         </motion.p>
         <div className="mx-auto mt-12 max-w-4xl">
           <div className="aspect-w-16 aspect-h-9 relative overflow-hidden rounded-2xl shadow-2xl">
-            <video
-              ref={videoRef}
-              className="h-full w-full object-cover"
-              loop
-              playsInline
-              poster="/placeholder.svg?height=400&width=600"
-            >
-              <source src="/landing-assets/video/video1.mp4" type="video/mp4" />
-              <track
-                kind="captions"
-                src="/landing-assets/video/captions.vtt"
-                srcLang="en"
-                label="English"
-                default
-              />
-              Your browser does not support the video tag.
-            </video>
-            <button
-              onClick={togglePlay}
-              type="button"
-              className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 transition-opacity duration-300 hover:bg-opacity-30"
-              aria-label={isPlaying ? "Pause video" : "Play video"}
-            >
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                {isPlaying ? (
-                  <Pause className="h-20 w-20 text-white" />
-                ) : (
-                  <Play className="h-20 w-20 text-white" />
-                )}
-              </motion.div>
-            </button>
+            <VideoPlayer publicId={"vidBloodAutoReg"} />
           </div>
         </div>
         <div className="mt-16 flex flex-col items-center justify-center space-y-8">

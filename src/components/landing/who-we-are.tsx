@@ -70,7 +70,7 @@ export default function WhoWeAre() {
 
         <div className="my-12 flex justify-center">
           <Image
-            src="/placeholder.svg?height=400&width=600"
+            src="https://d144dqt8e4woe2.cloudfront.net/landing/pete.jpg"
             alt="HBOT Chamber"
             width={600}
             height={400}

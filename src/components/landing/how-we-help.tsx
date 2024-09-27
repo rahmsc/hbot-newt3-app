@@ -1,16 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { Play } from "lucide-react";
+
+import VideoPlayer from "./video-player";
 
 const videoData = [
-  { id: 1, src: "/path-to-video-1.mp4" },
-  { id: 2, src: "/path-to-video-2.mp4" },
-  { id: 3, src: "/path-to-video-3.mp4" },
-  { id: 4, src: "/path-to-video-4.mp4" },
+  { id: 1, src: "vid1" },
+  { id: 2, src: "vid2" },
+  { id: 3, src: "vid3" },
+  { id: 4, src: "vid4" },
 ];
 
 export default function HowWeHelpSection() {
+  const imgSrc = "https://d144dqt8e4woe2.cloudfront.net/landing/img1.jpeg";
   return (
     <section className="bg-white py-20">
       <div className="container mx-auto max-w-4xl px-4">
@@ -42,22 +44,7 @@ export default function HowWeHelpSection() {
               key={video.id}
               className="relative aspect-video overflow-hidden rounded-lg bg-blue-200 shadow-md"
             >
-              <video
-                className="h-full w-full object-cover"
-                src={video.src}
-                controls
-              >
-                <track
-                  kind="captions"
-                  src={`${video.src.replace(".mp4", ".vtt")}`}
-                  srcLang="en"
-                  label="English"
-                />
-                Your browser does not support the video tag.
-              </video>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Play className="h-16 w-16 text-white opacity-80 transition-opacity hover:opacity-100" />
-              </div>
+              <VideoPlayer publicId={`${video.src}`} />
             </div>
           ))}
         </div>
@@ -74,10 +61,10 @@ export default function HowWeHelpSection() {
 
         <div className="flex justify-center">
           <Image
-            src="/placeholder.svg?height=400&width=400"
+            src={imgSrc}
             alt="Benefits of Hyperbaric Oxygen Therapy"
-            width={400}
-            height={400}
+            width={800}
+            height={600}
             className="rounded-lg shadow-lg"
           />
         </div>
