@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { type FC } from "react";
+import type { FC } from "react";
 
 import { X } from "lucide-react";
 
@@ -30,14 +30,14 @@ const RolePopup: FC<RolePopupProps> = ({ onSelectRole }) => {
         <div className="flex flex-row items-center justify-center space-x-4 font-light">
           <button
             onClick={() => onSelectRole("provider")}
-            className="mr-4 w-[250px] rounded bg-orange-500 px-4 py-2 text-xl text-white"
+            className="mr-4 w-[250px] rounded bg-orange-500 px-4 py-2 font-editors-note text-xl text-white"
             type="button"
           >
             Wellness Provider
           </button>
           <button
             onClick={() => onSelectRole("user")}
-            className="w-[250px] rounded bg-gray-500 px-4 py-2 text-xl text-white"
+            className="w-[250px] rounded bg-gray-500 px-4 py-2 font-editors-note text-xl text-white"
             type="button"
           >
             Home User

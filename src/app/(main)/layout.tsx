@@ -1,11 +1,15 @@
 import "~/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import Navbar from "~/components/navbar";
 import Footer from "~/components/sections/footer";
 import { Toaster } from "~/components/ui/toaster";
+import QuizPopup from "~/components/quiz-popup";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 const editorsNote = localFont({
   src: [
@@ -126,7 +130,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${editorsNote.variable}`}>
+      <body className={`font-sans ${inter.variable} ${editorsNote.variable}`}>
         <TRPCReactProvider>
           <Navbar />
           <main className="flex min-h-screen flex-col items-center justify-between">
@@ -134,6 +138,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <Toaster />
+          <QuizPopup />
         </TRPCReactProvider>
       </body>
     </html>

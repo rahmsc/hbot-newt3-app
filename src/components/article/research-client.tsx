@@ -44,7 +44,7 @@ export default function ResearchClient({
         {categories.map((category) => (
           <button
             key={category}
-            className={`rounded-full px-3 py-1 ${
+            className={`rounded-full px-3 py-1 font-editors-note ${
               selectedCategory === category
                 ? "text-orange-500"
                 : "bg-secondary text-secondary-foreground hover:bg-secondary/80"

@@ -8,8 +8,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-editors-note)", "sans-serif"],
-        "editors-note": ["var(--font-editors-note)", "sans-serif"],
+        sans: ["var(--font-sans)"],
+        "editors-note": ["EditorsNote", "serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
