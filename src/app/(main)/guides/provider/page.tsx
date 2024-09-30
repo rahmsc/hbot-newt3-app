@@ -4,6 +4,7 @@ import GuidesListing from "~/components/guides/guide-listings";
 import CategoriesComponent from "~/components/guides/categories-component";
 import PopularGuidesAlternative from "~/components/guides/popular-guides-alternative";
 import ProviderGuideCarousel from "~/components/guides/provider-guide-carousel";
+import PopularPosts from "~/components/guides/popular-guides";
 
 export interface GuideProp {
   id: string;
@@ -50,10 +51,13 @@ export default async function UserGuides() {
       <h1 className="text-center text-3xl font-bold">
         Wellness Provider Guides
       </h1>
-      <div className="mx-auto mb-8 w-full max-w-lg">
+      <div className="mx-auto mb-8 hidden w-full max-w-lg md:block">
         <ProviderGuideCarousel guides={guides} />
       </div>
-      <div className="flex w-full max-w-4xl flex-col gap-8 px-4 md:flex-row">
+      <div className="md:hidden">
+        <PopularPosts guides={[...guides]} />
+      </div>
+      <div className="hidden w-full max-w-4xl flex-col gap-8 px-4 md:flex md:flex-row">
         <GuidesListing guides={[...guides]} />
         <div className="w-full md:w-1/3">
           <PopularGuidesAlternative guides={[...guides]} />

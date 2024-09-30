@@ -138,7 +138,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <Toaster />
-          <QuizPopup />
+          {/* <QuizPopup /> */}
         </TRPCReactProvider>
       </body>
     </html>
