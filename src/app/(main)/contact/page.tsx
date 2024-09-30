@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import LinkSection from "~/components/sections/link-section";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -60,6 +61,17 @@ const messageTemplates = [
   },
 ];
 
+const guideDetails = [
+  "The Science Behind HBOT: Understand how increased pressure and pure oxygen help regeneration, longevity and wellness.",
+  "Types of HBOT Chambers: Compare soft-shell, hard-shell monoplace, and multiplace chambers to find the perfect fit for your space.",
+  "Space and Installation Requirements: Plan your space with confidence using our spatial guidelines.",
+  "Investment and ROI Analysis: Detailed breakdown of costs, pressure ranges, potential earnings, and long-term value considerations.",
+  "Health Benefits for You and Your Clients: Explore the wide range of conditions HBOT can address, from chronic fatigue to sports recovery.",
+  "Safety and Regulatory Information: Ensure you're well-informed about the proper use and maintenance of HBOT chambers.",
+  "Peer Reviewed Studies: Real-world Peer Reviewed Studies that show efficacy of HBOT.",
+  "Financing Options: Flexible ways to efficiently integrate HBOT.",
+];
+
 export default function ContactPage() {
   const { toast } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState("custom");
@@ -92,112 +104,194 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background pt-32">
-      <div className="flex w-full max-w-4xl overflow-hidden rounded-xl bg-card shadow-md">
-        <div className="w-full space-y-6 p-8 md:w-1/2">
-          <h1 className="text-center text-2xl font-bold">Contact Us</h1>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="subject"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Subject</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Message subject" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormItem>
-                <FormLabel>Message Template</FormLabel>
-                <Select
-                  onValueChange={handleTemplateChange}
-                  defaultValue={selectedTemplate}
+    <div className="min-h-screen pt-36">
+      <div className="container mx-auto px-4">
+        <div className="mb-16 text-center">
+          <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl">
+            Considering an HBOT Chamber for Your Home or Clinic?
+          </h1>
+          <p className="mb-8 text-xl text-gray-700">
+            Our comprehensive guide will help you make an informed decision and
+            unlock the potential of this cutting-edge treatment.
+          </p>
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Get Your Free Guide To HBOT Chambers Below
+          </h2>
+        </div>
+
+        <div className="mb-16 overflow-hidden rounded-2xl bg-white shadow-lg">
+          <div className="flex flex-col md:flex-row">
+            <div className="w-full space-y-6 p-8 md:w-1/2">
+              <h2 className="text-center text-3xl font-bold text-gray-900">
+                Contact Us
+              </h2>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-6"
                 >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a message template" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {messageTemplates.map((template) => (
-                      <SelectItem key={template.id} value={template.id}>
-                        {template.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormItem>
-              <FormField
-                control={form.control}
-                name="message"
-                render={({ field }) => (
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Your name"
+                            {...field}
+                            className="rounded-md"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Your email"
+                            {...field}
+                            className="rounded-md"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="subject"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Subject</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Message subject"
+                            {...field}
+                            className="rounded-md"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormItem>
-                    <FormLabel>Message</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Your message"
-                        {...field}
-                        value={
-                          selectedTemplate === "custom"
-                            ? field.value
-                            : (messageTemplates.find(
-                                (t) => t.id === selectedTemplate,
-                              )?.content ?? "")
-                        }
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setSelectedTemplate("custom");
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
+                    <FormLabel>Message Template</FormLabel>
+                    <Select
+                      onValueChange={handleTemplateChange}
+                      defaultValue={selectedTemplate}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="rounded-md">
+                          <SelectValue placeholder="Select a message template" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {messageTemplates.map((template) => (
+                          <SelectItem key={template.id} value={template.id}>
+                            {template.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormItem>
-                )}
+                  <FormField
+                    control={form.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Message</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Your message"
+                            {...field}
+                            className="min-h-[150px] rounded-md"
+                            value={
+                              selectedTemplate === "custom"
+                                ? field.value
+                                : (messageTemplates.find(
+                                    (t) => t.id === selectedTemplate,
+                                  )?.content ?? "")
+                            }
+                            onChange={(e) => {
+                              field.onChange(e);
+                              setSelectedTemplate("custom");
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="submit"
+                    className="w-full rounded-md bg-orange-500 hover:bg-orange-600"
+                  >
+                    Send Message
+                  </Button>
+                </form>
+              </Form>
+            </div>
+            <div className="relative hidden h-auto md:block md:w-1/2">
+              <Image
+                src="https://d144dqt8e4woe2.cloudfront.net/chambers/gallery/3.png"
+                alt="HBOT Chamber"
+                layout="fill"
+                objectFit="cover"
               />
-              <Button type="submit" className="w-full">
-                Send Message
-              </Button>
-            </form>
-          </Form>
+            </div>
+          </div>
         </div>
-        <div className="relative hidden md:block md:w-1/2">
-          <Image
-            src="https://d144dqt8e4woe2.cloudfront.net/chambers/gallery/3.png"
-            alt="Contact Us"
-            width={700}
-            height={700}
-          />
+
+        <div className="mb-16">
+          <h2 className="mb-8 text-center text-3xl font-bold text-gray-900">
+            What&apos;s Included In Our Free Guide
+          </h2>
+          <ul className="grid gap-6 md:grid-cols-2">
+            {guideDetails.map((detail, index) => (
+              <li
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                key={index}
+                className="flex items-start rounded-lg bg-white p-4 shadow-md"
+              >
+                <span className="mr-4 text-2xl text-orange-500">•</span>
+                <span className="text-gray-700">{detail}</span>
+              </li>
+            ))}
+          </ul>
         </div>
+
+        <div className="mb-16 text-center">
+          <p className="mb-8 text-xl text-gray-700">
+            Have clarity when exploring HBOT with our complete guide and make
+            the best decision for your home or business and clients.
+          </p>
+          <Button
+            size="lg"
+            className="rounded-full bg-orange-600 px-8 py-6 text-lg font-semibold hover:bg-orange-600"
+          >
+            Download Your Free HBOT Chamber Buyer&apos;s Guide
+          </Button>
+        </div>
+
+        <div className="rounded-2xl bg-white bg-opacity-80 p-12 text-center">
+          <h2 className="mb-4 text-4xl font-bold text-gray-900">
+            Enter The World Of HBOT...
+          </h2>
+          <h3 className="mb-6 text-2xl font-semibold text-gray-800">
+            And Renew From The Inside Out
+          </h3>
+          <p className="text-xl text-gray-700">
+            Experience a new level of wellness — with Oxygen
+          </p>
+        </div>
+        <LinkSection />
       </div>
     </div>
   );
