@@ -4,6 +4,7 @@ import type React from "react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { GuideDialog } from "./guide-dialog";
+import Link from "next/link";
 
 export interface GuideData {
   id: string;
@@ -36,19 +37,23 @@ const GuidesListing: React.FC<GuidesListingProps> = ({ guides }) => {
     <div className="w-2/3">
       <div className="grid grid-cols-1 gap-6">
         {currentGuides.map((guide) => (
-          <div
-            key={guide.id}
-            className="cursor-pointer rounded-lg border p-4 shadow transition-colors hover:bg-gray-50"
-            onClick={() => setSelectedGuide(guide)}
-            onKeyDown={() => setSelectedGuide(guide)}
-          >
-            <h3 className="text-xl font-bold">{guide.fields["Guide Title"]}</h3>
-            <p className="text-gray-600">
-              {guide.fields.Guide?.length > 150
-                ? `${guide.fields.Guide.substring(0, 150)}...`
-                : guide.fields.Guide}
-            </p>
-          </div>
+          <Link href={`/guides/provider/${guide.id}`} key={guide.id}>
+            <div
+              key={guide.id}
+              className="cursor-pointer rounded-lg border p-4 shadow transition-colors hover:bg-gray-50"
+              onClick={() => setSelectedGuide(guide)}
+              onKeyDown={() => setSelectedGuide(guide)}
+            >
+              <h3 className="text-xl font-bold">
+                {guide.fields["Guide Title"]}
+              </h3>
+              <p className="text-gray-600">
+                {guide.fields.Guide?.length > 150
+                  ? `${guide.fields.Guide.substring(0, 150)}...`
+                  : guide.fields.Guide}
+              </p>
+            </div>
+          </Link>
         ))}
       </div>
 
@@ -75,14 +80,14 @@ const GuidesListing: React.FC<GuidesListingProps> = ({ guides }) => {
         )}
       </div>
 
-      {selectedGuide && (
+      {/* {selectedGuide && (
         <GuideDialog
           isOpen={!!selectedGuide}
           onOpenChange={handleOpenChange}
           title={selectedGuide.fields["Guide Title"]}
           guideId={selectedGuide.id}
         />
-      )}
+      )} */}
     </div>
   );
 };

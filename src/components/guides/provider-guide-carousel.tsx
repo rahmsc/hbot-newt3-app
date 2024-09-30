@@ -12,6 +12,7 @@ import {
 } from "../ui/carousel";
 import { Card, CardContent } from "../ui/card";
 import { GuideDialog } from "./guide-dialog";
+import Link from "next/link";
 
 export interface GuideProp {
   id: string;
@@ -42,26 +43,28 @@ const ProviderGuideCarousel: React.FC<UserGuideCarouselProps> = ({
         <CarouselContent className="-ml-4">
           {guides.map((guide, index) => (
             <CarouselItem key={guide.id} className="basis-1/3 pl-4">
-              <Card>
-                <CardContent
-                  className="flex aspect-square cursor-pointer items-center justify-center bg-opacity-0 p-2"
-                  onClick={() => setSelectedGuide(guide)}
-                >
-                  <div className="relative h-full w-full">
-                    <Image
-                      src={`${imageUrl}${index + 1}.png`}
-                      alt={guide.fields["Guide Title"]}
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-2 text-white">
-                      <h2 className="line-clamp-2 text-sm font-semibold">
-                        {guide.fields["Guide Title"]}
-                      </h2>
+              <Link href={`/guides/provider/${guide.id}`}>
+                <Card>
+                  <CardContent
+                    className="flex aspect-square cursor-pointer items-center justify-center bg-opacity-0 p-2"
+                    onClick={() => setSelectedGuide(guide)}
+                  >
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={`${imageUrl}${index + 1}.png`}
+                        alt={guide.fields["Guide Title"]}
+                        layout="fill"
+                        objectFit="cover"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-2 text-white">
+                        <h2 className="line-clamp-2 text-sm font-semibold">
+                          {guide.fields["Guide Title"]}
+                        </h2>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Link>
             </CarouselItem>
           ))}
         </CarouselContent>
