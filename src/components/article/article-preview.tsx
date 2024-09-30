@@ -9,22 +9,26 @@ export default function ArticleRow({
   const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/research-articles/";
 
   return (
-    <div className="mx-2 flex max-w-7xl items-start space-x-6 border-b border-gray-400 py-8">
-      <div className="w-1/6 flex-shrink-0">
+    <div className="mx-2 flex flex-col border-b border-gray-400 py-6 sm:py-8 md:flex-row md:items-start md:space-x-6">
+      <div className="mb-4 w-full md:mb-0 md:w-1/6 md:flex-shrink-0">
         <h3 className="text-lg font-semibold">Article</h3>
-        <p className="text-md text-gray-500">{article.fields.publishedDate}</p>
+        <p className="text-sm text-gray-500 md:text-base">
+          {article.fields.publishedDate}
+        </p>
       </div>
-      <div className="w-4/6">
-        <h2 className="mb-3 text-4xl font-bold">{article.fields.heading}</h2>
-        <p className="mb-3 text-lg text-gray-800">
+      <div className="mb-4 w-full md:mb-0 md:w-4/6">
+        <h2 className="mb-3 text-2xl font-bold sm:text-3xl md:text-4xl">
+          {article.fields.heading}
+        </h2>
+        <p className="mb-3 text-base text-gray-800 sm:text-lg">
           {article.fields.introduction.slice(0, 250)}
           {article.fields.introduction.length > 250 ? "..." : ""}
         </p>
-        <p className="text-md italic text-gray-500">
+        <p className="text-sm italic text-gray-500 md:text-base">
           Authors: {article.fields.authors}
         </p>
       </div>
-      <div className="relative h-56 w-1/6 flex-shrink-0 overflow-hidden rounded-lg">
+      <div className="relative h-48 w-full overflow-hidden rounded-lg sm:h-56 md:h-56 md:w-1/6 md:flex-shrink-0">
         <Image
           src={`${imageUrl}${article.fields.id}.png`}
           alt={`Thumbnail for ${article.fields.heading}`}
