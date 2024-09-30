@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)"],
+        sans: ["Inter", "sans-serif"],
         "editors-note": ["EditorsNote", "serif"],
       },
       borderRadius: {
@@ -58,24 +58,29 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
       },
-      typography:
-        '({ theme }: { theme: (path: string) => string }) => ({\n        DEFAULT: {\n          css: {\n            a: {\n              color: theme("colors.blue.600"),\n              "&:hover": {\n                color: theme("colors.blue.500"),\n              },\n            },\n            p: {\n              marginBottom: theme("spacing.4"),\n            },\n          },\n        },\n      })',
-      keyframes: {
-        "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
+      typography: ({ theme }: { theme: (path: string) => string }) => ({
+        DEFAULT: {
+          css: {
+            a: {
+              color: theme("colors.blue.600"),
+              "&:hover": {
+                color: theme("colors.blue.500"),
+              },
+            },
+            p: {
+              marginBottom: theme("spacing.4"),
+            },
           },
         },
+      }),
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {

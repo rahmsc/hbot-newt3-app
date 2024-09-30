@@ -1,16 +1,21 @@
 import Airtable from "airtable";
+import Image from "next/image";
 import { notFound } from "next/navigation";
-import { RichTextDisplay } from "~/components/rich-text-display";
+import RichText from "~/components/rich-text";
 
-export interface BlogPost {
+export interface BlogPagePost {
   id: string;
   fields: {
+    "URL Slug": string;
+    "ID Blog": number;
     "Content Idea": string;
-    "Enriched Blog": string;
+    Introduction: string;
+    Body: string;
+    Conclusion: string;
   };
 }
 
-async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+async function getBlogPostBySlug(slug: string): Promise<BlogPagePost | null> {
   const base = new Airtable({
     apiKey: process.env.AIRTABLE_API_KEY,
   }).base(process.env.AIRTABLE_BASE_ID ?? "");
@@ -35,7 +40,7 @@ async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
         if (record) {
           resolve({
             id: record.id,
-            fields: record.fields as BlogPost["fields"],
+            fields: record.fields as BlogPagePost["fields"],
           });
         } else {
           resolve(null);
@@ -56,13 +61,60 @@ export default async function BlogPostPage({
   }
 
   return (
-    <section className="flex w-full flex-col items-center justify-center pt-32">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="mb-6 text-3xl font-bold">
+    <article className="mx-auto max-w-4xl px-4 py-16 pt-36 sm:px-6 lg:px-8">
+      <header className="mb-10 text-center">
+        <h1 className="mb-4 text-4xl font-bold leading-tight text-gray-900 sm:text-5xl">
           {post.fields["Content Idea"]}
         </h1>
-        <RichTextDisplay data={post} />
+      </header>
+
+      <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
+        <Image
+          src={`https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`}
+          alt={post.fields["Content Idea"]}
+          width={1000}
+          height={500}
+          className="w-full object-cover"
+        />
       </div>
-    </section>
+
+      <div className="mb-10 text-lg">
+        <RichText
+          content={post.fields.Introduction}
+          className="leading-relaxed"
+        />
+      </div>
+
+      <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
+        <Image
+          src={`https://d144dqt8e4woe2.cloudfront.net/blogs/bodyimage1/${post.fields["ID Blog"]}.png`}
+          alt={post.fields["Content Idea"]}
+          width={1000}
+          height={500}
+          className="w-full object-cover"
+        />
+      </div>
+
+      <div className="mb-10 text-lg">
+        <RichText content={post.fields.Body} className="leading-relaxed" />
+      </div>
+
+      <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
+        <Image
+          src={`https://d144dqt8e4woe2.cloudfront.net/blogs/bodyimage2/${post.fields["ID Blog"]}.png`}
+          alt={post.fields["Content Idea"]}
+          width={1000}
+          height={500}
+          className="w-full object-cover"
+        />
+      </div>
+
+      <div className="mb-10 text-lg">
+        <RichText
+          content={post.fields.Conclusion}
+          className="leading-relaxed"
+        />
+      </div>
+    </article>
   );
 }

@@ -9,46 +9,76 @@ interface RichTextProps {
   className?: string;
 }
 
-function splitIntoTwoSentenceParagraphs(text: string): string {
-  // Split the text into sentences
-  const sentences = text.match(/[^.!?]+[.!?]+/g) ?? [];
-
-  // Group sentences into pairs
-  const paragraphs: string[] = [];
-  for (let i = 0; i < sentences.length; i += 2) {
-    if (i + 1 < sentences.length) {
-      paragraphs.push(`${sentences[i]?.trim()} ${sentences[i + 1]?.trim()}`);
-    } else {
-      paragraphs.push(sentences[i]?.trim() ?? "");
-    }
-  }
-
-  // Join paragraphs with double line breaks
-  return paragraphs.join("\n\n");
-}
-
 export default function RichText({ content, className }: RichTextProps) {
-  const processedContent = splitIntoTwoSentenceParagraphs(content);
-
   return (
-    <div className={cn("prose dark:prose-invert", className)}>
+    <div className={cn("prose max-w-none dark:prose-invert", className)}>
       <ReactMarkdown
-        className={cn("prose max-w-none dark:prose-invert", className)}
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={{
           a: ({ ...props }) => (
             <a
               {...props}
-              className="text-blue-600 underline hover:text-blue-500"
+              className="text-blue-600 underline transition-colors duration-200 hover:text-blue-800"
               target="_blank"
               rel="noopener noreferrer"
             />
           ),
-          p: ({ ...props }) => <p {...props} className="mb-4" />,
+          p: ({ ...props }) => (
+            <p {...props} className="mb-6 leading-relaxed last:mb-0" />
+          ),
+          h1: ({ ...props }) => (
+            <h1
+              {...props}
+              className="mb-6 font-editors-note text-3xl font-bold"
+            />
+          ),
+          h2: ({ ...props }) => (
+            <h2
+              {...props}
+              className="mb-4 font-editors-note text-2xl font-semibold"
+            />
+          ),
+          h3: ({ ...props }) => (
+            <h3
+              {...props}
+              className="mb-3 font-editors-note text-xl font-semibold"
+            />
+          ),
+          h4: ({ ...props }) => (
+            <h4
+              {...props}
+              className="mb-2 font-editors-note text-lg font-semibold"
+            />
+          ),
+          h5: ({ ...props }) => (
+            <h5
+              {...props}
+              className="mb-2 font-editors-note text-base font-semibold"
+            />
+          ),
+          h6: ({ ...props }) => (
+            <h6
+              {...props}
+              className="mb-2 font-editors-note text-sm font-semibold"
+            />
+          ),
+          ul: ({ ...props }) => (
+            <ul {...props} className="mb-6 list-disc pl-6" />
+          ),
+          ol: ({ ...props }) => (
+            <ol {...props} className="mb-6 list-decimal pl-6" />
+          ),
+          li: ({ ...props }) => <li {...props} className="mb-2" />,
+          blockquote: ({ ...props }) => (
+            <blockquote
+              {...props}
+              className="mb-6 border-l-4 border-gray-300 pl-4 italic"
+            />
+          ),
         }}
       >
-        {processedContent}
+        {content}
       </ReactMarkdown>
     </div>
   );
