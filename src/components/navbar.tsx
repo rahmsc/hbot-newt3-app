@@ -82,23 +82,23 @@ const Navbar = () => {
   const NavLinks = () => (
     <>
       <NavLink href="/research" isActive={pathname === "/research"}>
-        Research
+        <p className="font-editors-note text-2xl font-semibold">Research</p>
       </NavLink>
       <NavLink
         href="/guides"
         onClick={handleGuidesClick}
         isActive={isGuidesActive}
       >
-        Guides
+        <p className="font-editors-note text-2xl font-semibold">Guides</p>
       </NavLink>
       <NavLink href="/chambers" isActive={pathname === "/chambers"}>
-        Chambers
+        <p className="font-editors-note text-2xl font-semibold">Chambers</p>
       </NavLink>
       <NavLink href="/blog" isActive={pathname === "/blog"}>
-        Blog
+        <p className="font-editors-note text-2xl font-semibold">Blog</p>
       </NavLink>
       <NavLink href="/contact" isActive={pathname === "/contact"}>
-        Join HQ
+        <p className="font-editors-note text-2xl font-semibold">Join HQ</p>
       </NavLink>
     </>
   );
