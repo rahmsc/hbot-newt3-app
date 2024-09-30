@@ -58,6 +58,7 @@ export default function EmailSubscriptionForm() {
       await emailMutation.mutateAsync(values);
     } catch (error) {
       // Error is handled in the onError callback of the mutation
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -67,11 +68,15 @@ export default function EmailSubscriptionForm() {
     <section className="bg-white py-16">
       <div className="container mx-auto px-4">
         <div className="mb-12 text-center">
+          <h2 className="mb-4 text-4xl font-bold text-gray-900">HQ INSIDER</h2>
           <p className="text-4xl text-gray-700">
-            DISCOVER THE BEST IN HYPERBARIC OXYGEN THERAPY. BY ENTERING <br />
-            YOUR EMAIL BELOW, YOU&apos;LL BE THE FIRST TO <br />
-            RECEIVE EXCLUSIVE INSIDER UPDATES, <br />
-            DELIVERED DIRECTLY TO YOUR INBOX.
+            YOUR MONTHLY DIVE INTO HBOT!
+            <br />
+            <br />
+            STAY INFORMED WITH THE LATEST NEWS,
+            <br /> RESEARCH, NEW WELLNESS PRODUCTS AND <br /> UNBEATABLE
+            DEALS—ALL DELIVERED STRAIGHT TO
+            <br /> YOUR INBOX.
           </p>
         </div>
 
