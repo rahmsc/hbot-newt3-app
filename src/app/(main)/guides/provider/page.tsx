@@ -1,16 +1,17 @@
 import Airtable from "airtable";
 
 import GuidesListing from "~/components/guides/guide-listings";
-import CategoriesComponent from "~/components/guides/categories-component";
-import PopularGuidesAlternative from "~/components/guides/popular-guides-alternative";
 import ProviderGuideCarousel from "~/components/guides/provider-guide-carousel";
 import PopularPosts from "~/components/guides/popular-guides";
+import PopularGuidesAlternative from "~/components/guides/popular-guides-alternative";
 
 export interface GuideProp {
   id: string;
   fields: {
     "Guide Title": string;
     Guide: string;
+    Approved: boolean;
+    Hook: string;
   };
 }
 
@@ -43,8 +44,9 @@ async function getAirtableData(): Promise<GuideProp[]> {
   });
 }
 
-export default async function UserGuides() {
-  const guides = await getAirtableData();
+export default async function ProviderGuides() {
+  const allGuides = await getAirtableData();
+  const approvedGuides = allGuides.filter((guide) => guide.fields.Approved);
 
   return (
     <section className="flex w-full flex-col items-center justify-center space-y-12 pt-32">
@@ -52,16 +54,15 @@ export default async function UserGuides() {
         Wellness Provider Guides
       </h1>
       <div className="mx-auto mb-8 hidden w-full max-w-lg md:block">
-        <ProviderGuideCarousel guides={guides} />
+        <ProviderGuideCarousel guides={approvedGuides} />
       </div>
       <div className="md:hidden">
-        <PopularPosts guides={[...guides]} />
+        <PopularPosts guides={approvedGuides} />
       </div>
       <div className="hidden w-full max-w-4xl flex-col gap-8 px-4 md:flex md:flex-row">
-        <GuidesListing guides={[...guides]} />
+        <GuidesListing guides={approvedGuides} />
         <div className="w-full md:w-1/3">
-          <PopularGuidesAlternative guides={[...guides]} />
-          <CategoriesComponent />
+          <PopularGuidesAlternative guides={approvedGuides} />
         </div>
       </div>
     </section>

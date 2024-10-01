@@ -3,7 +3,6 @@
 import type React from "react";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { GuideDialog } from "./guide-dialog";
 import Link from "next/link";
 
 export interface GuideData {
@@ -11,6 +10,7 @@ export interface GuideData {
   fields: {
     "Guide Title": string;
     Guide: string;
+    Hook: string;
   };
 }
 
@@ -20,7 +20,7 @@ interface GuidesListingProps {
 
 const GuidesListing: React.FC<GuidesListingProps> = ({ guides }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedGuide, setSelectedGuide] = useState<GuideData | null>(null);
+  // const [selectedGuide, setSelectedGuide] = useState<GuideData | null>(null);
   const guidesPerPage = 6;
 
   const indexOfLastGuide = currentPage * guidesPerPage;
@@ -29,9 +29,9 @@ const GuidesListing: React.FC<GuidesListingProps> = ({ guides }) => {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  const handleOpenChange = (open: boolean) => {
-    if (!open) setSelectedGuide(null);
-  };
+  // const handleOpenChange = (open: boolean) => {
+  //   if (!open) setSelectedGuide(null);
+  // };
 
   return (
     <div className="w-2/3">
@@ -41,16 +41,16 @@ const GuidesListing: React.FC<GuidesListingProps> = ({ guides }) => {
             <div
               key={guide.id}
               className="cursor-pointer rounded-lg border p-4 shadow transition-colors hover:bg-gray-50"
-              onClick={() => setSelectedGuide(guide)}
-              onKeyDown={() => setSelectedGuide(guide)}
+              // onClick={() => setSelectedGuide(guide)}
+              // onKeyDown={() => setSelectedGuide(guide)}
             >
               <h3 className="text-xl font-bold">
                 {guide.fields["Guide Title"]}
               </h3>
               <p className="text-gray-600">
-                {guide.fields.Guide?.length > 150
-                  ? `${guide.fields.Guide.substring(0, 150)}...`
-                  : guide.fields.Guide}
+                {guide.fields.Hook?.length > 150
+                  ? `${guide.fields.Hook.substring(0, 150)}...`
+                  : guide.fields.Hook}
               </p>
             </div>
           </Link>

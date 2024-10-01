@@ -1,10 +1,9 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+// import { useState } from "react";
 import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
-import { GuideDialog } from "./guide-dialog";
 import Link from "next/link";
 
 interface GuideProp {
@@ -12,6 +11,7 @@ interface GuideProp {
   fields: {
     "Guide Title": string;
     Guide: string;
+    Hook: string;
   };
 }
 
@@ -20,18 +20,17 @@ interface PopularPostsProps {
 }
 
 const PopularPosts: React.FC<PopularPostsProps> = ({ guides }) => {
-  const [selectedGuide, setSelectedGuide] = useState<GuideProp | null>(null);
-  const imageUrl =
-    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/guides/";
+  // const [selectedGuide, setSelectedGuide] = useState<GuideProp | null>(null);
+  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/guides/header/";
 
   const truncateGuide = (content: string, maxLength: number) => {
     if (content?.length <= maxLength) return content;
     return `${content?.slice(0, maxLength).trim()}...`;
   };
 
-  const handleOpenChange = (open: boolean) => {
-    if (!open) setSelectedGuide(null);
-  };
+  // const handleOpenChange = (open: boolean) => {
+  //   if (!open) setSelectedGuide(null);
+  // };
 
   return (
     <div className="w-full max-w-4xl">
@@ -42,7 +41,7 @@ const PopularPosts: React.FC<PopularPostsProps> = ({ guides }) => {
             <Card
               key={guide.id}
               className="cursor-pointer overflow-hidden"
-              onClick={() => setSelectedGuide(guide)}
+              // onClick={() => setSelectedGuide(guide)}
             >
               <CardContent className="p-0">
                 <div className="relative h-48 w-full">
@@ -58,7 +57,7 @@ const PopularPosts: React.FC<PopularPostsProps> = ({ guides }) => {
                     {guide.fields["Guide Title"]}
                   </h6>
                   <p className="text-sm text-gray-600">
-                    {truncateGuide(guide.fields.Guide, 100)}
+                    {truncateGuide(guide.fields.Hook, 150)}
                   </p>
                 </div>
               </CardContent>

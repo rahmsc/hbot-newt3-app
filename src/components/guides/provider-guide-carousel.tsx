@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+// import { useState } from "react";
 import Image from "next/image";
 import {
   Carousel,
@@ -11,7 +11,7 @@ import {
   CarouselPrevious,
 } from "../ui/carousel";
 import { Card, CardContent } from "../ui/card";
-import { GuideDialog } from "./guide-dialog";
+// import { GuideDialog } from "./guide-dialog";
 import Link from "next/link";
 
 export interface GuideProp {
@@ -29,25 +29,24 @@ interface UserGuideCarouselProps {
 const ProviderGuideCarousel: React.FC<UserGuideCarouselProps> = ({
   guides,
 }) => {
-  const [selectedGuide, setSelectedGuide] = useState<GuideProp | null>(null);
-  const imageUrl =
-    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/guides/";
+  // const [selectedGuide, setSelectedGuide] = useState<GuideProp | null>(null);
+  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/guides/header/";
 
-  const handleOpenChange = (open: boolean) => {
-    if (!open) setSelectedGuide(null);
-  };
+  // const handleOpenChange = (open: boolean) => {
+  //   if (!open) setSelectedGuide(null);
+  // };
 
   return (
     <>
       <Carousel className="w-full max-w-6xl">
         <CarouselContent className="-ml-4">
           {guides.map((guide, index) => (
-            <CarouselItem key={guide.id} className="basis-1/3 pl-4">
+            <CarouselItem key={guide.id} className="basis-1/2 pl-4">
               <Link href={`/guides/provider/${guide.id}`}>
                 <Card>
                   <CardContent
                     className="flex aspect-square cursor-pointer items-center justify-center bg-opacity-0 p-2"
-                    onClick={() => setSelectedGuide(guide)}
+                    // onClick={() => setSelectedGuide(guide)}
                   >
                     <div className="relative h-full w-full">
                       <Image
@@ -71,14 +70,14 @@ const ProviderGuideCarousel: React.FC<UserGuideCarouselProps> = ({
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-      {selectedGuide && (
+      {/* {selectedGuide && (
         <GuideDialog
           isOpen={!!selectedGuide}
           onOpenChange={handleOpenChange}
           title={selectedGuide.fields["Guide Title"]}
           guideId={selectedGuide.id}
         />
-      )}
+      )} */}
     </>
   );
 };

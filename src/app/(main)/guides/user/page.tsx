@@ -1,15 +1,17 @@
 import Airtable from "airtable";
 import PopularPosts from "~/components/guides/popular-guides";
 import UserGuideCarousel from "~/components/guides/user-guide-carousel";
-import GuidesListing from "~/components/guides/guide-listings";
-import CategoriesComponent from "~/components/guides/categories-component";
-import PopularGuidesAlternative from "~/components/guides/popular-guides-alternative";
+// import GuidesListing from "~/components/guides/guide-listings";
+// import CategoriesComponent from "~/components/guides/categories-component";
+// import PopularGuidesAlternative from "~/components/guides/popular-guides-alternative";
 
 export interface GuideProp {
   id: string;
   fields: {
     "Guide Title": string;
     Guide: string;
+    Hook: string;
+    Approved: boolean;
   };
 }
 
@@ -43,22 +45,23 @@ async function getAirtableData(): Promise<GuideProp[]> {
 }
 
 export default async function UserGuides() {
-  const guides = await getAirtableData();
+  const allGuides = await getAirtableData();
+  const approvedGuides = allGuides.filter((guide) => guide.fields.Approved);
 
   return (
     <section className="flex w-full flex-col items-center justify-center space-y-12 pt-32">
       <h1 className="text-center text-3xl font-bold">Home User Guides</h1>
       <div className="mx-auto mb-8 hidden w-full max-w-lg md:block">
-        <UserGuideCarousel guides={guides} />
+        <UserGuideCarousel guides={approvedGuides} />
       </div>
-      <PopularPosts guides={[...guides]} />
-      <div className="hidden w-full max-w-4xl flex-col gap-8 px-4 md:flex md:flex-row">
-        <GuidesListing guides={[...guides]} />
+      <PopularPosts guides={approvedGuides} />
+      {/* <div className="hidden w-full max-w-4xl flex-col gap-8 px-4 md:flex md:flex-row">
+        <GuidesListing guides={approvedGuides} />
         <div className="w-full md:w-1/3">
-          <PopularGuidesAlternative guides={[...guides]} />
+          <PopularGuidesAlternative guides={approvedGuides} />
           <CategoriesComponent />
         </div>
-      </div>
+      </div> */}
     </section>
   );
 }

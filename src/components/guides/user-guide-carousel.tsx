@@ -1,17 +1,16 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "../ui/carousel";
-import { Card, CardContent } from "../ui/card";
-import { GuideDialog } from "./guide-dialog";
+} from "~/components/ui/carousel";
+import { Card, CardContent } from "~/components/ui/card";
 
 export interface GuideProp {
   id: string;
@@ -26,55 +25,42 @@ interface UserGuideCarouselProps {
 }
 
 const UserGuideCarousel: React.FC<UserGuideCarouselProps> = ({ guides }) => {
-  const [selectedGuide, setSelectedGuide] = useState<GuideProp | null>(null);
-  const imageUrl =
-    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/guides/";
-
-  const handleOpenChange = (open: boolean) => {
-    if (!open) setSelectedGuide(null);
-  };
+  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/guides/header/";
 
   return (
-    <>
-      <Carousel className="w-full max-w-lg">
-        <CarouselContent>
-          {guides.map((guide, index) => (
-            <CarouselItem key={guide.id}>
-              <Card>
-                <CardContent
-                  className="flex aspect-square cursor-pointer items-center justify-center bg-opacity-0 p-6"
-                  onClick={() => setSelectedGuide(guide)}
-                >
-                  <div className="relative h-full w-full">
-                    <Image
-                      src={`${imageUrl}${index + 1}.png`}
-                      alt={guide.fields["Guide Title"]}
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-4 text-white">
-                      <h2 className="text-lg font-semibold">
-                        {guide.fields["Guide Title"]}
-                      </h2>
-                    </div>
+    <Carousel
+      opts={{
+        align: "start",
+        loop: true,
+      }}
+      className="w-full max-w-lg"
+    >
+      <CarouselContent>
+        {guides.map((guide, index) => (
+          <CarouselItem key={guide.id}>
+            <Link href={`/guides/user/${guide.id}`} passHref>
+              <Card className="cursor-pointer">
+                <CardContent className="relative aspect-square p-0">
+                  <Image
+                    src={`${imageUrl}${index + 1}.png`}
+                    alt={guide.fields["Guide Title"]}
+                    layout="fill"
+                    objectFit="cover"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-4 text-white">
+                    <h2 className="text-lg font-semibold">
+                      {guide.fields["Guide Title"]}
+                    </h2>
                   </div>
                 </CardContent>
               </Card>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
-      {selectedGuide && (
-        <GuideDialog
-          isOpen={!!selectedGuide}
-          onOpenChange={handleOpenChange}
-          title={selectedGuide.fields["Guide Title"]}
-          guideId={selectedGuide.id}
-        />
-      )}
-    </>
+            </Link>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
   );
 };
 
