@@ -49,7 +49,7 @@ const ChamberMasonryGrid: React.FC = () => {
                 width={400}
                 height={item.height}
                 src={`${imageUrl}${item.id}.png`}
-                alt={item.title}
+                alt={item?.title[0] ?? ""}
                 loading="lazy"
                 style={{ height: item.height, width: "100%" }}
                 className="object-cover"
@@ -57,9 +57,16 @@ const ChamberMasonryGrid: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50" />
               {hoveredItem === Number(item.id) && showPopup && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 p-4 text-white transition-opacity duration-300">
-                  <h3 className="text-center font-sans text-lg font-semibold">
-                    {item.title}
-                  </h3>
+                  <div className="max-h-full overflow-y-auto">
+                    {item.title.map((line) => (
+                      <p
+                        key={item.id}
+                        className="mb-1 text-center font-sans text-sm font-light"
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
