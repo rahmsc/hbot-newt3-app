@@ -26,6 +26,9 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import LinkSection from "~/components/sections/link-section";
+import ParallaxImage from "~/components/parralex-image";
+import ImageSection from "~/components/sections/image-section";
+import { GuideDialog } from "~/components/guides/guide-dialog";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -75,6 +78,7 @@ const guideDetails = [
 export default function ContactPage() {
   const { toast } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState("custom");
+  const [isGuideDialogOpen, setIsGuideDialogOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -101,6 +105,21 @@ export default function ContactPage() {
     if (template) {
       form.setValue("message", template.content);
     }
+  };
+
+  const handleGuideDownload = () => {
+    setIsGuideDialogOpen(true);
+  };
+
+  const handleGuideSubmit = (email: string) => {
+    // Here you would typically send the email to your backend
+    console.log("Guide requested for email:", email);
+    toast({
+      title: "Guide Sent",
+      description:
+        "Your free HBOT Chamber Buyer's Guide has been sent to your email!",
+    });
+    setIsGuideDialogOpen(false);
   };
 
   return (
@@ -275,24 +294,20 @@ export default function ContactPage() {
           <Button
             size="lg"
             className="rounded-full bg-orange-600 px-8 py-6 text-lg font-semibold hover:bg-orange-600"
+            onClick={handleGuideDownload}
           >
             Download Your Free HBOT Chamber Buyer&apos;s Guide
           </Button>
         </div>
 
-        <div className="rounded-2xl bg-white bg-opacity-80 p-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900">
-            Enter The World Of HBOT...
-          </h2>
-          <h3 className="mb-6 text-2xl font-semibold text-gray-800">
-            And Renew From The Inside Out
-          </h3>
-          <p className="text-xl text-gray-700">
-            Experience a new level of wellness — with Oxygen
-          </p>
-        </div>
+        <ImageSection />
         <LinkSection />
       </div>
+      <GuideDialog
+        isOpen={isGuideDialogOpen}
+        onOpenChange={setIsGuideDialogOpen}
+        onSubmit={handleGuideSubmit}
+      />
     </div>
   );
 }

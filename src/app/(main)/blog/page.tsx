@@ -10,6 +10,7 @@ interface BlogPostFields {
   "Enriched Blog": string;
   Description: string;
   "URL Slug": string;
+  Approved: boolean;
 }
 
 export interface BlogPost {
@@ -47,19 +48,17 @@ async function getAirtableData(): Promise<BlogPost[]> {
 }
 
 export default async function BlogPage() {
-  const blogPosts = await getAirtableData();
+  const allBlogPosts = await getAirtableData();
+  const approvedBlogPosts = allBlogPosts.filter((post) => post.fields.Approved);
 
   return (
     <section className="flex w-full flex-col items-center justify-center pt-32">
       <div className="container mx-auto px-4 py-8">
         <h1 className="mb-8 text-3xl font-bold">Latest Blog Posts</h1>
         <div className="space-y-8">
-          {blogPosts.map((post) => (
+          {approvedBlogPosts.map((post) => (
             <Link href={`/blog/${post.fields["URL Slug"]}`} key={post.id}>
-              <div
-                key={post.id}
-                className="flex flex-col overflow-hidden rounded-lg border shadow-lg sm:flex-row"
-              >
+              <div className="flex flex-col overflow-hidden rounded-lg border shadow-lg sm:flex-row">
                 <div className="w-full sm:w-1/4 lg:w-1/5">
                   <Image
                     src={`https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`}
