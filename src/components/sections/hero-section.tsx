@@ -36,16 +36,16 @@ const HeroSection = () => {
           <div className="flex-1 md:pr-8">
             <h1 className="mb-6 text-2xl font-bold capitalize md:text-6xl">
               LEARN <br />
-              AND FIND THE <br />
+              AND DISCOVER THE <br />
               RIGHT <br />
               CHAMBER FOR <br />
               YOUR NEEDS
               <br />
             </h1>
             <p className="mb-8 text-lg text-gray-700">
-              Simplify hyperbaric oxygen therapy with access to the <br />
-              latest research, protocols and personalised guidance. <br />
-              Sustainable over time.
+              We help you simplify, source and integrate hyperbaric <br />
+              oxygen therapy with the latest research, personalised <br />
+              guidance and industry leading solutions.
             </p>
           </div>
 

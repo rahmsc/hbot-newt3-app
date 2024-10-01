@@ -4,11 +4,12 @@ export default function ImageSection() {
   return (
     <div className="relative h-[50vh] min-h-[400px] w-full overflow-hidden">
       <Image
-        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-09-27%20at%2010.41.17%E2%80%AFpm-dpZBWeYJM74uhA4kLo8pOs9iAIxq3e.png"
+        src="https://d144dqt8e4woe2.cloudfront.net/contact/clouds.png"
         alt="Person experiencing HBOT therapy"
         quality={100}
-        width={1000}
-        height={1000}
+        fill
+        style={{ objectFit: "cover" }}
+        priority
       />
       <div className="absolute inset-0 bg-black bg-opacity-30" />
       <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">

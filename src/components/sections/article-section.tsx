@@ -12,18 +12,18 @@ export default async function ArticleSection() {
 
   if (!randomArticles) {
     return (
-      <div className="py-8 text-center">
+      <div className="py-16 text-center">
         <Spinner size={100} className="text-orange-500" />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h2 className="mb-8 text-3xl font-semibold uppercase">
+    <div className="container mx-auto px-4 py-16">
+      <h2 className="mb-12 text-4xl font-semibold uppercase">
         What&rsquo;s New
       </h2>
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
         {randomArticles.map((article) => (
           <Link
             key={article.fields.id}
@@ -31,7 +31,7 @@ export default async function ArticleSection() {
             className="group"
           >
             <div className="flex flex-col items-center">
-              <div className="relative h-48 w-full overflow-hidden rounded-lg">
+              <div className="relative h-56 w-full overflow-hidden rounded-lg shadow-md transition-shadow duration-300 group-hover:shadow-lg">
                 <Image
                   src={`${imgUrl}${article.fields.id}.png`}
                   alt={article.fields.heading}
@@ -40,7 +40,7 @@ export default async function ArticleSection() {
                   className="transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
-              <h3 className="mt-4 text-center text-lg font-semibold transition-colors duration-300 group-hover:text-orange-500">
+              <h3 className="mt-6 text-center text-xl font-semibold transition-colors duration-300 group-hover:text-orange-500">
                 {article.fields.heading}
               </h3>
             </div>

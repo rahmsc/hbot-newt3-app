@@ -10,6 +10,7 @@ interface BlogPost {
     "Content Idea": string;
     Description: string;
     "URL Slug": string;
+    "ID Blog": number;
   };
 }
 
@@ -22,7 +23,7 @@ async function getAirtableData(): Promise<BlogPost[]> {
     base("Blogs")
       .select({
         view: "Grid view",
-        maxRecords: 3, // Limit to 10 records
+        maxRecords: 3, // Limit to 3 records
       })
       .all((err, records) => {
         if (err) {
@@ -53,11 +54,13 @@ const BlogSection = async () => {
         <div className="grid grid-cols-1 gap-8 pt-16 md:grid-cols-3">
           {blogPosts.map((post) => (
             <div key={post.id} className="flex flex-col items-center">
-              <div className="relative h-72 w-72 overflow-hidden rounded-lg border">
+              <div className="relative aspect-square w-3/4 overflow-hidden rounded-lg border">
                 <Image
-                  src={logoImage}
+                  src={`https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`}
                   alt={post.fields["Content Idea"]}
-                  className="absolute inset-0"
+                  fill
+                  style={{ objectFit: "cover" }}
+                  sizes="(max-width: 768px) 75vw, (max-width: 1200px) 37.5vw, 25vw"
                 />
               </div>
               <div className="p-4 text-center">
