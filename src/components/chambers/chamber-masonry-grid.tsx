@@ -58,14 +58,24 @@ const ChamberMasonryGrid: React.FC = () => {
               {hoveredItem === Number(item.id) && showPopup && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 p-4 text-white transition-opacity duration-300">
                   <div className="max-h-full overflow-y-auto">
-                    {item.title.map((line) => (
-                      <p
-                        key={item.id}
-                        className="mb-1 text-center font-sans text-sm font-light"
-                      >
-                        {line}
-                      </p>
-                    ))}
+                    {item.title.length > 0 && (
+                      <>
+                        <p className="mb-2 text-center font-sans text-base font-semibold underline">
+                          {item.title[0]}
+                        </p>
+                        <hr className="mb-2 border-t border-gray-400" />
+                      </>
+                    )}
+                    <ul className="list-inside list-disc">
+                      {item.title.slice(1).map((line, index) => (
+                        <li
+                          key={`${item.id}-${index}`}
+                          className="mb-1 text-left font-sans text-sm font-light"
+                        >
+                          {line}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               )}
