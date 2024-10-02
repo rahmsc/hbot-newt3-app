@@ -7,7 +7,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import Navbar from "~/components/navbar";
 import Footer from "~/components/sections/footer";
 import { Toaster } from "~/components/ui/toaster";
-import QuizPopup from "~/components/quiz-popup";
+// import QuizPopup from "~/components/quiz-popup";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -129,11 +129,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`font-sans ${inter.variable} ${editorsNote.variable}`}>
+    <html lang="en" className="overflow-x-hidden">
+      <body
+        className={`font-sans ${inter.variable} ${editorsNote.variable} w-full overflow-x-hidden`}
+      >
         <TRPCReactProvider>
           <Navbar />
-          <main className="flex min-h-screen flex-col items-center justify-between">
+          <main className="flex min-h-screen w-full flex-col items-center justify-between">
             {children}
           </main>
           <Footer />

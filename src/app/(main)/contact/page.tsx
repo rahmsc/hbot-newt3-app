@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import LinkSection from "~/components/sections/link-section";
-import ParallaxImage from "~/components/parralex-image";
+
 import ImageSection from "~/components/sections/image-section";
 import { GuideDialog } from "~/components/guides/guide-dialog";
 
@@ -112,7 +112,6 @@ export default function ContactPage() {
   };
 
   const handleGuideSubmit = (email: string) => {
-    // Here you would typically send the email to your backend
     console.log("Guide requested for email:", email);
     toast({
       title: "Guide Sent",
@@ -123,31 +122,31 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen pt-36">
+    <div className="min-h-screen pt-20 md:pt-36">
       <div className="container mx-auto px-4">
-        <div className="mb-16 text-center">
-          <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl">
+        <div className="mb-8 px-4 text-center md:mb-16">
+          <h1 className="mb-4 text-3xl font-bold text-gray-900 md:mb-6 md:text-4xl lg:text-5xl">
             Considering an HBOT Chamber for Your Home or Clinic?
           </h1>
-          <p className="mb-8 text-xl text-gray-700">
+          <p className="mb-4 text-lg text-gray-700 md:mb-8 md:text-xl">
             Our comprehensive guide will help you make an informed decision and
             unlock the potential of this cutting-edge treatment.
           </p>
-          <h2 className="text-2xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-gray-800 md:text-2xl">
             Get Your Free Guide To HBOT Chambers Below
           </h2>
         </div>
 
-        <div className="mb-16 overflow-hidden rounded-2xl bg-white shadow-lg">
+        <div className="mb-8 overflow-hidden rounded-2xl bg-white shadow-lg md:mb-16">
           <div className="flex flex-col md:flex-row">
-            <div className="w-full space-y-6 p-8 md:w-1/2">
-              <h2 className="text-center text-3xl font-bold text-gray-900">
+            <div className="w-full space-y-4 p-4 md:w-1/2 md:space-y-6 md:p-8">
+              <h2 className="text-center text-2xl font-bold text-gray-900 md:text-3xl">
                 Contact Us
               </h2>
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-6"
+                  className="space-y-4 md:space-y-6"
                 >
                   <FormField
                     control={form.control}
@@ -268,32 +267,36 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div className="mb-16">
-          <h2 className="mb-8 text-center text-3xl font-bold text-gray-900">
+        <div className="mb-8 md:mb-16">
+          <h2 className="mb-4 p-2 text-center text-2xl font-bold text-gray-900 md:mb-8 md:text-3xl">
             What&apos;s Included In Our Free Guide
           </h2>
-          <ul className="grid gap-6 md:grid-cols-2">
+          <ul className="grid gap-4 md:grid-cols-2 md:gap-6">
             {guideDetails.map((detail, index) => (
               <li
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 key={index}
-                className="flex items-start rounded-lg bg-white p-4 shadow-md"
+                className="flex items-start rounded-lg bg-white p-3 shadow-md md:p-4"
               >
-                <span className="mr-4 text-2xl text-orange-500">•</span>
-                <span className="text-gray-700">{detail}</span>
+                <span className="mr-2 text-xl text-orange-500 md:mr-4 md:text-2xl">
+                  •
+                </span>
+                <span className="text-sm text-gray-700 md:text-base">
+                  {detail}
+                </span>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="mb-16 text-center">
-          <p className="mb-8 text-xl text-gray-700">
+        <div className="mb-8 text-center md:mb-16">
+          <p className="mb-4 px-4 text-lg text-gray-700 md:mb-8 md:text-xl">
             Have clarity when exploring HBOT with our complete guide and make
             the best decision for your home or business and clients.
           </p>
           <Button
             size="lg"
-            className="rounded-full bg-orange-600 px-8 py-6 text-lg font-semibold hover:bg-orange-600"
+            className="rounded-full bg-orange-600 px-6 py-4 text-base font-semibold hover:bg-orange-600 md:px-8 md:py-6 md:text-lg"
             onClick={handleGuideDownload}
           >
             Download Your Free HBOT Chamber Buyer&apos;s Guide
