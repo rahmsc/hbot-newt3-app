@@ -5,6 +5,10 @@ import getConditionListData, {
 } from "~/utils/airtable/getConditionListData";
 import ResearchClient from "../../../components/article/research-client";
 import Spinner from "~/components/spinner";
+import {
+  type ConditionWithCount,
+  getConditionsWithCounts,
+} from "~/utils/airtable/getConditionsWithCount";
 
 function ResearchLoading() {
   return (
@@ -23,6 +27,9 @@ interface UniqueCondition {
 export default async function ResearchPage() {
   const conditionListData: FilteredArticleItemProps[] =
     await getConditionListData();
+
+  const conditionsWithCounts: ConditionWithCount[] =
+    await getConditionsWithCounts();
 
   const conditionList: UniqueCondition[] = conditionListData
     .filter(
@@ -50,14 +57,14 @@ export default async function ResearchPage() {
   }
 
   // Convert the Map to an array of UniqueCondition objects
-  const uniqueConditions = Array.from(uniqueConditionsMap.values());
+  // const uniqueConditions = Array.from(uniqueConditionsMap.values());
 
   return (
     <section className="flex w-full flex-col items-center justify-center pt-32">
       <div className="container mx-auto px-4 py-8">
         <h1 className="mb-8 text-4xl font-bold">Research Articles</h1>
         <Suspense fallback={<ResearchLoading />}>
-          <ResearchClient uniqueConditions={uniqueConditions} />
+          <ResearchClient conditionsWithCounts={conditionsWithCounts} />
         </Suspense>
       </div>
     </section>

@@ -5,18 +5,19 @@ import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
 
-interface UniqueCondition {
+interface ConditionWithCount {
   condition: string;
   category: string;
   conditionTag: string;
+  articleCount: number;
 }
 
 interface ResearchClientProps {
-  uniqueConditions: UniqueCondition[];
+  conditionsWithCounts: ConditionWithCount[];
 }
 
 export default function ResearchClient({
-  uniqueConditions,
+  conditionsWithCounts,
 }: ResearchClientProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const router = useRouter();
@@ -32,15 +33,19 @@ export default function ResearchClient({
     router.push(`/research/${conditionTag}`);
   };
 
+  const validConditions = conditionsWithCounts.filter(
+    (item) => item.condition && item.condition.trim() !== "",
+  );
+
   const categories = [
     "All",
-    ...new Set(uniqueConditions.map((item) => item.category)),
-  ];
+    ...new Set(validConditions.map((item) => item.category)),
+  ].filter((category) => category && category.trim() !== "");
 
   const filteredConditions =
     selectedCategory === "All"
-      ? uniqueConditions
-      : uniqueConditions.filter((item) => item.category === selectedCategory);
+      ? validConditions
+      : validConditions.filter((item) => item.category === selectedCategory);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -148,10 +153,8 @@ export default function ResearchClient({
             </div>
             <div className="flex-1 text-right">
               <p className="text-sm text-muted-foreground">
-                {
-                  filteredConditions.filter((c) => c.category === item.category)
-                    .length
-                }
+                {item.articleCount}{" "}
+                {item.articleCount === 1 ? "article" : "articles"}
               </p>
             </div>
           </div>
