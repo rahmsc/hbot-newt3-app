@@ -17,9 +17,7 @@ export interface BlogPagePost {
   };
 }
 
-export async function getBlogPostBySlug(
-  slug: string,
-): Promise<BlogPagePost | null> {
+async function getBlogPostBySlug(slug: string): Promise<BlogPagePost | null> {
   const base = new Airtable({
     apiKey: process.env.AIRTABLE_API_KEY,
   }).base(process.env.AIRTABLE_BASE_ID ?? "");
