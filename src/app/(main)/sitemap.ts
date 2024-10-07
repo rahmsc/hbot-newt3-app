@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 import getArticlesByCondition from "~/utils/airtable/getArticlesByCondition";
 import { getAllGuides } from "~/utils/airtable/getAllGuides";
-import { getBlogPosts } from "./blog/page";
+import { getBlogPosts } from "~/utils/airtable/blogs/getBlogPosts";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.hyperbarichq.com";
