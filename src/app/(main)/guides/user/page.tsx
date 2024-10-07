@@ -2,6 +2,7 @@ import Airtable from "airtable";
 import PopularPosts from "~/components/guides/popular-guides";
 import UserGuideCarousel from "~/components/guides/user-guide-carousel";
 import type { Metadata } from "next";
+import Script from "next/script";
 
 export interface GuideProp {
   id: string;
@@ -69,7 +70,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: "https://www.hyperbarichq.com/guides/user",
       images: [
         {
-          url: "https://hbot-hq.com/images/hbot-guides-og.jpg",
+          url: "https://www.hyperbarichq.com/images/hbot-guides-og.jpg",
           width: 1200,
           height: 630,
           alt: "HBOT Home User Guides",
@@ -80,7 +81,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: "HBOT Home User Guides | HBOT-HQ",
       description: `Discover ${guideCount} expert guides for home HBOT use. Learn about ${topGuides}, and more.`,
-      images: ["https://hbot-hq.com/images/hbot-guides-twitter.jpg"],
+      images: ["https://www.hyperbarichq.com/images/hbot-guides-twitter.jpg"],
     },
   };
 }
@@ -89,13 +90,72 @@ export default async function UserGuides() {
   const allGuides = await getAirtableData();
   const approvedGuides = allGuides.filter((guide) => guide.fields.Approved);
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": "https://www.hyperbarichq.com/guides/user/#webpage",
+    url: "https://www.hyperbarichq.com/guides/user/",
+    name: "HBOT Home User Guides | HBOT-HQ",
+    isPartOf: {
+      "@id": "https://www.hyperbarichq.com/#website",
+    },
+    description: `Explore our collection of ${approvedGuides.length} home user guides for Hyperbaric Oxygen Therapy (HBOT).`,
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          item: {
+            "@id": "https://www.hyperbarichq.com/",
+            name: "Home",
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          item: {
+            "@id": "https://www.hyperbarichq.com/guides/",
+            name: "Guides",
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          item: {
+            "@id": "https://www.hyperbarichq.com/guides/user/",
+            name: "Home User Guides",
+          },
+        },
+      ],
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: approvedGuides.map((guide, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "HowTo",
+          name: guide.fields["Guide Title"],
+          description: guide.fields.Hook,
+          url: `https://www.hyperbarichq.com/guides/user/${guide.id}`,
+        },
+      })),
+    },
+  };
+
   return (
-    <section className="flex w-full flex-col items-center justify-center space-y-12 pt-32">
-      <h1 className="text-center text-3xl font-bold">Home User Guides</h1>
-      <div className="mx-auto mb-8 hidden w-full max-w-lg md:block">
-        <UserGuideCarousel guides={approvedGuides} />
-      </div>
-      <PopularPosts guides={approvedGuides} />
-    </section>
+    <>
+      <Script id="structured-data" type="application/ld+json">
+        {JSON.stringify(structuredData)}
+      </Script>
+      <section className="flex w-full flex-col items-center justify-center space-y-12 pt-32">
+        <h1 className="text-center text-3xl font-bold">Home User Guides</h1>
+        <div className="mx-auto mb-8 hidden w-full max-w-lg md:block">
+          <UserGuideCarousel guides={approvedGuides} />
+        </div>
+        <PopularPosts guides={approvedGuides} />
+      </section>
+    </>
   );
 }

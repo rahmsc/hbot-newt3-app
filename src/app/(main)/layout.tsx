@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import Navbar from "~/components/navbar";
 import Footer from "~/components/sections/footer";
 import { Toaster } from "~/components/ui/toaster";
+import Script from "next/script";
 // import QuizPopup from "~/components/quiz-popup";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -149,7 +150,7 @@ export const metadata: Metadata = {
       "Comprehensive platform for Hyperbaric Oxygen Therapy research, articles, guides, and community support.",
     images: [
       {
-        url: "https://hbot-hq.com/og-image.jpg",
+        url: "https://www.hyperbarichq.com/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "HBOT-HQ: Advancing Hyperbaric Oxygen Therapy",
@@ -161,7 +162,7 @@ export const metadata: Metadata = {
     title: "HBOT-HQ: Hyperbaric Oxygen Therapy Research and Knowledge",
     description:
       "Comprehensive platform for Hyperbaric Oxygen Therapy research, articles, guides, and community support.",
-    images: ["https://hbot-hq.com/twitter-image.jpg"],
+    images: ["https://www.hyperbarichq.com/twitter-image.jpg"],
     creator: "@hyperbarichq",
   },
   robots: {
@@ -186,8 +187,66 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.hyperbarichq.com/#website",
+        url: "https://www.hyperbarichq.com/",
+        name: "HBOT-HQ",
+        description: "Hyperbaric Oxygen Therapy Research and Knowledge",
+        publisher: {
+          "@id": "https://www.hyperbarichq.com/#organization",
+        },
+        potentialAction: [
+          {
+            "@type": "SearchAction",
+            target: {
+              "@type": "EntryPoint",
+              urlTemplate:
+                "https://www.hyperbarichq.com/search?q={search_term_string}",
+            },
+            "query-input": "required name=search_term_string",
+          },
+        ],
+        inLanguage: "en-AU",
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.hyperbarichq.com/#organization",
+        name: "HBOT-HQ",
+        url: "https://www.hyperbarichq.com/",
+        logo: {
+          "@type": "ImageObject",
+          inLanguage: "en-AU",
+          "@id": "https://www.hyperbarichq.com/#/schema/logo/image/",
+          url: "https://www.hyperbarichq.com/logo/hbothq_final_logo.png",
+          contentUrl: "https://www.hyperbarichq.com/logo/hbothq_final_logo.png",
+          width: 512,
+          height: 512,
+          caption: "HBOT-HQ",
+        },
+        image: {
+          "@id": "https://www.hyperbarichq.com/#/schema/logo/image/",
+        },
+        sameAs: [
+          "https://www.facebook.com/hyperbarichq",
+          "https://www.twitter.com/hyperbarichq",
+          "https://www.linkedin.com/company/hyperbarichq",
+          "https://www.youtube.com/channel/hyperbarichq",
+        ],
+      },
+    ],
+  };
+
   return (
     <html lang="en" className="overflow-x-hidden">
+      <head>
+        <Script id="structured-data" type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </Script>
+      </head>
       <body
         className={`font-sans ${inter.variable} ${editorsNote.variable} w-full overflow-x-hidden`}
       >
