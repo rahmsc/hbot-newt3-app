@@ -1,0 +1,20 @@
+# HBOT-HQ Robots.txt
+# https://www.hyperbarichq.com
+
+# Allow all well-behaved bots
+User-agent: *
+Allow: /
+
+# Optimize crawling
+Crawl-delay: 5
+
+# Disallow potentially sensitive or unnecessary areas
+Disallow: /api/
+Disallow: /_next/
+Disallow: /*?*  # Disallow URL parameters to avoid duplicate content
+
+# Sitemaps
+Sitemap: https://www.hyperbarichq.com/sitemap.xml
+
+# Specify preferred domain
+Host: https://www.hyperbarichq.com

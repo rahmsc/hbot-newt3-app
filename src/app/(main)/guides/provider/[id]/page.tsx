@@ -17,7 +17,7 @@ export interface GuidePageProp {
   };
 }
 
-async function getGuideById(id: string): Promise<GuidePageProp | null> {
+export async function getGuideById(id: string): Promise<GuidePageProp | null> {
   const base = new Airtable({
     apiKey: process.env.AIRTABLE_API_KEY,
   }).base(process.env.AIRTABLE_BASE_ID ?? "");

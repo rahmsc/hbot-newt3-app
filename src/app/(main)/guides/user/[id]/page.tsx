@@ -14,6 +14,7 @@ export interface GuidePageProp {
     "Guide Heading": string;
     "Guide Introduction": string;
     "Guide Body": string;
+    Approved: boolean;
   };
 }
 

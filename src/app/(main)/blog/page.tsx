@@ -20,7 +20,7 @@ export interface BlogPost {
   fields: BlogPostFields;
 }
 
-async function getAirtableData(): Promise<BlogPost[]> {
+export async function getBlogPosts(): Promise<BlogPost[]> {
   const base = new Airtable({
     apiKey: process.env.AIRTABLE_API_KEY,
   }).base(process.env.AIRTABLE_BASE_ID ?? "");
@@ -50,7 +50,7 @@ async function getAirtableData(): Promise<BlogPost[]> {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const allBlogPosts = await getAirtableData();
+  const allBlogPosts = await getBlogPosts();
   const approvedBlogPosts = allBlogPosts.filter((post) => post.fields.Approved);
 
   const postCount = approvedBlogPosts.length;
@@ -86,7 +86,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function BlogPage() {
-  const allBlogPosts = await getAirtableData();
+  const allBlogPosts = await getBlogPosts();
   const approvedBlogPosts = allBlogPosts.filter((post) => post.fields.Approved);
 
   const structuredData = {

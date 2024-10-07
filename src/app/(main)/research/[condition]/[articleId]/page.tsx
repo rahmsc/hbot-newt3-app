@@ -1,94 +1,135 @@
-import { HydrateClient } from "~/trpc/server";
-import ArticleSection from "~/components/sections/article-section";
-import BlogSection from "~/components/sections/blog-section";
-import ContactSection from "~/components/sections/contact-section";
-import EmailInputForm from "~/components/sections/email-input-form";
-import HeroSection from "~/components/sections/hero-section";
-import LinkSection from "~/components/sections/link-section";
-import ImageSection from "~/components/sections/image-section";
+import { Suspense } from "react";
+import ArticleContent from "~/components/article/article-content";
+import CallToAction from "~/components/sections/call-to-action";
+import Spinner from "~/components/spinner";
+import getArticleById from "~/utils/airtable/getArticleById";
 import type { Metadata } from "next";
 import Script from "next/script";
 
-export const metadata: Metadata = {
-  title: "Welcome to HBOT-HQ | Hyperbaric Oxygen Therapy Research",
-  description:
-    "Discover cutting-edge Hyperbaric Oxygen Therapy research, articles, and community support at HBOT-HQ.",
-  openGraph: {
-    title: "HBOT-HQ: Your Hub for Hyperbaric Oxygen Therapy",
-    description:
-      "Explore the latest in HBOT research, connect with experts, and join our thriving community.",
-    images: [
-      {
-        url: "https://hbot-hq.com/images/home-og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "HBOT-HQ Homepage",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "HBOT-HQ: Your Hub for Hyperbaric Oxygen Therapy",
-    description:
-      "Explore the latest in HBOT research, connect with experts, and join our thriving community.",
-    images: ["https://hbot-hq.com/images/home-twitter-image.jpg"],
-  },
-};
+function ArticleLoading() {
+  return (
+    <div className="flex h-64 items-center justify-center">
+      <Spinner size={100} className="text-orange-500" />
+    </div>
+  );
+}
 
-export default async function Home(): Promise<JSX.Element> {
+export async function generateMetadata({
+  params,
+}: {
+  params: { articleId: string };
+}): Promise<Metadata> {
+  const foundArticles = await getArticleById(params.articleId);
+  const foundArticle = foundArticles[0];
+
+  if (!foundArticle) {
+    return {
+      title: "Article Not Found",
+      description: "The requested article could not be found.",
+    };
+  }
+
+  return {
+    title: `${foundArticle.fields.heading} | HBOT-HQ Research`,
+    description:
+      foundArticle.fields.introduction ||
+      "Read about this Hyperbaric Oxygen Therapy research study on HBOT-HQ.",
+    keywords: [
+      "HBOT",
+      "Hyperbaric Oxygen Therapy",
+      "Research",
+      "Medical Study",
+      foundArticle.fields.condition,
+      ...(foundArticle.fields.keywords || []),
+    ],
+    authors: [{ name: foundArticle.fields.authors }],
+    openGraph: {
+      title: foundArticle.fields.heading,
+      description: foundArticle.fields.introduction,
+      type: "article",
+      url: `https://www.hyperbarichq.com/research/${foundArticle.fields.conditionTag}/${foundArticle.id}`,
+      images: [
+        {
+          url: `https://d144dqt8e4woe2.cloudfront.net/research-articles/${foundArticle.fields.id}.png`,
+          width: 1200,
+          height: 630,
+          alt: foundArticle.fields.heading,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: foundArticle.fields.heading,
+      description: foundArticle.fields.introduction,
+      images: [
+        `https://d144dqt8e4woe2.cloudfront.net/research-articles/${foundArticle.fields.id}.png`,
+      ],
+    },
+  };
+}
+
+const StudyPage = async ({
+  params,
+}: {
+  params: {
+    articleId: string;
+  };
+}) => {
+  const { articleId } = params;
+  const foundArticles = await getArticleById(articleId);
+  const foundArticle = foundArticles[0]; // Get the first (and presumably only) article
+
+  if (!foundArticle) {
+    return <div>Article not found</div>;
+  }
+
   const structuredData = {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": "https://hbot-hq.com/#website",
-        url: "https://hbot-hq.com/",
-        name: "HBOT-HQ",
-        description: "Your Hub for Hyperbaric Oxygen Therapy",
-        publisher: {
-          "@id": "https://hbot-hq.com/#organization",
-        },
-        inLanguage: "en-US",
+    "@type": "MedicalScholarlyArticle",
+    headline: foundArticle.fields.heading,
+    datePublished: foundArticle.fields.publishedDate,
+    dateModified: foundArticle.fields.publishedDate,
+    author: {
+      "@type": "Person",
+      name: foundArticle.fields.authors,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "HBOT-HQ",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.hyperbarichq.com/logo.png",
       },
-      {
-        "@type": "Organization",
-        "@id": "https://hbot-hq.com/#organization",
-        name: "HBOT-HQ",
-        url: "https://hbot-hq.com/",
-        logo: {
-          "@type": "ImageObject",
-          url: "https://hbot-hq.com/logo.png",
-          contentUrl: "https://hbot-hq.com/logo.png",
-          width: 512,
-          height: 512,
-          caption: "HBOT-HQ Logo",
-        },
-        sameAs: [
-          "https://www.facebook.com/hbothq",
-          "https://twitter.com/hbothq",
-          "https://www.linkedin.com/company/hbot-hq",
-          "https://www.youtube.com/channel/hbothq",
-        ],
-      },
-    ],
+    },
+    description: foundArticle.fields.introduction,
+    url: `https://www.hyperbarichq.com/research/${foundArticle.fields.conditionTag}/${foundArticle.id}`,
+    image: `https://d144dqt8e4woe2.cloudfront.net/research-articles/${foundArticle.fields.id}.png`,
+    medicalCondition: {
+      "@type": "MedicalCondition",
+      name: foundArticle.fields.condition,
+    },
+    keywords: foundArticle.fields.keywords,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://www.hyperbarichq.com/research/${foundArticle.fields.conditionTag}/${foundArticle.id}`,
+    },
   };
 
   return (
-    <HydrateClient>
+    <div className="w-full">
       <Script id="structured-data" type="application/ld+json">
         {JSON.stringify(structuredData)}
       </Script>
-      <main className="flex w-full flex-row items-center justify-center pt-32">
-        <div>
-          <HeroSection />
-          <LinkSection />
-          <ArticleSection />
-          <ImageSection />
-          <BlogSection />
-          <EmailInputForm />
-          <ContactSection />
+      <section className="flex w-full items-center justify-center pt-32">
+        <div className="w-full max-w-screen-lg px-8 py-16">
+          <Suspense fallback={<ArticleLoading />}>
+            <ArticleContent foundArticle={foundArticle} />
+          </Suspense>
         </div>
-      </main>
-    </HydrateClient>
+      </section>
+      <CallToAction />
+    </div>
   );
-}
+};
+
+export default StudyPage;
