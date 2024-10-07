@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import getArticlesByCondition from "~/utils/airtable/getArticlesByCondition";
-import { getAllGuides } from "~/utils/airtable/getAllGuides";
+import { getAllGuides } from "~/utils/airtable/guides/getAllGuides";
 import { getBlogPosts } from "~/utils/airtable/blogs/getBlogPosts";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
