@@ -1,9 +1,7 @@
 import Airtable from "airtable";
 import PopularPosts from "~/components/guides/popular-guides";
 import UserGuideCarousel from "~/components/guides/user-guide-carousel";
-// import GuidesListing from "~/components/guides/guide-listings";
-// import CategoriesComponent from "~/components/guides/categories-component";
-// import PopularGuidesAlternative from "~/components/guides/popular-guides-alternative";
+import type { Metadata } from "next";
 
 export interface GuideProp {
   id: string;
@@ -44,6 +42,49 @@ async function getAirtableData(): Promise<GuideProp[]> {
   });
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+  const allGuides = await getAirtableData();
+  const approvedGuides = allGuides.filter((guide) => guide.fields.Approved);
+
+  const guideCount = approvedGuides.length;
+  const topGuides = approvedGuides
+    .slice(0, 3)
+    .map((guide) => guide.fields["Guide Title"])
+    .join(", ");
+
+  return {
+    title: "HBOT Home User Guides | HBOT-HQ",
+    description: `Explore our collection of ${guideCount} home user guides for Hyperbaric Oxygen Therapy (HBOT). Learn about ${topGuides}, and more.`,
+    keywords: [
+      "HBOT",
+      "Hyperbaric Oxygen Therapy",
+      "Home User Guides",
+      "DIY HBOT",
+      "HBOT Instructions",
+    ],
+    openGraph: {
+      title: "HBOT Home User Guides",
+      description: `Access ${guideCount} comprehensive guides for home HBOT use. Expert advice on ${topGuides}, and other HBOT topics.`,
+      type: "website",
+      url: "https://www.hyperbarichq.com/guides/user",
+      images: [
+        {
+          url: "https://hbot-hq.com/images/hbot-guides-og.jpg",
+          width: 1200,
+          height: 630,
+          alt: "HBOT Home User Guides",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "HBOT Home User Guides | HBOT-HQ",
+      description: `Discover ${guideCount} expert guides for home HBOT use. Learn about ${topGuides}, and more.`,
+      images: ["https://hbot-hq.com/images/hbot-guides-twitter.jpg"],
+    },
+  };
+}
+
 export default async function UserGuides() {
   const allGuides = await getAirtableData();
   const approvedGuides = allGuides.filter((guide) => guide.fields.Approved);
@@ -55,13 +96,6 @@ export default async function UserGuides() {
         <UserGuideCarousel guides={approvedGuides} />
       </div>
       <PopularPosts guides={approvedGuides} />
-      {/* <div className="hidden w-full max-w-4xl flex-col gap-8 px-4 md:flex md:flex-row">
-        <GuidesListing guides={approvedGuides} />
-        <div className="w-full md:w-1/3">
-          <PopularGuidesAlternative guides={approvedGuides} />
-          <CategoriesComponent />
-        </div>
-      </div> */}
     </section>
   );
 }

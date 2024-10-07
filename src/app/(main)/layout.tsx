@@ -98,9 +98,23 @@ const editorsNote = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "HBOT-HQ",
+  title: {
+    default: "HBOT-HQ | Hyperbaric Oxygen Therapy Research and Knowledge",
+    template: "%s | HBOT-HQ",
+  },
   description:
-    "HBOT-HQ is a platform for hyperbaric oxygen therapy research and knowledge.",
+    "HBOT-HQ is a platform for hyperbaric oxygen therapy research and knowledge, providing articles, guides, and community support.",
+  keywords: [
+    "Hyperbaric Oxygen Therapy",
+    "HBOT",
+    "Oxygen Therapy",
+    "Medical Research",
+    "Health",
+    "Wellbeing",
+  ],
+  authors: [{ name: "HBOT-HQ Team" }],
+  creator: "HBOT-HQ",
+  publisher: "HBOT-HQ",
   icons: [
     { rel: "icon", url: "/logo/hbot_logo_svg.svg" },
     {
@@ -121,6 +135,50 @@ export const metadata: Metadata = {
       url: "/logo/hbothq_final_logo.png",
     },
   ],
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+  openGraph: {
+    type: "website",
+    locale: "en_AU",
+    url: "https://www.hyperbarichq.com",
+    siteName: "HBOT-HQ",
+    title: "HBOT-HQ: Hyperbaric Oxygen Therapy Research and Knowledge",
+    description:
+      "Comprehensive platform for Hyperbaric Oxygen Therapy research, articles, guides, and community support.",
+    images: [
+      {
+        url: "https://hbot-hq.com/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "HBOT-HQ: Advancing Hyperbaric Oxygen Therapy",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HBOT-HQ: Hyperbaric Oxygen Therapy Research and Knowledge",
+    description:
+      "Comprehensive platform for Hyperbaric Oxygen Therapy research, articles, guides, and community support.",
+    images: ["https://hbot-hq.com/twitter-image.jpg"],
+    creator: "@hyperbarichq",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "your-google-site-verification-code",
+    yandex: "your-yandex-verification-code",
+  },
 };
 
 export default function RootLayout({

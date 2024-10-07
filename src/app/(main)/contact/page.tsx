@@ -29,6 +29,8 @@ import LinkSection from "~/components/sections/link-section";
 
 import ImageSection from "~/components/sections/image-section";
 import { GuideDialog } from "~/components/guides/guide-dialog";
+import type { Metadata } from "next";
+import Script from "next/script";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -75,6 +77,34 @@ const guideDetails = [
   "Financing Options: Flexible ways to efficiently integrate HBOT.",
 ];
 
+export const metadata: Metadata = {
+  title: "Contact HBOT-HQ | Get Your Free HBOT Chamber Guide",
+  description:
+    "Contact HBOT-HQ for expert guidance on Hyperbaric Oxygen Therapy chambers. Download our free comprehensive guide to make an informed decision for your home or clinic.",
+  openGraph: {
+    title: "Contact HBOT-HQ | Free HBOT Chamber Guide",
+    description:
+      "Get expert advice and a free comprehensive guide on HBOT chambers for your home or clinic. Make an informed decision with HBOT-HQ.",
+    url: "https://www.hyperbarichq.com/contact",
+    type: "website",
+    images: [
+      {
+        url: "https://hbot-hq.com/images/contact-og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "HBOT-HQ Contact and Free Guide",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact HBOT-HQ | Free HBOT Chamber Guide",
+    description:
+      "Get expert advice and a free guide on HBOT chambers. Make an informed decision for your home or clinic with HBOT-HQ.",
+    images: ["https://hbot-hq.com/images/contact-twitter-image.jpg"],
+  },
+};
+
 export default function ContactPage() {
   const { toast } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState("custom");
@@ -120,197 +150,227 @@ export default function ContactPage() {
     });
     setIsGuideDialogOpen(false);
   };
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: "HBOT-HQ Contact Page",
+    description:
+      "Contact HBOT-HQ for expert guidance on Hyperbaric Oxygen Therapy chambers and get a free comprehensive guide.",
+    url: "https://www.hyperbarichq.com/contact",
+    mainEntity: {
+      "@type": "Organization",
+      name: "HBOT-HQ",
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        email: "hello@hyperbarichq.com",
+      },
+    },
+    offers: {
+      "@type": "Offer",
+      name: "Free HBOT Chamber Buyer's Guide",
+      description:
+        "Comprehensive guide to help you make an informed decision about HBOT chambers for your home or clinic.",
+      price: "0",
+      priceCurrency: "USD",
+    },
+  };
 
   return (
-    <div className="min-h-screen pt-20 md:pt-36">
-      <div className="container mx-auto px-4">
-        <div className="mb-8 px-4 text-center md:mb-16">
-          <h1 className="mb-4 text-3xl font-bold text-gray-900 md:mb-6 md:text-4xl lg:text-5xl">
-            Considering an HBOT Chamber for Your Home or Clinic?
-          </h1>
-          <p className="mb-4 text-lg text-gray-700 md:mb-8 md:text-xl">
-            Our comprehensive guide will help you make an informed decision and
-            unlock the potential of this cutting-edge treatment.
-          </p>
-          <h2 className="text-xl font-semibold text-gray-800 md:text-2xl">
-            Get Your Free Guide To HBOT Chambers Below
-          </h2>
-        </div>
+    <>
+      <Script id="structured-data" type="application/ld+json">
+        {JSON.stringify(structuredData)}
+      </Script>
+      <div className="min-h-screen pt-20 md:pt-36">
+        <div className="container mx-auto px-4">
+          <div className="mb-8 px-4 text-center md:mb-16">
+            <h1 className="mb-4 text-3xl font-bold text-gray-900 md:mb-6 md:text-4xl lg:text-5xl">
+              Considering an HBOT Chamber for Your Home or Clinic?
+            </h1>
+            <p className="mb-4 text-lg text-gray-700 md:mb-8 md:text-xl">
+              Our comprehensive guide will help you make an informed decision
+              and unlock the potential of this cutting-edge treatment.
+            </p>
+            <h2 className="text-xl font-semibold text-gray-800 md:text-2xl">
+              Get Your Free Guide To HBOT Chambers Below
+            </h2>
+          </div>
 
-        <div className="mb-8 overflow-hidden rounded-2xl bg-white shadow-lg md:mb-16">
-          <div className="flex flex-col md:flex-row">
-            <div className="w-full space-y-4 p-4 md:w-1/2 md:space-y-6 md:p-8">
-              <h2 className="text-center text-2xl font-bold text-gray-900 md:text-3xl">
-                Contact Us
-              </h2>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4 md:space-y-6"
-                >
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Your name"
-                            {...field}
-                            className="rounded-md"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Your email"
-                            {...field}
-                            className="rounded-md"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="subject"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Subject</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Message subject"
-                            {...field}
-                            className="rounded-md"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormItem>
-                    <FormLabel>Message Template</FormLabel>
-                    <Select
-                      onValueChange={handleTemplateChange}
-                      defaultValue={selectedTemplate}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="rounded-md">
-                          <SelectValue placeholder="Select a message template" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {messageTemplates.map((template) => (
-                          <SelectItem key={template.id} value={template.id}>
-                            {template.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                  <FormField
-                    control={form.control}
-                    name="message"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Message</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Your message"
-                            {...field}
-                            className="min-h-[150px] rounded-md"
-                            value={
-                              selectedTemplate === "custom"
-                                ? field.value
-                                : (messageTemplates.find(
-                                    (t) => t.id === selectedTemplate,
-                                  )?.content ?? "")
-                            }
-                            onChange={(e) => {
-                              field.onChange(e);
-                              setSelectedTemplate("custom");
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    type="submit"
-                    className="w-full rounded-md bg-orange-500 hover:bg-orange-600"
+          <div className="mb-8 overflow-hidden rounded-2xl bg-white shadow-lg md:mb-16">
+            <div className="flex flex-col md:flex-row">
+              <div className="w-full space-y-4 p-4 md:w-1/2 md:space-y-6 md:p-8">
+                <h2 className="text-center text-2xl font-bold text-gray-900 md:text-3xl">
+                  Contact Us
+                </h2>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4 md:space-y-6"
                   >
-                    Send Message
-                  </Button>
-                </form>
-              </Form>
-            </div>
-            <div className="relative hidden h-auto md:block md:w-1/2">
-              <Image
-                src="https://d144dqt8e4woe2.cloudfront.net/chambers/gallery/3.png"
-                alt="HBOT Chamber"
-                layout="fill"
-                objectFit="cover"
-              />
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Your name"
+                              {...field}
+                              className="rounded-md"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Your email"
+                              {...field}
+                              className="rounded-md"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="subject"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Subject</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Message subject"
+                              {...field}
+                              className="rounded-md"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormItem>
+                      <FormLabel>Message Template</FormLabel>
+                      <Select
+                        onValueChange={handleTemplateChange}
+                        defaultValue={selectedTemplate}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="rounded-md">
+                            <SelectValue placeholder="Select a message template" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {messageTemplates.map((template) => (
+                            <SelectItem key={template.id} value={template.id}>
+                              {template.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                    <FormField
+                      control={form.control}
+                      name="message"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Message</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Your message"
+                              {...field}
+                              className="min-h-[150px] rounded-md"
+                              value={
+                                selectedTemplate === "custom"
+                                  ? field.value
+                                  : (messageTemplates.find(
+                                      (t) => t.id === selectedTemplate,
+                                    )?.content ?? "")
+                              }
+                              onChange={(e) => {
+                                field.onChange(e);
+                                setSelectedTemplate("custom");
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="submit"
+                      className="w-full rounded-md bg-orange-500 hover:bg-orange-600"
+                    >
+                      Send Message
+                    </Button>
+                  </form>
+                </Form>
+              </div>
+              <div className="relative hidden h-auto md:block md:w-1/2">
+                <Image
+                  src="https://d144dqt8e4woe2.cloudfront.net/chambers/gallery/3.png"
+                  alt="HBOT Chamber"
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="mb-8 md:mb-16">
-          <h2 className="mb-4 p-2 text-center text-2xl font-bold text-gray-900 md:mb-8 md:text-3xl">
-            What&apos;s Included In Our Free Guide
-          </h2>
-          <ul className="grid gap-4 md:grid-cols-2 md:gap-6">
-            {guideDetails.map((detail, index) => (
-              <li
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                key={index}
-                className="flex items-start rounded-lg bg-white p-3 shadow-md md:p-4"
-              >
-                <span className="mr-2 text-xl text-orange-500 md:mr-4 md:text-2xl">
-                  •
-                </span>
-                <span className="text-sm text-gray-700 md:text-base">
-                  {detail}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+          <div className="mb-8 md:mb-16">
+            <h2 className="mb-4 p-2 text-center text-2xl font-bold text-gray-900 md:mb-8 md:text-3xl">
+              What&apos;s Included In Our Free Guide
+            </h2>
+            <ul className="grid gap-4 md:grid-cols-2 md:gap-6">
+              {guideDetails.map((detail, index) => (
+                <li
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                  key={index}
+                  className="flex items-start rounded-lg bg-white p-3 shadow-md md:p-4"
+                >
+                  <span className="mr-2 text-xl text-orange-500 md:mr-4 md:text-2xl">
+                    •
+                  </span>
+                  <span className="text-sm text-gray-700 md:text-base">
+                    {detail}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        <div className="mb-8 text-center md:mb-16">
-          <p className="mb-4 px-4 text-lg text-gray-700 md:mb-8 md:text-xl">
-            Have clarity when exploring HBOT with our complete guide and make
-            the best decision for your home or business and clients.
-          </p>
-          <Button
-            size="lg"
-            className="rounded-full bg-orange-600 px-6 py-4 text-base font-semibold hover:bg-orange-600 md:px-8 md:py-6 md:text-lg"
-            onClick={handleGuideDownload}
-          >
-            Download Your Free HBOT Chamber Buyer&apos;s Guide
-          </Button>
-        </div>
+          <div className="mb-8 text-center md:mb-16">
+            <p className="mb-4 px-4 text-lg text-gray-700 md:mb-8 md:text-xl">
+              Have clarity when exploring HBOT with our complete guide and make
+              the best decision for your home or business and clients.
+            </p>
+            <Button
+              size="lg"
+              className="rounded-full bg-orange-600 px-6 py-4 text-base font-semibold hover:bg-orange-600 md:px-8 md:py-6 md:text-lg"
+              onClick={handleGuideDownload}
+            >
+              Download Your Free HBOT Chamber Buyer&apos;s Guide
+            </Button>
+          </div>
 
-        <ImageSection />
-        <LinkSection />
+          <ImageSection />
+          <LinkSection />
+        </div>
+        <GuideDialog
+          isOpen={isGuideDialogOpen}
+          onOpenChange={setIsGuideDialogOpen}
+          onSubmit={handleGuideSubmit}
+        />
       </div>
-      <GuideDialog
-        isOpen={isGuideDialogOpen}
-        onOpenChange={setIsGuideDialogOpen}
-        onSubmit={handleGuideSubmit}
-      />
-    </div>
+    </>
   );
 }

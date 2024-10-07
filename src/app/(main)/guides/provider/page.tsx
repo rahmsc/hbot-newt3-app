@@ -1,4 +1,5 @@
 import Airtable from "airtable";
+import type { Metadata } from "next";
 
 import GuidesListing from "~/components/guides/guide-listings";
 import ProviderGuideCarousel from "~/components/guides/provider-guide-carousel";
@@ -42,6 +43,49 @@ async function getAirtableData(): Promise<GuideProp[]> {
         resolve(guidePosts);
       });
   });
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const allGuides = await getAirtableData();
+  const approvedGuides = allGuides.filter((guide) => guide.fields.Approved);
+
+  const guideCount = approvedGuides.length;
+  const topGuides = approvedGuides
+    .slice(0, 3)
+    .map((guide) => guide.fields["Guide Title"])
+    .join(", ");
+
+  return {
+    title: "HBOT Wellness Provider Guides | HBOT-HQ",
+    description: `Access ${guideCount} comprehensive guides for HBOT wellness providers. Expert advice on ${topGuides}, and more HBOT topics.`,
+    keywords: [
+      "HBOT",
+      "Hyperbaric Oxygen Therapy",
+      "Wellness Provider Guides",
+      "HBOT Clinic",
+      "HBOT Best Practices",
+    ],
+    openGraph: {
+      title: "HBOT Wellness Provider Guides",
+      description: `Discover ${guideCount} expert guides for HBOT wellness providers. Learn about ${topGuides}, and other essential HBOT topics.`,
+      type: "website",
+      url: "https://www.hyperbarichq.com/guides/provider",
+      images: [
+        {
+          url: "https://hbot-hq.com/images/hbot-provider-guides-og.jpg",
+          width: 1200,
+          height: 630,
+          alt: "HBOT Wellness Provider Guides",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "HBOT Wellness Provider Guides | HBOT-HQ",
+      description: `Access ${guideCount} comprehensive guides for HBOT wellness providers. Expert advice on ${topGuides}, and more.`,
+      images: ["https://hbot-hq.com/images/hbot-provider-guides-twitter.jpg"],
+    },
+  };
 }
 
 export default async function ProviderGuides() {
