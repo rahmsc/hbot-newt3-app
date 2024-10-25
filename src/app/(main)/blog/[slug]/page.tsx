@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import RichText from "~/components/rich-text";
 import type { Metadata } from "next";
 import Script from "next/script";
+import { generateStaticParams } from "~/components/sections/blog-section";
+
+export { generateStaticParams };
 
 export interface BlogPagePost {
   id: string;
@@ -11,6 +14,7 @@ export interface BlogPagePost {
     "URL Slug": string;
     "ID Blog": number;
     "Content Idea": string;
+    Title: string;
     Introduction: string;
     Body: string;
     Conclusion: string;
@@ -66,10 +70,10 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${post.fields["Content Idea"]} | HBOT-HQ Blog`,
+    title: `${post.fields.Title} | HBOT-HQ Blog`,
     description: post.fields.Introduction.slice(0, 160),
     openGraph: {
-      title: post.fields["Content Idea"],
+      title: post.fields.Title,
       description: post.fields.Introduction.slice(0, 160),
       type: "article",
       url: `https://www.hyperbarichq.com/blog/${post.fields["URL Slug"]}`,
@@ -78,13 +82,13 @@ export async function generateMetadata({
           url: `https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`,
           width: 1000,
           height: 500,
-          alt: post.fields["Content Idea"],
+          alt: post.fields.Title,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: post.fields["Content Idea"],
+      title: post.fields.Title,
       description: post.fields.Introduction.slice(0, 160),
       images: [
         `https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`,
@@ -107,7 +111,7 @@ export default async function BlogPostPage({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    headline: post.fields["Content Idea"],
+    headline: post.fields.Title,
     image: `https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`,
     articleBody: `${post.fields.Introduction} ${post.fields.Body} ${post.fields.Conclusion}`,
     url: `https://www.hyperbarichq.com/blog/${post.fields["URL Slug"]}`,
@@ -129,14 +133,14 @@ export default async function BlogPostPage({
       <article className="mx-auto max-w-4xl px-4 py-16 pt-36 sm:px-6 lg:px-8">
         <header className="mb-10 text-center">
           <h1 className="mb-4 text-4xl font-bold leading-tight text-gray-900 sm:text-5xl">
-            {post.fields["Content Idea"]}
+            {post.fields.Title}
           </h1>
         </header>
 
         <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
           <Image
             src={`https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`}
-            alt={post.fields["Content Idea"]}
+            alt={post.fields.Title}
             width={1000}
             height={500}
             className="w-full object-cover"
@@ -153,7 +157,7 @@ export default async function BlogPostPage({
         <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
           <Image
             src={`https://d144dqt8e4woe2.cloudfront.net/blogs/bodyimage1/${post.fields["ID Blog"]}.png`}
-            alt={post.fields["Content Idea"]}
+            alt={post.fields.Title}
             width={1000}
             height={500}
             className="w-full object-cover"
@@ -167,7 +171,7 @@ export default async function BlogPostPage({
         <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
           <Image
             src={`https://d144dqt8e4woe2.cloudfront.net/blogs/bodyimage2/${post.fields["ID Blog"]}.png`}
-            alt={post.fields["Content Idea"]}
+            alt={post.fields.Title}
             width={1000}
             height={500}
             className="w-full object-cover"

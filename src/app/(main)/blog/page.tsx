@@ -10,7 +10,7 @@ interface BlogPostFields {
   "ID Blog": string;
   "Content Idea": string;
   "Enriched Blog": string;
-  Description: string;
+  Introduction: string;
   "URL Slug": string;
   Approved: boolean;
 }
@@ -70,7 +70,7 @@ export default async function BlogPage() {
       "@type": "BlogPosting",
       headline: post.fields["Content Idea"],
       url: `https://www.hyperbarichq.com/blog/${post.fields["URL Slug"]}`,
-      description: post.fields.Description.slice(0, 200),
+      description: post.fields.Introduction.slice(0, 200),
       image: `https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`,
     })),
   };
@@ -104,8 +104,8 @@ export default async function BlogPage() {
                       <div className="mb-4 text-gray-600">
                         <RichText
                           content={
-                            post.fields.Description.slice(0, 200) +
-                            (post.fields.Description.length > 200 ? "..." : "")
+                            post.fields.Introduction.slice(0, 200) +
+                            (post.fields.Introduction.length > 350 ? "..." : "")
                           }
                         />
                       </div>
