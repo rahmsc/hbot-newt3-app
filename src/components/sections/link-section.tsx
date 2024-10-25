@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { sendGAEvent } from "@next/third-parties/google";
 
 const links = [
   { name: "Research", number: 17, link: "/research" },
@@ -28,7 +29,14 @@ export default function LinkSection() {
               className="hover:text-selected-text flex items-baseline space-x-4"
             >
               {index !== 0 && <span className="mr-2 text-gray-400">/</span>}
-              <Link href={link.link}>
+              <Link
+                href={link.link}
+                onClick={() =>
+                  sendGAEvent("event", "buttonClicked", {
+                    value: `Link Section - ${link.name}`,
+                  })
+                }
+              >
                 <span className="whitespace-nowrap hover:underline">
                   {link.name.replace(" ", "\u00A0")}
                 </span>

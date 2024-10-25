@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Inter } from "next/font/google";
 
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { TRPCReactProvider } from "~/trpc/react";
 import Navbar from "~/components/navbar";
 import Footer from "~/components/sections/footer";
@@ -259,6 +260,7 @@ export default function RootLayout({
           <Toaster />
           {/* <QuizPopup /> */}
         </TRPCReactProvider>
+        <GoogleAnalytics gaId={"G-KZMJT45KDX"} />
       </body>
     </html>
   );

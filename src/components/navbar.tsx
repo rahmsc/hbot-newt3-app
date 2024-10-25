@@ -7,6 +7,7 @@ import logo from "../../public/logo/LOGO.png";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import type React from "react";
+import { sendGAEvent } from "@next/third-parties/google";
 
 const Navbar = () => {
   const [show, setShow] = useState(true);
@@ -94,7 +95,13 @@ const Navbar = () => {
 
   const NavLinks = () => (
     <>
-      <NavLink href="/research" isActive={pathname === "/research"}>
+      <NavLink
+        href="/research"
+        isActive={pathname === "/research"}
+        onClick={() =>
+          sendGAEvent("event", "buttonClicked", { value: "Research Navbar" })
+        }
+      >
         <p className="font-editors-note text-xl font-semibold md:text-2xl">
           Research
         </p>
@@ -108,17 +115,35 @@ const Navbar = () => {
           Guides
         </p>
       </NavLink>
-      <NavLink href="/chambers" isActive={pathname === "/chambers"}>
+      <NavLink
+        href="/chambers"
+        isActive={pathname === "/chambers"}
+        onClick={() =>
+          sendGAEvent("event", "buttonClicked", { value: "Chambers Navbar" })
+        }
+      >
         <p className="font-editors-note text-xl font-semibold md:text-2xl">
           Chambers
         </p>
       </NavLink>
-      <NavLink href="/blog" isActive={pathname === "/blog"}>
+      <NavLink
+        href="/blog"
+        isActive={pathname === "/blog"}
+        onClick={() =>
+          sendGAEvent("event", "buttonClicked", { value: "Blog Navbar" })
+        }
+      >
         <p className="font-editors-note text-xl font-semibold md:text-2xl">
           Blog
         </p>
       </NavLink>
-      <NavLink href="/contact" isActive={pathname === "/contact"}>
+      <NavLink
+        href="/contact"
+        isActive={pathname === "/contact"}
+        onClick={() =>
+          sendGAEvent("event", "buttonClicked", { value: "Contact Navbar" })
+        }
+      >
         <p className="font-editors-note text-xl font-semibold md:text-2xl">
           Join HQ
         </p>
