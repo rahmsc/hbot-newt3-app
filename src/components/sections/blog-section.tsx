@@ -11,6 +11,7 @@ interface BlogPost {
     Description: string;
     "URL Slug": string;
     "ID Blog": number;
+    Approved: boolean;
   };
 }
 
@@ -24,6 +25,7 @@ async function getAirtableData(): Promise<BlogPost[]> {
       .select({
         view: "Grid view",
         maxRecords: 3, // Limit to 3 records
+        filterByFormula: "{Approved} = 1",
       })
       .all((err, records) => {
         if (err) {
