@@ -11,6 +11,7 @@ import {
   CarouselPrevious,
 } from "~/components/ui/carousel";
 import { Card, CardContent } from "~/components/ui/card";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export interface GuideProp {
   id: string;
@@ -38,7 +39,15 @@ const UserGuideCarousel: React.FC<UserGuideCarouselProps> = ({ guides }) => {
       <CarouselContent>
         {guides.map((guide, index) => (
           <CarouselItem key={guide.id}>
-            <Link href={`/guides/user/${guide.id}`} passHref>
+            <Link
+              href={`/guides/user/${guide.id}`}
+              onClick={() =>
+                sendGAEvent("event", "buttonClicked", {
+                  value: `User Guide ${guide.fields["Guide Title"]}`,
+                })
+              }
+              passHref
+            >
               <Card className="cursor-pointer">
                 <CardContent className="relative aspect-square p-0">
                   <Image

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
+import { sendGAEvent } from "@next/third-parties/google";
 
 interface ConditionWithCount {
   condition: string;
@@ -27,9 +28,13 @@ export default function ResearchClient({
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
+    sendGAEvent("event", "buttonClicked", { value: `Research ${category}` });
   };
 
   const handleConditionClick = (conditionTag: string) => {
+    sendGAEvent("event", "buttonClicked", {
+      value: `Research ${conditionTag}`,
+    });
     router.push(`/research/${conditionTag}`);
   };
 

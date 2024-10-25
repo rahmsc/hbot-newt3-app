@@ -1,6 +1,7 @@
 import Link from "next/link";
 import getArticlesByCondition from "~/utils/airtable/getArticlesByCondition";
 import ArticleRow from "./article-preview";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default async function ConditionContent({
   conditionTag,
@@ -20,6 +21,11 @@ export default async function ConditionContent({
           key={article.id}
           href={`/research/${conditionTag}/${article.id}`}
           className="group"
+          onClick={() =>
+            sendGAEvent("event", "buttonClicked", {
+              value: `Research Article ${article.id}`,
+            })
+          }
         >
           <ArticleRow article={article} />
         </Link>

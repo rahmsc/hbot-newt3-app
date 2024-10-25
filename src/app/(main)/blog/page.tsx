@@ -5,6 +5,7 @@ import Script from "next/script";
 
 import RichText from "~/components/rich-text";
 import { getBlogPosts } from "~/utils/airtable/blogs/getBlogPosts";
+import { sendGAEvent } from "@next/third-parties/google";
 
 interface BlogPostFields {
   "ID Blog": string;
@@ -85,7 +86,15 @@ export default async function BlogPage() {
           <h1 className="mb-8 text-3xl font-bold">Latest Blog Posts</h1>
           <div className="space-y-8">
             {approvedBlogPosts.map((post) => (
-              <Link href={`/blog/${post.fields["URL Slug"]}`} key={post.id}>
+              <Link
+                href={`/blog/${post.fields["URL Slug"]}`}
+                key={post.id}
+                onClick={() =>
+                  sendGAEvent("event", "buttonClicked", {
+                    value: `Blog Post ${post.fields["Content Idea"]}`,
+                  })
+                }
+              >
                 <div className="flex flex-col overflow-hidden rounded-lg border shadow-lg sm:flex-row">
                   <div className="w-full sm:w-1/4 lg:w-1/5">
                     <Image

@@ -3,6 +3,7 @@ import RichText from "../rich-text";
 import FaqAccordion, { type FaqItem } from "./faq-accordion";
 import ParallaxImage from "../parralex-image";
 import AccordionTemplate from "../accordion-template";
+import { sendGAEvent } from "@next/third-parties/google";
 
 function ArticleContent({
   foundArticle,

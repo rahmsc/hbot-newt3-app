@@ -4,9 +4,6 @@ import { notFound } from "next/navigation";
 import RichText from "~/components/rich-text";
 import type { Metadata } from "next";
 import Script from "next/script";
-// import { generateStaticParams } from "~/components/sections/blog-section";
-
-// export { generateStaticParams };
 
 export interface BlogPagePost {
   id: string;
