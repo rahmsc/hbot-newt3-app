@@ -17,6 +17,7 @@ import {
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { useToast } from "../../hooks/use-toast";
+import { sendGAEvent } from "@next/third-parties/google";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -99,7 +100,16 @@ export default function EmailSubscriptionForm() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoading}
+                onClick={() =>
+                  sendGAEvent("event", "buttonClicked", {
+                    value: "Subscribe(HQ Insider)",
+                  })
+                }
+              >
                 {isLoading ? "Subscribing..." : "Subscribe"}
               </Button>
             </form>

@@ -9,6 +9,7 @@ import Navbar from "~/components/navbar";
 import Footer from "~/components/sections/footer";
 import { Toaster } from "~/components/ui/toaster";
 import Script from "next/script";
+import Hotjar from "~/components/hotjar";
 // import QuizPopup from "~/components/quiz-popup";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -261,6 +262,7 @@ export default function RootLayout({
           {/* <QuizPopup /> */}
         </TRPCReactProvider>
         <GoogleAnalytics gaId={"G-KZMJT45KDX"} />
+        <Hotjar />
       </body>
     </html>
   );
