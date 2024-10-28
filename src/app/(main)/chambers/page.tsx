@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
 import ChamberMasonryGrid from "~/components/chambers/chamber-masonry-grid";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title: "HBOT Chambers | Home and Clinic Solutions | HBOT-HQ",
@@ -71,6 +72,11 @@ const Chambers = () => {
             </h2>
             <Link
               href="/contact"
+              onClick={() =>
+                sendGAEvent("event", "buttonClicked", {
+                  value: "Contact Us(Chamber Page)",
+                })
+              }
               className="mb-5 inline-block rounded-full bg-orange-500 px-8 py-3 text-lg font-bold text-white transition duration-300 hover:bg-orange-600"
             >
               Contact Us

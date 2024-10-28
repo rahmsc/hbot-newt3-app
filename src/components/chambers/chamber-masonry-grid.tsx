@@ -5,6 +5,7 @@ import { useState, useCallback } from "react";
 import Masonry from "react-masonry-css";
 import Image from "next/image";
 import { blogContentmansorygrid } from "../../data/chamberData";
+import { sendGAEvent } from "@next/third-parties/google";
 
 const breakpointColumnsObj = {
   default: 5,
@@ -42,6 +43,13 @@ const ChamberMasonryGrid: React.FC = () => {
           <article
             className="relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-shadow duration-300 hover:shadow-lg"
             onMouseEnter={() => handleMouseEnter(Number(item.id))}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                sendGAEvent("event", "buttonClicked", {
+                  value: `Chamber ${item.title[0]}`,
+                });
+              }
+            }}
             onMouseLeave={handleMouseLeave}
           >
             <div className="relative">

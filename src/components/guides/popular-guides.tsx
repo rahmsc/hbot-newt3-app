@@ -13,6 +13,7 @@ import {
 } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import { sendGAEvent } from "@next/third-parties/google";
 
 interface GuideProp {
   id: string;
@@ -44,7 +45,12 @@ const HorizontalGuides: React.FC<HorizontalGuidesProps> = ({ guides }) => {
           <Card
             key={guide.id}
             className="cursor-pointer overflow-hidden transition-shadow duration-300 hover:shadow-lg"
-            onClick={() => setSelectedGuide(guide)}
+            onClick={() => {
+              setSelectedGuide(guide);
+              sendGAEvent("event", "buttonClicked", {
+                value: `Popular Guide ${guide.fields["Guide Title"]}`,
+              });
+            }}
           >
             <CardContent className="p-0">
               <div className="flex flex-col md:flex-row">

@@ -28,6 +28,7 @@ import {
 import LinkSection from "~/components/sections/link-section";
 import ImageSection from "~/components/sections/image-section";
 import { GuideDialog } from "~/components/guides/guide-dialog";
+import { sendGAEvent } from "@next/third-parties/google";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -108,6 +109,9 @@ export default function ContactForm() {
 
   const handleGuideDownload = () => {
     setIsGuideDialogOpen(true);
+    sendGAEvent("event", "buttonClicked", {
+      value: "Download Guide(Contact Us)",
+    });
   };
 
   const handleGuideSubmit = (email: string) => {

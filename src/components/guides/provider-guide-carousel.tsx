@@ -13,6 +13,7 @@ import {
 import { Card, CardContent } from "../ui/card";
 // import { GuideDialog } from "./guide-dialog";
 import Link from "next/link";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export interface GuideProp {
   id: string;
@@ -42,7 +43,14 @@ const ProviderGuideCarousel: React.FC<UserGuideCarouselProps> = ({
         <CarouselContent className="-ml-4">
           {guides.map((guide, index) => (
             <CarouselItem key={guide.id} className="basis-1/2 pl-4">
-              <Link href={`/guides/provider/${guide.id}`}>
+              <Link
+                href={`/guides/provider/${guide.id}`}
+                onClick={() =>
+                  sendGAEvent("event", "buttonClicked", {
+                    value: `Provider Guide ${guide.fields["Guide Title"]}`,
+                  })
+                }
+              >
                 <Card>
                   <CardContent
                     className="flex aspect-square cursor-pointer items-center justify-center bg-opacity-0 p-2"
