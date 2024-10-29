@@ -18,12 +18,15 @@ export interface GuidePageProp {
   };
 }
 
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
 export async function generateMetadata({
   params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
-  const guide = await getGuideById(params.id);
+}: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const guide = await getGuideById(id);
 
   if (!guide) {
     return {
@@ -39,7 +42,7 @@ export async function generateMetadata({
       title: guide.fields["Guide Title"],
       description: guide.fields["Guide Introduction"].substring(0, 160),
       type: "article",
-      url: `https://www.hyperbarichq.com/guides/user/${params.id}`,
+      url: `https://www.hyperbarichq.com/guides/user/${id}`,
       images: [
         {
           url: `https://d144dqt8e4woe2.cloudfront.net/guides/header/${guide.fields["ID Blog"]}.png`,
@@ -60,12 +63,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function GuidePage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const guide = await getGuideById(params.id);
+export default async function GuidePage({ params }: PageProps) {
+  const { id } = await params;
+  const guide = await getGuideById(id);
 
   if (!guide) {
     notFound();
