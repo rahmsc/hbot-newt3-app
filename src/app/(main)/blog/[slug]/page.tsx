@@ -52,14 +52,15 @@ async function getBlogPostBySlug(slug: string): Promise<BlogPagePost | null> {
   });
 }
 
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
+
 export async function generateMetadata({
   params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  // eslint-disable-next-line @typescript-eslint/await-thenable
-  const resolvedParams = await params;
-  const post = await getBlogPostBySlug(resolvedParams.slug);
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getBlogPostBySlug(slug);
 
   if (!post) {
     return {
@@ -96,14 +97,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function BlogPostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  // eslint-disable-next-line @typescript-eslint/await-thenable
-  const resolvedParams = await params;
-  const post = await getBlogPostBySlug(resolvedParams.slug);
+export default async function BlogPostPage({ params }: PageProps) {
+  const { slug } = await params;
+  const post = await getBlogPostBySlug(slug);
 
   if (!post) {
     notFound();
