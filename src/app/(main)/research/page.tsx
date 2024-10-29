@@ -25,14 +25,7 @@ interface UniqueCondition {
   conditionTag: string;
 }
 
-type PageProps = {
-  params: Promise<{ condition: string }>;
-};
-
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  await params; // Await params even if not used, to satisfy TypeScript
+export async function generateMetadata(): Promise<Metadata> {
   const conditionsWithCounts = await getConditionsWithCounts();
   const totalArticles = conditionsWithCounts.reduce(
     (sum, condition) => sum + condition.articleCount,
@@ -79,8 +72,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ResearchPage({ params }: PageProps) {
-  await params; // Await params even if not used, to satisfy TypeScript
+export default async function ResearchPage() {
   const conditionListData: FilteredArticleItemProps[] =
     await getConditionListData();
 

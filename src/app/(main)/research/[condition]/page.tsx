@@ -13,18 +13,21 @@ function ArticlesLoading() {
   );
 }
 
+type PageProps = {
+  params: Promise<{ condition: string }>;
+};
+
 export async function generateMetadata({
   params,
-}: {
-  params: { condition: string };
-}): Promise<Metadata> {
+}: PageProps): Promise<Metadata> {
+  const { condition } = await params;
   const conditionList = await getArticlesByCondition();
   const conditionItem = conditionList.find(
-    (item) => item.fields.conditionTag === params.condition,
+    (item) => item.fields.conditionTag === condition,
   );
-  const conditionName = conditionItem?.fields.condition ?? params.condition;
+  const conditionName = conditionItem?.fields.condition ?? condition;
   const articleCount = conditionList.filter(
-    (item) => item.fields.conditionTag === params.condition,
+    (item) => item.fields.conditionTag === condition,
   ).length;
 
   return {
@@ -41,10 +44,10 @@ export async function generateMetadata({
       title: `HBOT Research: ${conditionName} | HBOT-HQ`,
       description: `Access ${articleCount} HBOT research articles on ${conditionName}. Comprehensive information on Hyperbaric Oxygen Therapy for this condition.`,
       type: "website",
-      url: `https://www.hyperbarichq.com/research/${params.condition}`,
+      url: `https://www.hyperbarichq.com/research/${condition}`,
       images: [
         {
-          url: `https://www.hyperbarichq.com/images/conditions/${params.condition}.jpg`,
+          url: `https://www.hyperbarichq.com/images/conditions/${condition}.jpg`,
           width: 1200,
           height: 630,
           alt: `HBOT Research for ${conditionName}`,
@@ -56,33 +59,28 @@ export async function generateMetadata({
       title: `HBOT for ${conditionName} | Research Articles`,
       description: `Discover ${articleCount} HBOT research articles on ${conditionName}. Evidence-based Hyperbaric Oxygen Therapy information.`,
       images: [
-        `https://www.hyperbarichq.com/images/conditions/${params.condition}.jpg`,
+        `https://www.hyperbarichq.com/images/conditions/${condition}.jpg`,
       ],
     },
   };
 }
 
-export default async function ConditionPage({
-  params,
-}: {
-  params: {
-    condition: string;
-  };
-}) {
+export default async function ConditionPage({ params }: PageProps) {
+  const { condition } = await params;
   const conditionList = await getArticlesByCondition();
   const conditionItem = conditionList.find(
-    (item) => item.fields.conditionTag === params.condition,
+    (item) => item.fields.conditionTag === condition,
   );
-  const conditionName = conditionItem?.fields.condition ?? params.condition;
+  const conditionName = conditionItem?.fields.condition ?? condition;
   const articleCount = conditionList.filter(
-    (item) => item.fields.conditionTag === params.condition,
+    (item) => item.fields.conditionTag === condition,
   ).length;
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "@id": `https://www.hyperbarichq.com/research/${params.condition}/#webpage`,
-    url: `https://www.hyperbarichq.com/research/${params.condition}/`,
+    "@id": `https://www.hyperbarichq.com/research/${condition}/#webpage`,
+    url: `https://www.hyperbarichq.com/research/${condition}/`,
     name: `HBOT for ${conditionName} | Research Articles`,
     isPartOf: {
       "@id": "https://www.hyperbarichq.com/#website",
@@ -111,7 +109,7 @@ export default async function ConditionPage({
           "@type": "ListItem",
           position: 3,
           item: {
-            "@id": `https://www.hyperbarichq.com/research/${params.condition}/`,
+            "@id": `https://www.hyperbarichq.com/research/${condition}/`,
             name: `${conditionName}`,
           },
         },
@@ -153,7 +151,7 @@ export default async function ConditionPage({
             Articles on {conditionName}
           </h1>
           <Suspense fallback={<ArticlesLoading />}>
-            <ConditionContent conditionTag={params.condition} />
+            <ConditionContent conditionTag={condition} />
           </Suspense>
         </div>
       </section>
