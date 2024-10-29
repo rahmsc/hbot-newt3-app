@@ -57,7 +57,9 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const post = await getBlogPostBySlug(params.slug);
+  // eslint-disable-next-line @typescript-eslint/await-thenable
+  const resolvedParams = await params;
+  const post = await getBlogPostBySlug(resolvedParams.slug);
 
   if (!post) {
     return {
@@ -99,7 +101,9 @@ export default async function BlogPostPage({
 }: {
   params: { slug: string };
 }) {
-  const post = await getBlogPostBySlug(params.slug);
+  // eslint-disable-next-line @typescript-eslint/await-thenable
+  const resolvedParams = await params;
+  const post = await getBlogPostBySlug(resolvedParams.slug);
 
   if (!post) {
     notFound();
