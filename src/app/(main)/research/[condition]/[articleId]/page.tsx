@@ -14,12 +14,15 @@ function ArticleLoading() {
   );
 }
 
+type PageProps = {
+  params: Promise<{ articleId: string }>;
+};
+
 export async function generateMetadata({
   params,
-}: {
-  params: { articleId: string };
-}): Promise<Metadata> {
-  const foundArticles = await getArticleById(params.articleId);
+}: PageProps): Promise<Metadata> {
+  const { articleId } = await params;
+  const foundArticles = await getArticleById(articleId);
   const foundArticle = foundArticles[0];
 
   if (!foundArticle) {
@@ -68,14 +71,8 @@ export async function generateMetadata({
   };
 }
 
-const StudyPage = async ({
-  params,
-}: {
-  params: {
-    articleId: string;
-  };
-}) => {
-  const { articleId } = params;
+const StudyPage = async ({ params }: PageProps) => {
+  const { articleId } = await params;
   const foundArticles = await getArticleById(articleId);
   const foundArticle = foundArticles[0]; // Get the first (and presumably only) article
 
