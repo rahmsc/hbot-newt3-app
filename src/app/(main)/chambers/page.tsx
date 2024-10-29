@@ -72,11 +72,11 @@ const Chambers = () => {
             </h2>
             <Link
               href="/contact"
-              onClick={() =>
-                sendGAEvent("event", "buttonClicked", {
-                  value: "Contact Us(Chamber Page)",
-                })
-              }
+              // onClick={() =>
+              //   sendGAEvent("event", "buttonClicked", {
+              //     value: "Contact Us(Chamber Page)",
+              //   })
+              // }
               className="mb-5 inline-block rounded-full bg-orange-500 px-8 py-3 text-lg font-bold text-white transition duration-300 hover:bg-orange-600"
             >
               Contact Us
