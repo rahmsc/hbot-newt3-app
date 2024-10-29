@@ -5,20 +5,22 @@ import { getAllGuides } from "~/utils/airtable/guides/getAllGuides";
 import { getBlogPosts } from "~/utils/airtable/blogs/getBlogPosts";
 
 function safeDate(dateString: string | number | Date): string {
-  try {
-    const date = new Date(dateString);
-    return date.toISOString();
-  } catch (error) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  if (dateString instanceof Date) {
+    return dateString.toISOString();
+  }
+
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
     console.error(`Invalid date: ${dateString}. Using current date.`);
-    console.error(error);
     return new Date().toISOString();
   }
+
+  return date.toISOString();
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.hyperbarichq.com";
-  let sitemapEntries: MetadataRoute.Sitemap = [];
+  const sitemapEntries: MetadataRoute.Sitemap = [];
 
   try {
     console.log("Starting sitemap generation...");
@@ -34,14 +36,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       "/blog",
     ];
 
-    const staticSitemap: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
-      url: `${baseUrl}${route}`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: route === "" ? "daily" : "weekly",
-      priority: route === "" ? 1 : 0.8,
-    }));
-
-    sitemapEntries = [...staticSitemap];
+    sitemapEntries.push(
+      ...staticRoutes.map((route) => ({
+        url: `${baseUrl}${route}`,
+        lastModified: new Date().toISOString(),
+        // changeFrequency: (route === "" ? "daily" : "weekly") as const,
+        priority: route === "" ? 1 : 0.8,
+      })),
+    );
 
     // Research articles
     const articles = await getArticlesByCondition();
@@ -49,65 +51,59 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...new Set(articles.map((article) => article.fields.conditionTag)),
     ];
 
-    const researchSitemap: MetadataRoute.Sitemap = conditionTags.flatMap(
-      (tag) => {
-        const conditionUrl = `${baseUrl}/research/${tag}`;
-        const articleUrls = articles
-          .filter((article) => article.fields.conditionTag === tag)
-          .map((article) => ({
-            url: `${baseUrl}/research/${tag}/${article.fields.id}`,
-            lastModified: safeDate(article.fields.publishedDate),
-            changeFrequency: "monthly" as const,
-            priority: 0.6,
-          }));
+    for (const tag of conditionTags) {
+      sitemapEntries.push({
+        url: `${baseUrl}/research/${tag}`,
+        lastModified: new Date().toISOString(),
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      });
 
-        return [
-          {
-            url: conditionUrl,
-            lastModified: new Date().toISOString(),
-            changeFrequency: "weekly" as const,
-            priority: 0.7,
-          },
-          ...articleUrls,
-        ];
-      },
-    );
+      const tagArticles = articles.filter(
+        (article) => article.fields.conditionTag === tag,
+      );
 
-    sitemapEntries = [...sitemapEntries, ...researchSitemap];
+      for (const article of tagArticles) {
+        sitemapEntries.push({
+          url: `${baseUrl}/research/${tag}/${article.fields.id}`,
+          lastModified: safeDate(article.fields.publishedDate),
+          changeFrequency: "monthly" as const,
+          priority: 0.6,
+        });
+      }
+    }
 
     // Guides
     const allGuides = await getAllGuides();
     const approvedGuides = allGuides.filter((guide) => guide.fields.Approved);
 
-    const guidesSitemap: MetadataRoute.Sitemap = approvedGuides.flatMap(
-      (guide) => [
+    for (const guide of approvedGuides) {
+      sitemapEntries.push(
         {
           url: `${baseUrl}/guides/provider/${guide.id}`,
           lastModified: new Date().toISOString(),
-          changeFrequency: "monthly",
+          changeFrequency: "monthly" as const,
           priority: 0.6,
         },
         {
           url: `${baseUrl}/guides/user/${guide.id}`,
           lastModified: new Date().toISOString(),
-          changeFrequency: "monthly",
+          changeFrequency: "monthly" as const,
           priority: 0.6,
         },
-      ],
-    );
-
-    sitemapEntries = [...sitemapEntries, ...guidesSitemap];
+      );
+    }
 
     // Blog posts
     const allBlogs = await getBlogPosts();
-    const blogSitemap: MetadataRoute.Sitemap = allBlogs.map((post) => ({
-      url: `${baseUrl}/blog/${post.fields["URL Slug"]}`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    }));
-
-    sitemapEntries = [...sitemapEntries, ...blogSitemap];
+    for (const post of allBlogs) {
+      sitemapEntries.push({
+        url: `${baseUrl}/blog/${post.fields["URL Slug"]}`,
+        lastModified: new Date().toISOString(),
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      });
+    }
 
     console.log(
       `Sitemap generation complete. Total entries: ${sitemapEntries.length}`,
