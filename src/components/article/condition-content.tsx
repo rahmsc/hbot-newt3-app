@@ -1,7 +1,15 @@
-import Link from "next/link";
+import { Suspense } from "react";
 import getArticlesByCondition from "~/utils/airtable/getArticlesByCondition";
-import ArticleRow from "./article-preview";
-import { sendGAEvent } from "@next/third-parties/google";
+import ArticleListClient from "./article-list";
+import Spinner from "~/components/spinner";
+
+function ArticlesLoading() {
+  return (
+    <div className="flex h-64 items-center justify-center">
+      <Spinner size={75} className="text-orange-500" />
+    </div>
+  );
+}
 
 export default async function ConditionContent({
   conditionTag,
@@ -15,21 +23,11 @@ export default async function ConditionContent({
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4">
-      {filteredArticles.map((article) => (
-        <Link
-          key={article.id}
-          href={`/research/${conditionTag}/${article.id}`}
-          className="group"
-          onClick={() =>
-            sendGAEvent("event", "buttonClicked", {
-              value: `Research Article ${article.id}`,
-            })
-          }
-        >
-          <ArticleRow article={article} />
-        </Link>
-      ))}
-    </div>
+    <Suspense fallback={<ArticlesLoading />}>
+      <ArticleListClient
+        articles={filteredArticles}
+        conditionTag={conditionTag}
+      />
+    </Suspense>
   );
 }
