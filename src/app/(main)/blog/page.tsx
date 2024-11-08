@@ -5,7 +5,6 @@ import Script from "next/script";
 
 import RichText from "~/components/rich-text";
 import { getBlogPosts } from "~/utils/airtable/blogs/getBlogPosts";
-import BlogPostLink from "~/components/blog/BlogPostLink";
 
 interface BlogPostFields {
   "ID Blog": string;
@@ -71,10 +70,11 @@ export default async function BlogPage() {
       "@type": "BlogPosting",
       headline: post.fields["Content Idea"],
       url: `https://www.hyperbarichq.com/blog/${post.fields["URL Slug"]}`,
-      description: post.fields.Introduction.slice(0, 200),
+      description: post.fields.Introduction?.slice(0, 200) || "",
       image: `https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`,
     })),
   };
+  console.log(approvedBlogPosts);
 
   return (
     <>
@@ -86,44 +86,44 @@ export default async function BlogPage() {
           <h1 className="mb-8 text-3xl font-bold">Latest Blog Posts</h1>
           <div className="space-y-8">
             {approvedBlogPosts.map((post) => (
-              <BlogPostLink
-                key={post.id}
-                href={`/blog/${post.fields["URL Slug"]}`}
-                title={post.fields["Content Idea"]}
-              >
-                <div className="flex flex-col overflow-hidden rounded-lg border shadow-lg sm:flex-row">
-                  <div className="w-full sm:w-1/4 lg:w-1/5">
-                    <Image
-                      src={`https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`}
-                      alt={post.fields["Content Idea"]}
-                      width={400}
-                      height={300}
-                      className="h-48 w-full object-cover sm:h-full"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col justify-between p-4 sm:p-6">
-                    <div>
-                      <h2 className="mb-2 text-xl font-bold underline sm:text-2xl">
-                        {post.fields["Content Idea"]}
-                      </h2>
-                      <div className="mb-4 text-gray-600">
-                        <RichText
-                          content={
-                            post.fields.Introduction.slice(0, 200) +
-                            (post.fields.Introduction.length > 350 ? "..." : "")
-                          }
-                        />
-                      </div>
+              <div key={post.id}>
+                <Link
+                  href={`/blog/${post.fields["URL Slug"]}`}
+                  className="block hover:opacity-90"
+                >
+                  <div className="flex flex-col overflow-hidden rounded-lg border shadow-lg sm:flex-row">
+                    <div className="w-full sm:w-1/4 lg:w-1/5">
+                      <Image
+                        src={`https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`}
+                        alt={post.fields["Content Idea"]}
+                        width={400}
+                        height={300}
+                        className="h-48 w-full object-cover sm:h-full"
+                      />
                     </div>
-                    <Link
-                      href={`/blog/${post.fields["URL Slug"]}`}
-                      className="text-orange-500 hover:underline"
-                    >
-                      Read more
-                    </Link>
+                    <div className="flex flex-1 flex-col justify-between p-4 sm:p-6">
+                      <div>
+                        <h2 className="mb-2 text-xl font-bold underline sm:text-2xl">
+                          {post.fields["Content Idea"]}
+                        </h2>
+                        <div className="mb-4 text-gray-600">
+                          <RichText
+                            content={
+                              (post.fields.Introduction?.slice(0, 200) ?? "") +
+                              (post.fields.Introduction?.length > 350
+                                ? "..."
+                                : "")
+                            }
+                          />
+                        </div>
+                      </div>
+                      <span className="text-orange-500 hover:underline">
+                        Read more
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </BlogPostLink>
+                </Link>
+              </div>
             ))}
           </div>
         </div>
