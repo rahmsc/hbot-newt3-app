@@ -19,6 +19,7 @@ export interface BlogPost {
   id: string;
   fields: BlogPostFields;
 }
+export const revalidate = 3600; // Revalidate every hour
 
 export async function generateMetadata(): Promise<Metadata> {
   const allBlogPosts = await getBlogPosts();
@@ -74,7 +75,6 @@ export default async function BlogPage() {
       image: `https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`,
     })),
   };
-  console.log(approvedBlogPosts);
 
   return (
     <>
