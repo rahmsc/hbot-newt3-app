@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import getArticlesByCondition from "~/utils/airtable/getArticlesByCondition";
+import getArticlesByCondition from "~/utils/supabase/getArticlesByCondition";
 import ArticleListClient from "./article-list";
 import Spinner from "~/components/spinner";
 
@@ -12,11 +12,11 @@ function ArticlesLoading() {
 }
 
 export default async function ConditionContent({
-  conditionTag,
+  conditionId,
 }: {
-  conditionTag: string;
+  conditionId: number;
 }) {
-  const filteredArticles = await getArticlesByCondition(conditionTag);
+  const filteredArticles = await getArticlesByCondition(conditionId);
 
   if (!filteredArticles || filteredArticles.length === 0) {
     return <div>No articles found for this condition.</div>;

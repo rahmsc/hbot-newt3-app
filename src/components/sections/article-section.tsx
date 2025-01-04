@@ -35,9 +35,8 @@ export default async function ArticleSection() {
                 <Image
                   src={`${imgUrl}${article.fields.id}.png`}
                   alt={article.fields.heading}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transition-transform duration-300 group-hover:scale-105"
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
               <h3 className="mt-6 text-center text-xl font-semibold transition-colors duration-300 group-hover:text-orange-500">

@@ -96,8 +96,8 @@ const Navbar = () => {
   const NavLinks = () => (
     <>
       <NavLink
-        href="/research"
-        isActive={pathname === "/research"}
+        href="/new-research"
+        isActive={pathname === "/new-research"}
         onClick={() =>
           sendGAEvent("event", "buttonClicked", { value: "Research Navbar" })
         }

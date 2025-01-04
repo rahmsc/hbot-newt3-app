@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import ArticleContent from "~/components/article/article-content";
 import CallToAction from "~/components/sections/call-to-action";
 import Spinner from "~/components/spinner";
-import getArticleById from "~/utils/airtable/getArticleById";
+import getArticleById, { ArticlesProps } from "~/utils/supabase/getArticleById";
 import type { Metadata } from "next";
 import Script from "next/script";
 
@@ -23,7 +23,10 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { articleId } = await params;
   const foundArticles = await getArticleById(articleId);
-  const foundArticle = foundArticles[0];
+  if (!foundArticles) {
+    console.error("Error in generateMetadata:", foundArticles);
+  }
+  const foundArticle: ArticlesProps = foundArticles[0];
 
   if (!foundArticle) {
     return {

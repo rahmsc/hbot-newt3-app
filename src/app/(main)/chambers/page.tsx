@@ -1,38 +1,80 @@
+"use client";
+
 import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
 import ChamberMasonryGrid from "~/components/chambers/chamber-masonry-grid";
 import { sendGAEvent } from "@next/third-parties/google";
+import dynamic from "next/dynamic";
+import { useMemo } from "react";
+import type { HyperbaricCenter } from "~/types/map";
+import HyperbaricLocator from "~/components/map/hyperbaric-locator";
 
-export const metadata: Metadata = {
-  title: "HBOT Chambers | Home and Clinic Solutions | HBOT-HQ",
-  description:
-    "Explore various types of Hyperbaric Oxygen Therapy chambers for home and clinic use. Get expert guidance and access the latest HBOT research and solutions.",
-  openGraph: {
-    title: "HBOT Chambers for Home and Clinic | HBOT-HQ",
-    description:
-      "Discover the right Hyperbaric Oxygen Therapy chamber for your needs. Expert guidance and latest HBOT solutions available.",
-    url: "https://www.hyperbarichq.com/chamber",
-    type: "website",
-    images: [
-      {
-        url: "https://hbot-hq.com/images/hbot-chambers-og.jpg",
-        width: 1200,
-        height: 630,
-        alt: "HBOT Chambers",
-      },
-    ],
+// Example centers data - you'll need to replace this with your actual data
+const hyperbaricCenters: HyperbaricCenter[] = [
+  {
+    id: "1",
+    name: "Example HBOT Center 1",
+    position: [51.505, -0.09],
+    address: "123 Example St, London",
+    phone: "+44 20 1234 5678",
+    website: "https://example.com",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "HBOT Chambers | Home and Clinic Solutions",
-    description:
-      "Find the perfect HBOT chamber for your home or clinic. Expert guidance and latest research available.",
-    images: ["https://hbot-hq.com/images/hbot-chambers-twitter.jpg"],
-  },
-};
+  // Add more centers...
+];
+
+// export const metadata: Metadata = {
+//   title: "HBOT Chambers | Home and Clinic Solutions | HBOT-HQ",
+//   description:
+//     "Explore various types of Hyperbaric Oxygen Therapy chambers for home and clinic use. Get expert guidance and access the latest HBOT research and solutions.",
+//   openGraph: {
+//     title: "HBOT Chambers for Home and Clinic | HBOT-HQ",
+//     description:
+//       "Discover the right Hyperbaric Oxygen Therapy chamber for your needs. Expert guidance and latest HBOT solutions available.",
+//     url: "https://www.hyperbarichq.com/chamber",
+//     type: "website",
+//     images: [
+//       {
+//         url: "https://hbot-hq.com/images/hbot-chambers-og.jpg",
+//         width: 1200,
+//         height: 630,
+//         alt: "HBOT Chambers",
+//       },
+//     ],
+//   },
+//   twitter: {
+//     card: "summary_large_image",
+//     title: "HBOT Chambers | Home and Clinic Solutions",
+//     description:
+//       "Find the perfect HBOT chamber for your home or clinic. Expert guidance and latest research available.",
+//     images: ["https://hbot-hq.com/images/hbot-chambers-twitter.jpg"],
+//   },
+// };
 
 const Chambers = () => {
+  // biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+  const Map = useMemo(
+    () =>
+      dynamic(() => import("~/components/map/map"), {
+        loading: () => (
+          <div className="flex h-[400px] w-full items-center justify-center bg-gray-100">
+            <p>Loading map...</p>
+          </div>
+        ),
+        ssr: false,
+      }),
+    [],
+  );
+
+  const mapCenter: [number, number] = [51.505, -0.09];
+  const mapMarkers = [
+    {
+      position: mapCenter,
+      popup: "Our Location",
+      title: "Main Office",
+    },
+  ];
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -82,6 +124,9 @@ const Chambers = () => {
               Contact Us
             </Link>
           </div>
+          <div className="mb-12 w-full">
+            <HyperbaricLocator />
+          </div>
           <div className="my-12 border-t border-gray-300" />
           <div className="container mx-auto px-4">
             <div className="mb-10 text-center">
@@ -94,6 +139,9 @@ const Chambers = () => {
               <ChamberMasonryGrid />
             </div>
           </div>
+          {/* <div className="mb-12 h-[400px] w-full">
+            <Map center={mapCenter} centers={hyperbaricCenters} />
+          </div> */}
         </div>
       </section>
     </>

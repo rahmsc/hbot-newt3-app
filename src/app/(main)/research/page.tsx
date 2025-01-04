@@ -1,7 +1,5 @@
 import { Suspense } from "react";
-import getConditionListData, {
-  type FilteredArticleItemProps,
-} from "~/utils/airtable/getConditionListData";
+import getConditionListData from "~/utils/supabase/getConditionWithCategoryData"; // type FilteredArticleItemProps,
 import ResearchClient from "../../../components/article/research-client";
 import Spinner from "~/components/spinner";
 import {
@@ -73,26 +71,41 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ResearchPage() {
-  const conditionListData: FilteredArticleItemProps[] =
-    await getConditionListData();
+  const conditionListData = await getConditionListData();
 
-  const conditionsWithCounts: ConditionWithCount[] =
-    await getConditionsWithCounts();
+  const conditionsWithCounts = conditionListData.reduce(
+    (acc, item) => {
+      const existingCondition = acc.find(
+        (c) => c.condition === item.condition_name,
+      );
+      if (existingCondition) {
+        existingCondition.articleCount++;
+      } else {
+        acc.push({
+          condition: item.condition_name,
+          articleCount: 1,
+        });
+      }
+      return acc;
+    },
+    [] as { condition: string; articleCount: number }[],
+  );
 
-  const conditionList: UniqueCondition[] = conditionListData
-    .filter(
-      (item) =>
-        item.fields.condition &&
-        item.fields.category &&
-        item.fields.conditionTag,
-    )
-    .map((item) => ({
-      condition: item.fields.condition,
-      category: item.fields.category,
-      conditionTag: item.fields.conditionTag,
-    }));
+  const uniqueConditions = Array.from(
+    new Set(conditionListData.map((item) => item.condition_name)),
+  ).map((conditionName) => {
+    const item = conditionListData.find(
+      (i) => i.condition_name === conditionName,
+    );
+    return {
+      condition: item?.condition_name || "",
+      id: item?.id || 0,
+    };
+  });
 
-  const uniqueConditionsMap = new Map<string, UniqueCondition>();
+  const uniqueConditionsMap = new Map(
+    uniqueConditions.map((item) => [item.condition, item]),
+  );
 
   for (const item of conditionList) {
     if (!uniqueConditionsMap.has(item.condition)) {

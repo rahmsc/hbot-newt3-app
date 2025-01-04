@@ -9,7 +9,7 @@ import { sendGAEvent } from "@next/third-parties/google";
 interface ConditionWithCount {
   condition: string;
   category: string;
-  conditionTag: string;
+  conditionId: number;
   articleCount: number;
 }
 

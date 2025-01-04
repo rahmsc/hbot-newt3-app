@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import ConditionContent from "~/components/article/condition-content";
 import Spinner from "~/components/spinner";
-import getArticlesByCondition from "~/utils/airtable/getArticlesByCondition";
+import getArticlesByCondition from "~/utils/supabase/getArticlesByCondition";
 import type { Metadata } from "next";
 import Script from "next/script";
 
@@ -21,7 +21,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { condition } = await params;
-  const conditionList = await getArticlesByCondition();
+  const conditionList = await getArticlesByCondition(params.condition);
   const conditionItem = conditionList.find(
     (item) => item.fields.conditionTag === condition,
   );

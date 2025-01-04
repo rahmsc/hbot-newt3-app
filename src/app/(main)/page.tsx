@@ -8,6 +8,10 @@ import LinkSection from "~/components/sections/link-section";
 import ImageSection from "~/components/sections/image-section";
 import type { Metadata } from "next";
 import Script from "next/script";
+import getRandomArticles from "~/utils/supabase/getRandomArticles";
+import getArticleById from "~/utils/supabase/getArticleById";
+import getConditionListData from "~/utils/supabase/getConditionWithCategoryData";
+import getArticlesByCondition from "~/utils/supabase/getArticlesByCondition";
 
 export const metadata: Metadata = {
   title: "Welcome to HyperbaricHQ | Hyperbaric Oxygen Therapy Research",
@@ -73,6 +77,10 @@ export default async function Home(): Promise<JSX.Element> {
     ],
   };
 
+  const conditionListData = await getArticlesByCondition(45);
+  // const conditionListData = await getConditionListData();
+  console.log(conditionListData);
+
   return (
     <HydrateClient>
       <Script id="structured-data" type="application/ld+json">
@@ -81,12 +89,12 @@ export default async function Home(): Promise<JSX.Element> {
       <main className="flex w-full flex-row items-center justify-center pt-32">
         <div>
           <HeroSection />
-          <LinkSection />
+          {/* <LinkSection />
           <ArticleSection />
           <ImageSection />
           <BlogSection />
           <EmailInputForm />
-          <ContactSection />
+          <ContactSection /> */}
         </div>
       </main>
     </HydrateClient>
