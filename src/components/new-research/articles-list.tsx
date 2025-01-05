@@ -56,6 +56,14 @@ export function ArticlesList({ selectedConditionId }: ArticlesListProps) {
   return (
     <div className="flex flex-col gap-8">
       <section className="mx-auto max-w-3xl text-center">
+        <div className="mb-8 flex justify-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-white">
+            <span className="font-medium tracking-wide">
+              Evidence based research,
+            </span>
+            <span className="italic tracking-wide">instantly</span>
+          </div>
+        </div>
         <h1 className="mb-6 text-5xl font-bold">
           The world&apos;s best resource on{" "}
           <span className="italic">Hyperbaric Oxygen Therapy</span>
@@ -77,7 +85,7 @@ export function ArticlesList({ selectedConditionId }: ArticlesListProps) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="rounded-full bg-black p-2">
+            <button className="rounded-full bg-black p-2" type="button">
               <span className="text-white">→</span>
             </button>
           </div>
@@ -85,6 +93,7 @@ export function ArticlesList({ selectedConditionId }: ArticlesListProps) {
             <span className="text-sm text-gray-600">Try:</span>
             {["Aging", "Autism", "Alzheimer's"].map((term) => (
               <button
+                type="button"
                 key={term}
                 className="rounded-full bg-slate-100 px-3 py-1 text-sm"
                 onClick={() => setSearchQuery(term)}
@@ -105,7 +114,7 @@ export function ArticlesList({ selectedConditionId }: ArticlesListProps) {
           filteredArticles.map((article) => (
             <Link
               key={article.id}
-              href={`/research/${article.condition_id}/${article.id}`}
+              href={`/new-research/${article.id}`}
               className="group"
               onClick={() =>
                 sendGAEvent("event", "buttonClicked", {
@@ -125,7 +134,7 @@ export function ArticlesList({ selectedConditionId }: ArticlesListProps) {
                 </div>
                 <div className="relative h-[200px] overflow-hidden rounded-lg">
                   <Image
-                    src={`${imageUrl}${article.id}.png`}
+                    src={`${imageUrl}${article.id > 100 ? article.id % 100 : article.id}.png`}
                     alt={article.heading}
                     className="h-full w-full object-cover"
                     width={300}

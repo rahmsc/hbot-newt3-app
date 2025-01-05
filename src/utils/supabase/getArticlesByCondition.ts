@@ -16,7 +16,7 @@ export interface ConditionIdArticlesProps {
 }
 
 export default async function getArticlesByCondition(
-  conditionId: number,
+  conditionId: number | null,
 ): Promise<ConditionIdArticlesProps[]> {
   const supabase = createClient();
 

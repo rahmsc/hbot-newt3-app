@@ -1,4 +1,4 @@
-import { ResearchContent } from "~/components/new-research/research-content";
+import ResearchContent from "~/components/new-research/research-content";
 import { getCategoryWithConditions } from "~/utils/supabase/getCategoryWithConditions";
 
 interface GroupedCategory {
