@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
+import { Card } from "~/components/ui/card";
 import { BookmarkIcon } from "lucide-react";
 import type { RandomArticleItemProps } from "~/utils/supabase/getRandomArticles";
+import Link from "next/link";
 
 export function ArticleCard({
   id,
@@ -13,54 +14,72 @@ export function ArticleCard({
 }: RandomArticleItemProps) {
   const imageUrl =
     "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
+
   return (
-    <Card className="overflow-hidden">
-      <div className="grid grid-cols-[120px_1fr] gap-4">
-        <div className="relative h-full">
+    <Link href={`/new-research/${id}`}>
+      <Card className="group relative flex h-full overflow-hidden transition-all duration-300 hover:shadow-lg">
+        {/* Removed grid, using flex instead */}
+        <div className="relative w-[220px] shrink-0">
+          <div className="absolute inset-0 bg-purple-100/20" />
           <Image
             src={`${imageUrl}${id}.png`}
             alt={heading}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="220px"
           />
         </div>
-        <CardContent className="p-4">
-          <div className="flex items-start justify-between gap-4">
-            <Badge
-              variant="secondary"
-              className="bg-black text-white hover:bg-black/90"
-            >
-              Immune Health
-            </Badge>
-            <Button variant="outline" className="gap-2">
-              <BookmarkIcon className="h-4 w-4" />
-              Save
-            </Button>
+
+        <div className="flex flex-1 flex-col justify-between p-6">
+          <div className="space-y-4">
+            <div className="flex items-start justify-between">
+              <Badge
+                variant="secondary"
+                className="rounded-full bg-black px-4 py-1 text-sm font-medium text-white"
+              >
+                Immune Health
+              </Badge>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 rounded-full p-0 hover:bg-gray-100"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // Add save functionality here
+                }}
+              >
+                <BookmarkIcon className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="line-clamp-2 text-xl font-semibold tracking-tight text-gray-900">
+                {heading}
+              </h3>
+              <p className="line-clamp-2 text-sm text-gray-600">{summary}</p>
+            </div>
           </div>
-          <h3 className="mt-2.5 text-lg font-semibold tracking-tight">
-            {heading}
-          </h3>
-          <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-            {summary}
-          </p>
+
           <div className="mt-4 flex items-center justify-between">
             <Badge
-              variant="secondary"
-              className={`${
-                outcome_rating?.toLowerCase() === "negative"
-                  ? "bg-red-100 text-red-700 hover:bg-red-100/80"
-                  : "bg-green-100 text-green-700 hover:bg-green-100/80"
+              variant="default"
+              className={`rounded-full px-4 py-1 ${
+                outcome_rating?.toLowerCase() === "positive"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
               }`}
             >
-              {outcome_rating} Outcome
+              {outcome_rating}
             </Badge>
-            <Button variant="default" className="gap-2">
-              Read More
-              <span className="text-lg">→</span>
+            <Button
+              variant="link"
+              className="font-semibold text-black hover:no-underline"
+            >
+              Read More <span className="ml-2">→</span>
             </Button>
           </div>
-        </CardContent>
-      </div>
-    </Card>
+        </div>
+      </Card>
+    </Link>
   );
 }

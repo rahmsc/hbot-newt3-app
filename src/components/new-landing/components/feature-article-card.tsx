@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
+import { Card } from "~/components/ui/card";
 import { BookmarkIcon } from "lucide-react";
 import type { RandomArticleItemProps } from "~/utils/supabase/getRandomArticles";
+import Link from "next/link";
 
 export function FeaturedArticleCard({
   id,
@@ -19,95 +20,110 @@ export function FeaturedArticleCard({
 }: RandomArticleItemProps) {
   const imageUrl =
     "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
+
   return (
-    <Card className="overflow-hidden border-[1px] border-blue-200 shadow-[0_0_0_1px_rgba(59,130,246,0.1)] transition-shadow hover:shadow-[0_0_0_1px_rgba(59,130,246,0.2)]">
-      <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
+    <Card className="overflow-hidden">
+      {/* Image Section */}
+      <div className="relative h-[240px] w-full">
         <Image
           src={`${imageUrl}${id}.png`}
           alt={heading}
           fill
           className="object-cover"
+          priority
         />
       </div>
-      <CardContent className="p-6">
-        <div className="grid grid-cols-[1fr_auto] gap-8">
-          <div className="space-y-4">
-            <Badge className="rounded-full bg-black px-4 py-1 text-white hover:bg-black/90">
-              Neurological
-            </Badge>
-            <div className="space-y-2">
-              <h2 className="text-2xl font-bold">{heading}</h2>
-              <p className="text-muted-foreground">{summary}</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Button variant="outline" className="gap-2">
-                <BookmarkIcon className="h-4 w-4" />
-                Save
-              </Button>
-              <Button variant="outline" className="gap-2">
+
+      {/* Content Section */}
+      <div className="space-y-6 p-8">
+        {/* Category & Save Button */}
+        <div className="flex items-center justify-between">
+          <Badge className="rounded-full bg-black px-4 py-1.5 text-sm font-medium text-white">
+            Neurological
+          </Badge>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 rounded-full p-0"
+          >
+            <BookmarkIcon className="h-4 w-4" />
+            <span className="sr-only">Save article</span>
+          </Button>
+        </div>
+
+        {/* Title & Summary */}
+        <div className="space-y-4">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+            {heading}
+          </h2>
+          <p className="text-lg leading-relaxed text-gray-600">{summary}</p>
+        </div>
+
+        {/* Metadata Grid */}
+        <div className="grid grid-cols-2 gap-x-12 gap-y-4">
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-red-600">CONDITION</p>
+            <p className="text-gray-900">Stroke</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-red-600">ATA</p>
+            <p className="text-gray-900">{pressure_used}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-red-600"># OF SESSIONS</p>
+            <p className="text-gray-900">{number_of_treatments}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-red-600">PUBLISHED DATE</p>
+            <p className="text-gray-900">
+              {published_date
+                ? new Date(published_date).toLocaleDateString("en-US", {
+                    month: "long",
+                    year: "numeric",
+                  })
+                : "N/A"}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-red-600">PEER REVIEWED</p>
+            <p className="text-gray-900">{peer_reviewed ? "Yes" : "No"}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-red-600">PUBLIC DATA</p>
+            <p className="text-gray-900">{public_data ? "Yes" : "No"}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-red-600">FUNDED</p>
+            <p className="text-gray-900">{funded ? "Yes" : "N/A"}</p>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center justify-between pt-4">
+          <div className="flex items-center gap-4">
+            <Button variant="outline" className="gap-2">
+              <BookmarkIcon className="h-4 w-4" />
+              Save
+            </Button>
+            <Link href={`/new-research/${id}`}>
+              <Button className="gap-2">
                 Read More
                 <span className="text-lg">→</span>
               </Button>
-            </div>
-            <Badge
-              variant="secondary"
-              className={`${
-                outcome_rating?.toLowerCase() === "negative"
-                  ? "bg-red-100 text-red-700 hover:bg-red-100/80"
-                  : "bg-green-100 text-green-700 hover:bg-green-100/80"
-              }`}
-            >
-              {outcome_rating} Outcome
-            </Badge>
+            </Link>
           </div>
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <div className="grid gap-2">
-                <div className="text-sm font-semibold text-red-600">
-                  CONDITION
-                </div>
-                <div>Stroke</div>
-              </div>
-              <div className="grid gap-2">
-                <div className="text-sm font-semibold text-red-600">ATA</div>
-                <div>{pressure_used}</div>
-              </div>
-              <div className="grid gap-2">
-                <div className="text-sm font-semibold text-red-600">
-                  PUBLISHED DATE
-                </div>
-                <div>
-                  {published_date
-                    ? new Date(published_date).toLocaleDateString()
-                    : "N/A"}
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <div className="text-sm font-semibold text-red-600">
-                  PEER REVIEWED
-                </div>
-                <div>{peer_reviewed ? "Yes" : "No"}</div>
-              </div>
-              <div className="grid gap-2">
-                <div className="text-sm font-semibold text-red-600">
-                  PUBLIC DATA
-                </div>
-                <div>{public_data ? "Yes" : "No"}</div>
-              </div>
-              <div className="grid gap-2">
-                <div className="text-sm font-semibold text-red-600">FUNDED</div>
-                <div>{funded ? "Yes" : "N/A"}</div>
-              </div>
-              <div className="grid gap-2">
-                <div className="text-sm font-semibold text-red-600">
-                  # OF SESSIONS
-                </div>
-                <div className="font-semibold">{number_of_treatments}</div>
-              </div>
-            </div>
-          </div>
+          <Badge
+            variant="secondary"
+            className={`rounded-full px-6 py-1.5 ${
+              outcome_rating?.toLowerCase() === "positive"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {outcome_rating}
+          </Badge>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

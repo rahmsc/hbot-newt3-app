@@ -4,6 +4,7 @@ import RichText from "../rich-text";
 import FaqAccordion from "../article/faq-accordion";
 import ParallaxImage from "../parralex-image";
 import AccordionTemplate from "../accordion-template";
+import { format } from "date-fns";
 
 import type { ArticlesProps } from "~/utils/supabase/getArticleById";
 
@@ -42,7 +43,7 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
         </div>
         <div className="flex-1 space-y-2">
           <p className="font-bold text-red-600">PUBLISHED DATE</p>
-          <p>{foundArticle.publishedDate.toLocaleDateString()}</p>
+          <p>{format(new Date(foundArticle.publishedDate), "MM/dd/yyyy")}</p>
         </div>
       </div>
 
