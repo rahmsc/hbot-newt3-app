@@ -18,24 +18,48 @@ type PageProps = {
 
 const StudyPage = async ({ params }: PageProps) => {
   const { id } = params;
-  const foundArticle = await getArticleById(Number(id));
 
-  if (!foundArticle) {
-    return <div>Article not found</div>;
+  if (!id || Number.isNaN(Number(id))) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <p className="text-lg text-gray-700">Invalid article ID provided</p>
+      </div>
+    );
   }
 
-  return (
-    <div className="w-full">
-      <section className="flex w-full items-center justify-center pt-32">
-        <div className="w-full max-w-screen-lg px-8 py-16">
-          <Suspense fallback={<ArticleLoading />}>
-            <ArticleContent foundArticle={foundArticle} />
-          </Suspense>
+  try {
+    const foundArticle = await getArticleById(Number(id));
+
+    if (!foundArticle) {
+      return (
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <p className="text-lg text-gray-700">Article not found</p>
         </div>
-      </section>
-      <CallToAction />
-    </div>
-  );
+      );
+    }
+
+    return (
+      <div className="w-full">
+        <section className="flex w-full items-center justify-center pt-32">
+          <div className="w-full max-w-screen-lg px-8 py-16">
+            <Suspense fallback={<ArticleLoading />}>
+              <ArticleContent foundArticle={foundArticle} />
+            </Suspense>
+          </div>
+        </section>
+        <CallToAction />
+      </div>
+    );
+  } catch (error) {
+    console.error("Error fetching article:", error);
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <p className="text-lg text-gray-700">
+          Error loading article. Please try again later.
+        </p>
+      </div>
+    );
+  }
 };
 
 export default StudyPage;

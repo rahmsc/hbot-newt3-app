@@ -1,4 +1,5 @@
-import { createClient } from "./server";
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { createClient } from "./client";
 
 export interface ArticlesProps {
   id: number;
@@ -19,9 +20,6 @@ export interface ArticlesProps {
   results: string;
   conclusion: string;
   conflictsOfInterest: string;
-  imageUrl: string;
-  createdAt: Date;
-  updatedAt: Date;
   //   faqs: string;
   funding: string;
   outcome: string;
@@ -35,10 +33,13 @@ export default async function getArticleById(
       throw new Error("Article ID is required");
     }
 
-    const supabase = await createClient();
+    const supabase = createClient();
+
+    // Add logging to debug the connection and ID
+    console.log("Fetching article with ID:", id);
 
     const { data, error } = await supabase
-      .from("studies") // replace with your actual table name
+      .from("studies")
       .select(
         `
         id,
@@ -59,52 +60,63 @@ export default async function getArticleById(
         results,
         conclusion,
         conflicts_of_interest,
-        image_url,
-        created_at,
-        updated_at,
         funding,
         outcome
       `,
       )
-      .eq("id", id);
+      .eq("id", id)
+      .single(); // Use single() instead of potentially getting an array
 
     if (error) {
-      console.error("Error fetching article:", error);
-      throw error;
+      // Improve error logging
+      console.error("Supabase error details:", {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+      });
+      throw new Error(`Database error: ${error.message}`);
     }
 
-    if (!data || data.length === 0) {
+    if (!data) {
+      console.log("No data found for article ID:", id);
       return null;
     }
 
-    // Transform the first (and should be only) result
+    // Log the raw data for debugging
+    console.log("Raw data from database:", data);
+
+    // Safely transform the data with null checks
     return {
-      id: Number(data?.[0]?.id),
-      conditionId: String(data?.[0]?.condition_id),
-      heading: data?.[0]?.heading as string,
-      publishedDate: new Date(data?.[0]?.published_date as string),
-      studyLink: data?.[0]?.study_link as string,
-      authors: data?.[0]?.authors as string,
-      pressureUsed: data?.[0]?.pressure_used as string,
-      numberOfTreatments: data?.[0]?.number_of_treatments as number,
-      peerReviewed: data?.[0]?.peer_reviewed as boolean,
-      publicData: data?.[0]?.public_data as boolean,
-      funded: data?.[0]?.funded as boolean,
-      outcomeRating: data?.[0]?.outcome_rating as string,
-      summary: data?.[0]?.summary as string,
-      introduction: data?.[0]?.introduction as string,
-      outcomes: data?.[0]?.outcomes as string,
-      results: data?.[0]?.results as string,
-      conclusion: data?.[0]?.conclusion as string,
-      conflictsOfInterest: data?.[0]?.conflicts_of_interest as string,
-      imageUrl: data?.[0]?.image_url as string,
-      createdAt: new Date(data?.[0]?.created_at as string),
-      updatedAt: new Date(data?.[0]?.updated_at as string),
-      funding: data?.[0]?.funding as string,
-      outcome: data?.[0]?.outcome as string,
+      id: Number(data.id) || 0,
+      conditionId: String(data.condition_id || ""),
+      heading: data.heading ?? "",
+      publishedDate: data.published_date ?? new Date(),
+      studyLink: data.study_link ?? "",
+      authors: data.authors ?? "",
+      pressureUsed: data.pressure_used ?? "",
+      numberOfTreatments: Number(data.number_of_treatments) || 0,
+      peerReviewed: Boolean(data.peer_reviewed),
+      publicData: Boolean(data.public_data),
+      funded: Boolean(data.funded),
+      outcomeRating: data.outcome_rating || "",
+      summary: data.summary || "",
+      introduction: data.introduction || "",
+      outcomes: data.outcomes || "",
+      results: data.results || "",
+      conclusion: data.conclusion || "",
+      conflictsOfInterest: data.conflicts_of_interest || "",
+      funding: data.funding || "",
+      outcome: data.outcome || "",
     };
   } catch (error) {
-    console.error("Error in getArticleById:", error);
+    // Improve error logging
+    console.error("Detailed error in getArticleById:", {
+      error,
+      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorStack: error instanceof Error ? error.stack : undefined,
+      articleId: id,
+    });
     throw error;
   }
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArticleCard } from "./components/article-card";
-import { FeaturedArticleCard } from "./components/feature-article-card";
+import { ArticleCard } from "./components/research/article-card";
+import { FeaturedArticleCard } from "./components/research/feature-article-card";
 import { FilterDialog } from "./components/filter-dialog";
 import getRandomArticles, {
   type RandomArticleItemProps,

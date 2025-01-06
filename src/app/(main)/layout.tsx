@@ -10,6 +10,7 @@ import Footer from "~/components/sections/footer";
 import { Toaster } from "~/components/ui/toaster";
 import Script from "next/script";
 import Hotjar from "~/components/hotjar";
+import { AuthProvider } from "~/contexts/AuthContext";
 // import QuizPopup from "~/components/quiz-popup";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -253,13 +254,15 @@ export default function RootLayout({
         className={`font-sans ${inter.variable} ${editorsNote.variable} w-full overflow-x-hidden`}
       >
         <TRPCReactProvider>
-          <Navbar />
-          <main className="flex min-h-screen w-full flex-col items-center justify-between">
-            {children}
-          </main>
-          <Footer />
-          <Toaster />
-          {/* <QuizPopup /> */}
+          <AuthProvider>
+            <Navbar />
+            <main className="flex min-h-screen w-full flex-col items-center justify-between">
+              {children}
+            </main>
+            <Footer />
+            <Toaster />
+            {/* <QuizPopup /> */}
+          </AuthProvider>
         </TRPCReactProvider>
         <GoogleAnalytics gaId={"G-KZMJT45KDX"} />
         <Hotjar />

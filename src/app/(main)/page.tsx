@@ -13,6 +13,7 @@ import getArticleById from "~/utils/supabase/getArticleById";
 
 import getArticlesByCondition from "~/utils/supabase/getArticlesByCondition";
 import ResearchDashboard from "~/components/new-landing/research-section";
+import TrendingSection from "~/components/new-landing/trending-section";
 
 export const metadata: Metadata = {
   title: "Welcome to HyperbaricHQ | Hyperbaric Oxygen Therapy Research",
@@ -89,6 +90,7 @@ export default async function Home(): Promise<JSX.Element> {
         <div>
           <HeroSection />
           <ResearchDashboard />
+          <TrendingSection />
           {/* <LinkSection />
           <ArticleSection />
           <ImageSection />

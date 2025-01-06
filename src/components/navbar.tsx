@@ -8,6 +8,7 @@ import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import type React from "react";
 import { sendGAEvent } from "@next/third-parties/google";
+import { LoginButton } from "./auth/LoginButton";
 
 const Navbar = () => {
   const [show, setShow] = useState(true);
@@ -175,6 +176,7 @@ const Navbar = () => {
           </div>
           <div className="hidden items-center space-x-4 text-xl md:flex md:space-x-8">
             <NavLinks />
+            <LoginButton />
           </div>
           <div className="md:hidden">
             <button onClick={toggleMobileMenu} className="p-2" type="button">
