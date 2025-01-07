@@ -11,6 +11,7 @@ const config = {
       "d144dqt8e4woe2.cloudfront.net",
       "hbothq-bucket.s3.ap-southeast-2.amazonaws.com",
       "hebbkx1anhila5yf.public.blob.vercel-storage.com",
+      "picsum.photos",
     ],
   },
   experimental: {

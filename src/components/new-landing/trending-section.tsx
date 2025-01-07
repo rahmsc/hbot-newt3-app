@@ -15,7 +15,7 @@ const articles: TrendingArticleProps[] = [
     title: "The Latest Chamber Technology",
     description:
       "Chambers making headway into 2025 with the latest technology leading the market",
-    image: "/chamber-tech.jpg",
+    image: "https://picsum.photos/id/210/200/300",
     link: "/blog/latest-chamber-technology",
   },
   {
@@ -26,7 +26,7 @@ const articles: TrendingArticleProps[] = [
     title: "Wellness Centres are LOVING HBOT",
     description:
       "Chambers making headway into 2025 with the latest technology leading the market",
-    image: "/wellness-centres.jpg",
+    image: "https://picsum.photos/id/130/200/300",
     link: "/blog/wellness-centres-loving-hbot",
   },
   {
@@ -37,7 +37,7 @@ const articles: TrendingArticleProps[] = [
     title: "Home Hyperbaric Set Ups",
     description:
       "Chambers making headway into 2025 with the latest technology leading the market",
-    image: "/home-setup.jpg",
+    image: "https://picsum.photos/id/98/200/300",
     link: "/blog/home-hyperbaric-setups",
   },
   // Duplicate articles for the second row with slightly different descriptions
@@ -49,7 +49,7 @@ const articles: TrendingArticleProps[] = [
     title: "The Latest Chamber Technology",
     description:
       "Chambers making headway into 2025 with the latest technology leading the market",
-    image: "/chamber-tech.jpg",
+    image: "https://picsum.photos/id/120/200/300",
     link: "/blog/latest-chamber-technology-2",
   },
   {
@@ -60,7 +60,7 @@ const articles: TrendingArticleProps[] = [
     title: "Wellness Centres are LOVING HBOT",
     description:
       "Wellness centres opening an hbot are loving their new set ups almost as much as their clients...",
-    image: "/wellness-centres.jpg",
+    image: "https://picsum.photos/id/29/200/300",
     link: "/blog/wellness-centres-loving-hbot-2",
   },
   {
@@ -71,7 +71,7 @@ const articles: TrendingArticleProps[] = [
     title: "Home Hyperbaric Set Ups",
     description:
       "The sleekest home hyperbaric setups we've seen from the north to the south! Its all here",
-    image: "/home-setup.jpg",
+    image: "https://picsum.photos/id/32/200/300",
     link: "/blog/home-hyperbaric-setups-2",
   },
 ];
