@@ -121,13 +121,15 @@ export default function HyperbaricLocator() {
 
     setIsLoading(true);
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
+      (position) => {
         const newLocation: [number, number] = [
           position.coords.latitude,
           position.coords.longitude,
         ];
         setCurrentLocation(newLocation);
-        await searchHyperbaricCenters(newLocation);
+        searchHyperbaricCenters(newLocation).catch((error) => {
+          console.error("Error searching hyperbaric centers:", error);
+        });
       },
       (error) => {
         console.error("Error getting location:", error);

@@ -16,6 +16,12 @@ import ResearchDashboard from "~/components/new-landing/research-section";
 import TrendingSection from "~/components/new-landing/trending-section";
 import ProvidersSection from "~/components/new-landing/providers-section";
 import ShopSection from "~/components/new-landing/shop-section";
+import { SiteHeader } from "~/components/site-header";
+import { TopNav } from "~/components/new-landing/header/top-nav";
+import { HeroText } from "~/components/new-landing/header/hero-text";
+import { ChambersSection } from "~/components/new-landing/chambers-section";
+import { WellnessMarketplace } from "~/components/new-landing/marketplace-section";
+import { CTASection } from "~/components/new-landing/cta-section";
 
 export const metadata: Metadata = {
   title: "Welcome to HyperbaricHQ | Hyperbaric Oxygen Therapy Research",
@@ -88,19 +94,17 @@ export default async function Home(): Promise<JSX.Element> {
       <Script id="structured-data" type="application/ld+json">
         {JSON.stringify(structuredData)}
       </Script>
-      <main className="flex w-full flex-row items-center justify-center pt-32">
+      <main className="flex w-full flex-row items-center justify-center">
         <div>
-          <HeroSection />
+          <HeroText />
           <ResearchDashboard />
+          <ChambersSection />
           <TrendingSection />
           <ProvidersSection />
-          <ShopSection />
-          {/* <LinkSection />
-          <ArticleSection />
-          <ImageSection />
-          <BlogSection />
+          <WellnessMarketplace />
+          <CTASection />
           <EmailInputForm />
-          <ContactSection /> */}
+          <ContactSection />
         </div>
       </main>
     </HydrateClient>

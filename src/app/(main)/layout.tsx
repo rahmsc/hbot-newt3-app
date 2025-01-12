@@ -1,16 +1,19 @@
 import "~/styles/globals.css";
+import "~/styles/embla.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Inter } from "next/font/google";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { TRPCReactProvider } from "~/trpc/react";
-import Navbar from "~/components/navbar";
+
 import Footer from "~/components/sections/footer";
 import { Toaster } from "~/components/ui/toaster";
 import Script from "next/script";
 import Hotjar from "~/components/hotjar";
 import { AuthProvider } from "~/contexts/AuthContext";
+import { TopNav } from "~/components/new-landing/header/top-nav";
+import { MainNav } from "~/components/new-landing/header/main-nav";
 // import QuizPopup from "~/components/quiz-popup";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -255,7 +258,8 @@ export default function RootLayout({
       >
         <TRPCReactProvider>
           <AuthProvider>
-            <Navbar />
+            <TopNav />
+            <MainNav />
             <main className="flex min-h-screen w-full flex-col items-center justify-between">
               {children}
             </main>

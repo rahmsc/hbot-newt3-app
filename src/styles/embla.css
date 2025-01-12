@@ -1,0 +1,35 @@
+.embla {
+  --slide-spacing: 1rem;
+  --slide-size: 100%;
+  --slide-height: 19rem;
+}
+
+@media (min-width: 640px) {
+  .embla {
+    --slide-size: 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .embla {
+    --slide-size: 33.333%;
+  }
+}
+
+.embla__viewport {
+  overflow: hidden;
+}
+
+.embla__container {
+  backface-visibility: hidden;
+  display: flex;
+  touch-action: pan-y;
+  margin-left: calc(var(--slide-spacing) * -1);
+}
+
+.embla__slide {
+  flex: 0 0 var(--slide-size);
+  min-width: 0;
+  padding-left: var(--slide-spacing);
+  position: relative;
+}
