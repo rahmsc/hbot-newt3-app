@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
-import logoImage from "../../../public/logo/logo_resized.png";
-import { motion } from "framer-motion";
-
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import React from "react";
+
+import logoImage from "../../../public/logo/logo_resized.png";
 
 const HeroSection = () => {
   return (

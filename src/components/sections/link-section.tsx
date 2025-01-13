@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { motion } from "framer-motion";
 import { sendGAEvent } from "@next/third-parties/google";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 const links = [
   { name: "Research", number: 17, link: "/research" },

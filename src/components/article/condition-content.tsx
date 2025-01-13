@@ -1,7 +1,9 @@
 import { Suspense } from "react";
-import getArticlesByCondition from "~/utils/supabase/getArticlesByCondition";
-import ArticleListClient from "./article-list";
+
 import Spinner from "~/components/spinner";
+import getArticlesByCondition from "~/utils/supabase/getArticlesByCondition";
+
+import ArticleListClient from "./article-list";
 
 function ArticlesLoading() {
   return (

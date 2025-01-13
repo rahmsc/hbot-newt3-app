@@ -1,4 +1,5 @@
-import ResearchContent from "~/components/nuresearch/research-content";
+import { ResearchContent } from "~/components/nuresearch/research-content";
+import { getArticleCountsByCondition } from "~/utils/supabase/getArticleCountsByCondition";
 import { getCategoryWithConditions } from "~/utils/supabase/getCategoryWithConditions";
 
 interface GroupedCategory {
@@ -7,11 +8,20 @@ interface GroupedCategory {
   conditions: {
     id: number;
     name: string;
+    articleCount?: number;
   }[];
 }
 
-export default async function ResearchPage() {
+interface Props {
+  searchParams: { selectedCategory?: string };
+}
+
+export default async function ResearchPage({ searchParams }: Props) {
   const categoriesAndConditions = await getCategoryWithConditions();
+  const articleCounts = await getArticleCountsByCondition();
+  const selectedCategoryId = searchParams.selectedCategory
+    ? Number.parseInt(searchParams.selectedCategory)
+    : undefined;
 
   const groupedCategories: GroupedCategory[] = categoriesAndConditions.reduce(
     (acc: GroupedCategory[], curr) => {
@@ -28,6 +38,7 @@ export default async function ResearchPage() {
           existingCategory.conditions.push({
             id: curr.condition_id,
             name: curr.condition_name,
+            // articleCount: articleCounts[curr.condition_id] || 0,
           });
         }
         return acc;
@@ -40,6 +51,7 @@ export default async function ResearchPage() {
           {
             id: curr.condition_id,
             name: curr.condition_name,
+            // articleCount: articleCounts[curr.condition_id] || 0,
           },
         ],
       });
@@ -49,8 +61,11 @@ export default async function ResearchPage() {
   );
 
   return (
-    <div className="container pt-24">
-      <ResearchContent categories={groupedCategories} />
+    <div className="container">
+      <ResearchContent
+        categories={groupedCategories}
+        initialSelectedCategory={selectedCategoryId}
+      />
     </div>
   );
 }

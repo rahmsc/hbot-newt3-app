@@ -1,5 +1,6 @@
-import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+
 import { ProviderCard } from "./components/providers/provider-card";
 
 const SAMPLE_PROVIDERS = [
@@ -40,27 +41,35 @@ const SAMPLE_PROVIDERS = [
 
 export default function ProvidersSection() {
   return (
-    <section className="container mx-auto px-4 py-12">
-      <div className="mb-8 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Verified HBOT Providers</h2>
-        <Link
-          href="/providers"
-          className="flex items-center gap-2 rounded-full bg-black px-6 py-3 text-white hover:bg-gray-800"
-        >
-          See all
-          <ChevronRight className="h-4 w-4" />
-        </Link>
-      </div>
+    <section className="w-full bg-white">
+      <div className="container mx-auto px-4 py-24">
+        <div className="mb-12">
+          <div className="mb-8 flex items-center justify-between">
+            <div className="space-y-4">
+              <h2 className="font-heading text-3xl font-bold text-gray-900">
+                Verified HBOT Providers
+              </h2>
+              <p className="font-sans text-lg text-gray-600">
+                Discover leading hyperbaric oxygen therapy providers in your
+                area
+              </p>
+            </div>
+            <Link
+              href="/providers"
+              className="inline-flex items-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-medium text-white hover:bg-gray-800"
+            >
+              See all
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
 
-      <p className="mb-8 text-gray-600">
-        Discover leading hyperbaric oxygen therapy providers in your area
-      </p>
-
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {SAMPLE_PROVIDERS.map((provider, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-          <ProviderCard key={index} {...provider} />
-        ))}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {SAMPLE_PROVIDERS.map((provider, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            <ProviderCard key={index} {...provider} />
+          ))}
+        </div>
       </div>
     </section>
   );

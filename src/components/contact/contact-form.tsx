@@ -1,11 +1,15 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { sendGAEvent } from "@next/third-parties/google";
+import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import Image from "next/image";
 
+import { GuideDialog } from "~/components/guides/guide-dialog";
+import ImageSection from "~/components/sections/image-section";
+import LinkSection from "~/components/sections/link-section";
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -16,8 +20,6 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import { useToast } from "~/hooks/use-toast";
 import {
   Select,
   SelectContent,
@@ -25,10 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import LinkSection from "~/components/sections/link-section";
-import ImageSection from "~/components/sections/image-section";
-import { GuideDialog } from "~/components/guides/guide-dialog";
-import { sendGAEvent } from "@next/third-parties/google";
+import { Textarea } from "~/components/ui/textarea";
+import { useToast } from "~/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2, {

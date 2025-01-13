@@ -1,7 +1,8 @@
-import React from "react";
 import { InstagramLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+
 import logo from "../../../public/logo/LOGO.png";
 import TikTokIcon from "../../../public/logo/tiktok";
 

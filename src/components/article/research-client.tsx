@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import React from "react";
 import { sendGAEvent } from "@next/third-parties/google";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useEffect,useRef, useState } from "react";
 
 interface ConditionWithCount {
   condition: string;

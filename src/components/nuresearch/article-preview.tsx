@@ -1,4 +1,6 @@
 import { format } from "date-fns";
+import Link from "next/link";
+
 import type { ConditionIdArticlesProps } from "~/utils/supabase/getArticlesByCondition";
 
 interface ArticlePreviewProps {
@@ -8,14 +10,14 @@ interface ArticlePreviewProps {
 export function ArticlePreview({ article }: ArticlePreviewProps) {
   if (!article) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex h-full items-center justify-center p-6">
         <p className="text-gray-500">Select an article to view details</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="h-full space-y-6 p-6">
       <div className="space-y-4">
         <h1 className="text-2xl font-bold text-gray-900">{article.heading}</h1>
         <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -57,19 +59,15 @@ export function ArticlePreview({ article }: ArticlePreviewProps) {
         <p className="text-gray-700">{article.summary}</p>
       </div>
 
-      <div className="flex gap-4">
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
-        >
-          <span>Open graph</span>
-        </button>
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-700 hover:bg-purple-200"
-        >
-          <span>Add origin</span>
-        </button>
+      <div className="flex gap-4 pt-6">
+        <Link href={`/new-research/${article.id}`}>
+          <button
+            type="button"
+            className="flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-600"
+          >
+            <span>View Paper</span>
+          </button>
+        </Link>
       </div>
     </div>
   );

@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import type { Map as LeafletMap } from "leaflet";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
-import { Input } from "~/components/ui/input";
+
+import type { Map as LeafletMap } from "leaflet";
+import L from "leaflet";
+import { MapPin,Search } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Search, MapPin } from "lucide-react";
+import { Input } from "~/components/ui/input";
 import type { HyperbaricCenter } from "~/types/map";
 
 // Component to handle map updates

@@ -1,9 +1,10 @@
+import type { Metadata } from "next";
+import Script from "next/script";
 import { Suspense } from "react";
+
 import ConditionContent from "~/components/article/condition-content";
 import Spinner from "~/components/spinner";
 import getArticlesByCondition from "~/utils/supabase/getArticlesByCondition";
-import type { Metadata } from "next";
-import Script from "next/script";
 
 function ArticlesLoading() {
   return (

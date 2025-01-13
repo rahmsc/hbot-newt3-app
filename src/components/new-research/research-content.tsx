@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ArticlesList } from "./articles-list";
+import { useEffect,useState } from "react";
+
 import {
   Accordion,
   AccordionContent,
@@ -14,6 +14,8 @@ import { conditions } from "~/data/researchDataDemo";
 import getArticlesByCondition, {
   type ConditionIdArticlesProps,
 } from "~/utils/supabase/getArticlesByCondition";
+
+import { ArticlesList } from "./articles-list";
 
 export interface ResearchContentProps {
   categories: {

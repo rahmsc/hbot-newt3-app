@@ -1,14 +1,15 @@
 "use client";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
-import RolePopup from "./guides/guide-popup";
-import logo from "../../public/logo/LOGO.png";
-import Image from "next/image";
-import { Menu, X } from "lucide-react";
-import type React from "react";
 import { sendGAEvent } from "@next/third-parties/google";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname,useRouter } from "next/navigation";
+import type React from "react";
+import { useEffect,useState } from "react";
+
+import logo from "../../public/logo/LOGO.png";
 import { LoginButton } from "./auth/LoginButton";
+import RolePopup from "./guides/guide-popup";
 
 const Navbar = () => {
   const [show, setShow] = useState(true);

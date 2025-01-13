@@ -1,10 +1,11 @@
+import type { Metadata } from "next";
+import Script from "next/script";
 import { Suspense } from "react";
+
 import ArticleContent from "~/components/article/article-content";
 import CallToAction from "~/components/sections/call-to-action";
 import Spinner from "~/components/spinner";
-import getArticleById, { ArticlesProps } from "~/utils/supabase/getArticleById";
-import type { Metadata } from "next";
-import Script from "next/script";
+import getArticleById, { type ArticlesProps } from "~/utils/supabase/getArticleById";
 
 function ArticleLoading() {
   return (

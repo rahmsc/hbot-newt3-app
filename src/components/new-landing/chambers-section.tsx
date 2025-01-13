@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
+import useEmblaCarousel from "embla-carousel-react";
+import { ChevronLeft,ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+
+import { Button } from "~/components/ui/button";
+import { combinedChamberData } from "~/data/combinedChambersData";
+import type { chambersDataProp } from "~/data/rebrandData";
+
 import { ChamberCard } from "./components/chambers/chambers-card";
 import { ChamberQuickView } from "./components/chambers/chambers-quick-view";
-import { combinedChamberData } from "~/data/combinedChambersData";
-import { Button } from "~/components/ui/button";
-import Link from "next/link";
-import { ChevronRight, ChevronLeft } from "lucide-react";
-import type { chambersDataProp } from "~/data/rebrandData";
 
 export function ChambersSection() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);

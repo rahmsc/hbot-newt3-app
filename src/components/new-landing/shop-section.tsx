@@ -1,12 +1,13 @@
 "use client";
 
-import { cn } from "~/lib/utils";
 import { ChevronRight } from "lucide-react";
-
 import Link from "next/link";
 import { useState } from "react";
-import ProductCard from "./components/shop/product-card";
+
 import TitlePill from "~/components/new-landing/components/title-pill";
+import { cn } from "~/lib/utils";
+
+import ProductCard from "./components/shop/product-card";
 
 type TabType = "chambers" | "products";
 

@@ -1,6 +1,7 @@
-import React from "react";
-import Link from "next/link";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import React from "react";
+
 import CallToAction from "./call-to-action";
 
 const ContactSection = () => {

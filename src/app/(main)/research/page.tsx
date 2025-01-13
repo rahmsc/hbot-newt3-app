@@ -1,13 +1,15 @@
+import type { Metadata } from "next";
+import Script from "next/script";
 import { Suspense } from "react";
-import getConditionListData from "~/utils/supabase/getConditionWithCategoryData"; // type FilteredArticleItemProps,
-import ResearchClient from "../../../components/article/research-client";
+
 import Spinner from "~/components/spinner";
 import {
   type ConditionWithCount,
   getConditionsWithCounts,
 } from "~/utils/airtable/getConditionsWithCount";
-import type { Metadata } from "next";
-import Script from "next/script";
+import getConditionListData from "~/utils/supabase/getConditionWithCategoryData"; // type FilteredArticleItemProps,
+
+import ResearchClient from "../../../components/article/research-client";
 
 function ResearchLoading() {
   return (

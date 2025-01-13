@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "~/components/ui/button";
-import { Check } from "lucide-react";
 import { motion } from "framer-motion";
+import { Check } from "lucide-react";
+import { useState } from "react";
+
+import { Button } from "~/components/ui/button";
+
 import { EmailPopup } from "./email-popup";
 import VideoPlayer from "./video-player";
 

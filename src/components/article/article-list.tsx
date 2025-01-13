@@ -1,9 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { sendGAEvent } from "@next/third-parties/google";
-import ArticleRow from "./article-preview";
+import Link from "next/link";
+
 import type { FilteredArticleByConditionItemProps } from "~/utils/airtable/getArticlesByCondition";
+
+import ArticleRow from "./article-preview";
 
 interface ArticleListClientProps {
   articles: FilteredArticleByConditionItemProps[];

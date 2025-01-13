@@ -1,8 +1,13 @@
 "use client";
 
-import type React from "react";
+import { sendGAEvent } from "@next/third-parties/google";
 // import { useState } from "react";
 import Image from "next/image";
+// import { GuideDialog } from "./guide-dialog";
+import Link from "next/link";
+import type React from "react";
+
+import { Card, CardContent } from "../ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -10,10 +15,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../ui/carousel";
-import { Card, CardContent } from "../ui/card";
-// import { GuideDialog } from "./guide-dialog";
-import Link from "next/link";
-import { sendGAEvent } from "@next/third-parties/google";
 
 export interface GuideProp {
   id: string;

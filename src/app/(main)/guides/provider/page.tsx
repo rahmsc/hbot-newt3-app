@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import Script from "next/script";
 
 import GuidesListing from "~/components/guides/guide-listings";
-import ProviderGuideCarousel from "~/components/guides/provider-guide-carousel";
 import PopularPosts from "~/components/guides/popular-guides";
 import PopularGuidesAlternative from "~/components/guides/popular-guides-alternative";
+import ProviderGuideCarousel from "~/components/guides/provider-guide-carousel";
 
 export interface GuideProp {
   id: string;

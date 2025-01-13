@@ -1,6 +1,6 @@
-import { Star, MapPin, Clock, Phone } from "lucide-react";
-import Link from "next/link";
+import { Clock, MapPin, Phone,Star } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProviderCardProps {
   name: string;

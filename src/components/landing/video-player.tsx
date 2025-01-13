@@ -1,7 +1,7 @@
 "use client";
-import { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, Maximize, Minimize } from "lucide-react";
+import { Maximize, Minimize,Pause, Play } from "lucide-react";
+import { useRef,useState } from "react";
 
 interface VideoPlayerProps {
   publicId: string;

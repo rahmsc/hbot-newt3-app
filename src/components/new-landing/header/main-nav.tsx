@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
 import { Menu } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef,useState } from "react";
 
 const navItems = [
   "NURESEARCH",
@@ -15,11 +16,31 @@ const navItems = [
 
 export function MainNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    // Close menu on route change
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    // Handle clicking outside of menu
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <nav className="w-full border-y">
       <div className="container mx-auto">
-        <div className="relative">
+        <div className="relative" ref={menuRef}>
           {/* Mobile menu button */}
           <button
             type="button"

@@ -1,4 +1,4 @@
-import { Lightbulb, Users, Truck, Cog, HeartHandshake } from "lucide-react";
+import { Cog, HeartHandshake,Lightbulb, Truck, Users } from "lucide-react";
 
 export default function HowWeWorkSection() {
   return (

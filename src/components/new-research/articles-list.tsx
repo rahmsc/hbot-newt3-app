@@ -1,14 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { sendGAEvent } from "@next/third-parties/google";
+import { Search } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+
 import getArticlesByCondition, {
   type ConditionIdArticlesProps,
 } from "~/utils/supabase/getArticlesByCondition";
-import Image from "next/image";
+
 import { Input } from "../ui/input";
-import { Search } from "lucide-react";
 
 interface ArticlesListProps {
   selectedConditionId: number | null;

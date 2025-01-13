@@ -1,12 +1,13 @@
 "use client";
 
-import RichText from "../rich-text";
-import FaqAccordion from "../article/faq-accordion";
-import ParallaxImage from "../parralex-image";
-import AccordionTemplate from "../accordion-template";
 import { format } from "date-fns";
 
 import type { ArticlesProps } from "~/utils/supabase/getArticleById";
+
+import AccordionTemplate from "../accordion-template";
+import FaqAccordion from "../article/faq-accordion";
+import ParallaxImage from "../parralex-image";
+import RichText from "../rich-text";
 
 function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
   const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/research-articles/";

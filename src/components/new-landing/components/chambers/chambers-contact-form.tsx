@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "~/components/ui/dialog";
 import {
   Form,
@@ -21,7 +23,6 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { Button } from "~/components/ui/button";
 import type { chambersDataProp } from "~/data/rebrandData";
 
 const formSchema = z.object({

@@ -1,8 +1,8 @@
 import img1 from "../../public/testImages/img1.jpg";
+import img5 from "../../public/testImages/img1.jpg";
 import img2 from "../../public/testImages/img2.jpg";
 import img3 from "../../public/testImages/img3.jpg";
 import img4 from "../../public/testImages/img4.jpg";
-import img5 from "../../public/testImages/img1.jpg";
 import img6 from "../../public/testImages/img6.jpg";
 
 export const articleContent1 = [

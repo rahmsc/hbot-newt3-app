@@ -1,18 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ArticleCard } from "./components/research/article-card";
-import { FeaturedArticleCard } from "./components/research/feature-article-card";
-import { FilterDialog } from "./components/filter-dialog";
-import getRandomArticles, {
-  type RandomArticleItemProps,
-} from "~/utils/supabase/getRandomArticles";
-import { Button } from "~/components/ui/button";
 import { XIcon } from "lucide-react";
+import { useEffect,useState } from "react";
+
+import { Button } from "~/components/ui/button";
 import {
   type CategoryWithConditions,
   getCategoryWithConditions,
 } from "~/utils/supabase/getCategoryWithConditions";
+import getRandomArticles, {
+  type RandomArticleItemProps,
+} from "~/utils/supabase/getRandomArticles";
+
+import { FilterDialog } from "./components/filter-dialog";
+import { ArticleCard } from "./components/research/article-card";
+import { FeaturedArticleCard } from "./components/research/feature-article-card";
 
 export default function ResearchDashboard() {
   const [selectedConditions, setSelectedConditions] = useState<number[]>([]);

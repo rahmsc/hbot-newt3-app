@@ -1,9 +1,10 @@
 "use client";
 
-import { Dialog, DialogContent } from "~/components/ui/dialog";
-import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
 import Image from "next/image";
+
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import { Dialog, DialogContent } from "~/components/ui/dialog";
 import type { chambersDataProp } from "~/data/rebrandData";
 
 interface ChamberQuickViewProps {

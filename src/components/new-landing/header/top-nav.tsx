@@ -1,10 +1,12 @@
 "use client";
 
+import { Menu,Search } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { Search, Menu } from "lucide-react";
+
+import { LoginButton } from "~/components/auth/LoginButton";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import Image from "next/image";
 
 export function TopNav() {
   return (
@@ -48,13 +50,7 @@ export function TopNav() {
             >
               Shop Chambers
             </Button>
-            <Button variant="outline" className="hidden gap-2 sm:inline-flex">
-              Login
-            </Button>
-            <Button variant="ghost" size="icon" className="ml-2">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Menu</span>
-            </Button>
+            <LoginButton />
           </div>
         </div>
       </div>

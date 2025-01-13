@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { api } from "~/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { sendGAEvent } from "@next/third-parties/google";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
+import { api } from "~/trpc/react";
+
 import { Button } from "../../components/ui/button";
 import {
   Form,
@@ -17,7 +20,6 @@ import {
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { useToast } from "../../hooks/use-toast";
-import { sendGAEvent } from "@next/third-parties/google";
 
 const formSchema = z.object({
   email: z.string().email({

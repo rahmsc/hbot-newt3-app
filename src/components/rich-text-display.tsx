@@ -4,15 +4,17 @@
 
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+
+import type { BlogPost } from "~/app/(main)/blog/page";
+
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
-import type { BlogPost } from "~/app/(main)/blog/page";
 
 export function RichTextDisplay({ data }: { data: BlogPost | BlogPost[] }) {
   const posts = Array.isArray(data) ? data : [data];

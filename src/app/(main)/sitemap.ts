@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
 
+import { getBlogPosts } from "~/utils/airtable/blogs/getBlogPosts";
 import getArticlesByCondition from "~/utils/airtable/getArticlesByCondition";
 import { getAllGuides } from "~/utils/airtable/guides/getAllGuides";
-import { getBlogPosts } from "~/utils/airtable/blogs/getBlogPosts";
 
 function safeDate(dateString: string | number | Date): string {
   if (dateString instanceof Date) {

@@ -1,9 +1,10 @@
 import Airtable from "airtable";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import RichText from "~/components/rich-text";
-import type { Metadata } from "next";
 import Script from "next/script";
+
+import RichText from "~/components/rich-text";
 
 export interface BlogPagePost {
   id: string;

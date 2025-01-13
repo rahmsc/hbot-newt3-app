@@ -1,27 +1,16 @@
-import { HydrateClient } from "~/trpc/server";
-import ArticleSection from "~/components/sections/article-section";
-import BlogSection from "~/components/sections/blog-section";
-import ContactSection from "~/components/sections/contact-section";
-import EmailInputForm from "~/components/sections/email-input-form";
-import HeroSection from "~/components/sections/hero-section";
-import LinkSection from "~/components/sections/link-section";
-import ImageSection from "~/components/sections/image-section";
 import type { Metadata } from "next";
 import Script from "next/script";
-import getRandomArticles from "~/utils/supabase/getRandomArticles";
-import getArticleById from "~/utils/supabase/getArticleById";
 
-import getArticlesByCondition from "~/utils/supabase/getArticlesByCondition";
+import { ChambersSection } from "~/components/new-landing/chambers-section";
+import { CTASection } from "~/components/new-landing/cta-section";
+import { HeroText } from "~/components/new-landing/header/hero-text";
+import { WellnessMarketplace } from "~/components/new-landing/marketplace-section";
+import ProvidersSection from "~/components/new-landing/providers-section";
 import ResearchDashboard from "~/components/new-landing/research-section";
 import TrendingSection from "~/components/new-landing/trending-section";
-import ProvidersSection from "~/components/new-landing/providers-section";
-import ShopSection from "~/components/new-landing/shop-section";
-import { SiteHeader } from "~/components/site-header";
-import { TopNav } from "~/components/new-landing/header/top-nav";
-import { HeroText } from "~/components/new-landing/header/hero-text";
-import { ChambersSection } from "~/components/new-landing/chambers-section";
-import { WellnessMarketplace } from "~/components/new-landing/marketplace-section";
-import { CTASection } from "~/components/new-landing/cta-section";
+import ContactSection from "~/components/sections/contact-section";
+import EmailInputForm from "~/components/sections/email-input-form";
+import { HydrateClient } from "~/trpc/server";
 
 export const metadata: Metadata = {
   title: "Welcome to HyperbaricHQ | Hyperbaric Oxygen Therapy Research",
@@ -95,16 +84,18 @@ export default async function Home(): Promise<JSX.Element> {
         {JSON.stringify(structuredData)}
       </Script>
       <main className="flex w-full flex-row items-center justify-center">
-        <div>
+        <div className="w-full">
           <HeroText />
-          <ResearchDashboard />
-          <ChambersSection />
-          <TrendingSection />
-          <ProvidersSection />
-          <WellnessMarketplace />
-          <CTASection />
-          <EmailInputForm />
-          <ContactSection />
+          <div className="space-y-24">
+            <ResearchDashboard />
+            <ChambersSection />
+            <TrendingSection />
+            <ProvidersSection />
+            <WellnessMarketplace />
+            <CTASection />
+            <EmailInputForm />
+            <ContactSection />
+          </div>
         </div>
       </main>
     </HydrateClient>

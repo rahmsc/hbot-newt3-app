@@ -1,6 +1,6 @@
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { FC } from "react";
-import { X } from "lucide-react";
 
 interface RolePopupProps {
   onSelectRole: (role: "provider" | "user") => void;

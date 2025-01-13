@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+
 import ArticleContent from "~/components/new-research/article-content";
 import CallToAction from "~/components/sections/call-to-action";
 import Spinner from "~/components/spinner";
@@ -40,8 +41,8 @@ const StudyPage = async ({ params }: PageProps) => {
 
     return (
       <div className="w-full">
-        <section className="flex w-full items-center justify-center pt-32">
-          <div className="w-full max-w-screen-lg px-8 py-16">
+        <section className="flex w-full items-center justify-center">
+          <div className="p w-full max-w-screen-lg px-8 py-4">
             <Suspense fallback={<ArticleLoading />}>
               <ArticleContent foundArticle={foundArticle} />
             </Suspense>

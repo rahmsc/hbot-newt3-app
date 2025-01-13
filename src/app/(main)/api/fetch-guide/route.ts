@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import Airtable from "airtable";
+import { NextResponse } from "next/server";
 
 const airtable = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY });
 const base = airtable.base(process.env.AIRTABLE_BASE_ID ?? "");

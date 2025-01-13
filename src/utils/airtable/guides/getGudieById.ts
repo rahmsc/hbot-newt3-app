@@ -1,4 +1,5 @@
 import Airtable from "airtable";
+
 import type { GuidePageProp } from "~/app/(main)/guides/provider/[id]/page";
 
 export async function getGuideById(id: string): Promise<GuidePageProp | null> {

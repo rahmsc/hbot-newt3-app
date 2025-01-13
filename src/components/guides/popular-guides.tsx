@@ -1,9 +1,13 @@
 "use client";
 
-import type React from "react";
-import { useState } from "react";
+import { sendGAEvent } from "@next/third-parties/google";
+import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import type React from "react";
+import { useState } from "react";
+
+import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import {
   Dialog,
@@ -11,9 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { Button } from "~/components/ui/button";
-import { ChevronRight } from "lucide-react";
-import { sendGAEvent } from "@next/third-parties/google";
 
 interface GuideProp {
   id: string;

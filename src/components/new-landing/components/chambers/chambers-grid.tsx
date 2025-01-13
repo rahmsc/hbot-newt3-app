@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { ChamberCard } from "./chambers-card";
-import { ChamberQuickView } from "./chambers-quick-view";
+
 import { combinedChamberData } from "~/data/combinedChambersData";
 import type { chambersDataProp } from "~/data/rebrandData";
+
+import { ChamberCard } from "./chambers-card";
+import { ChamberQuickView } from "./chambers-quick-view";
 
 export function ChambersGrid() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState<boolean>(false);

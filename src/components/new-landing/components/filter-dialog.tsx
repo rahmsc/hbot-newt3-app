@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { SlidersHorizontal } from "lucide-react";
+import { useEffect,useState } from "react";
+
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import {
@@ -11,7 +13,6 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { SlidersHorizontal } from "lucide-react";
 import type { CategoryWithConditions } from "~/utils/supabase/getCategoryWithConditions";
 
 interface FilterDialogProps {

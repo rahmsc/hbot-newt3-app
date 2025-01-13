@@ -1,9 +1,11 @@
-import Link from "next/link";
 import Image from "next/image";
-import Spinner from "../spinner";
+import Link from "next/link";
+
 import getRandomArticles, {
   type RandomArticleItemProps,
 } from "~/utils/airtable/getRandomArticles";
+
+import Spinner from "../spinner";
 
 export default async function ArticleSection() {
   const imgUrl = "https://d144dqt8e4woe2.cloudfront.net/research-articles/";

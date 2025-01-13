@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+
 import { Button } from "../../components/ui/button";
 import {
   Card,
@@ -7,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
-import Link from "next/link";
 
 export default function CallToAction() {
   const imageUrl =

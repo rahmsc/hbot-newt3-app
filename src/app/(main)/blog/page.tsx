@@ -1,6 +1,6 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import type { Metadata } from "next";
 import Script from "next/script";
 
 import RichText from "~/components/rich-text";
@@ -10,6 +10,7 @@ interface BlogPostFields {
   "ID Blog": string;
   "Content Idea": string;
   "Enriched Blog": string;
+  Date: Date;
   Introduction: string;
   "URL Slug": string;
   Approved: boolean;

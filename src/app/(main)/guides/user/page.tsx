@@ -1,8 +1,9 @@
 import Airtable from "airtable";
-import PopularPosts from "~/components/guides/popular-guides";
-import UserGuideCarousel from "~/components/guides/user-guide-carousel";
 import type { Metadata } from "next";
 import Script from "next/script";
+
+import PopularPosts from "~/components/guides/popular-guides";
+import UserGuideCarousel from "~/components/guides/user-guide-carousel";
 
 export interface GuideProp {
   id: string;

@@ -1,10 +1,11 @@
+import { BookmarkIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
-import { BookmarkIcon } from "lucide-react";
 import type { RandomArticleItemProps } from "~/utils/supabase/getRandomArticles";
-import Link from "next/link";
 
 export function FeaturedArticleCard({
   id,

@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { sendGAEvent } from "@next/third-parties/google";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+
 import getArticlesByCondition, {
   type ConditionIdArticlesProps,
 } from "~/utils/supabase/getArticlesByCondition";
@@ -34,7 +35,7 @@ export function ArticlesList({
         if (isMounted) {
           setArticles(data || []);
           // Set the first article as the default preview when articles load
-          if (data && data.length > 0) {
+          if (data?.[0]) {
             onArticleHover(data[0]);
           }
           setPrevConditionId(selectedConditionId);
@@ -97,14 +98,14 @@ export function ArticlesList({
 
   if (!selectedConditionId) {
     return (
-      <div className="py-10 text-center text-gray-500">
-        Select a condition to view articles.
+      <div className="flex h-full items-center justify-center p-6">
+        <p className="text-gray-500">Select a condition to view articles.</p>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-[200px]">
+    <div className="relative h-full">
       {/* Loading Overlay */}
       <div
         className={`absolute inset-0 z-10 flex items-center justify-center bg-white/80 transition-opacity duration-300 ${
@@ -119,12 +120,14 @@ export function ArticlesList({
 
       {/* Content */}
       <div
-        className={`transition-opacity duration-300 ${isLoading ? "opacity-50" : "opacity-100"}`}
+        className={`h-full transition-opacity duration-300 ${
+          isLoading ? "opacity-50" : "opacity-100"
+        }`}
       >
         {articles.length > 0 ? (
           content
         ) : (
-          <div className="py-10 text-center text-gray-500">
+          <div className="flex h-full items-start justify-center p-6 pt-12 text-gray-500">
             No articles found for this condition.
           </div>
         )}

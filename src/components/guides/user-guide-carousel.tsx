@@ -1,8 +1,11 @@
 "use client";
 
-import type React from "react";
+import { sendGAEvent } from "@next/third-parties/google";
 import Image from "next/image";
 import Link from "next/link";
+import type React from "react";
+
+import { Card, CardContent } from "~/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -10,8 +13,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "~/components/ui/carousel";
-import { Card, CardContent } from "~/components/ui/card";
-import { sendGAEvent } from "@next/third-parties/google";
 
 export interface GuideProp {
   id: string;
