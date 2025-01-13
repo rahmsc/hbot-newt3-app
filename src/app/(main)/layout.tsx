@@ -2,15 +2,14 @@ import "~/styles/globals.css";
 import "~/styles/embla.css";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { Inter, Raleway, Work_Sans } from "next/font/google";
-import localFont from "next/font/local";
+import { Raleway, Work_Sans } from "next/font/google";
 import Script from "next/script";
 
-import Hotjar from "~/components/hotjar";
-import { MainNav } from "~/components/new-landing/header/main-nav";
-import { TopNav } from "~/components/new-landing/header/top-nav";
-import Footer from "~/components/sections/footer";
+import { MainNav } from "~/components/header/main-nav";
+import { TopNav } from "~/components/header/top-nav";
+import Footer from "~/components/landing/footer";
 import { Toaster } from "~/components/ui/toaster";
+import Hotjar from "~/components/utils/hotjar";
 import { AuthProvider } from "~/contexts/AuthContext";
 import { TRPCReactProvider } from "~/trpc/react";
 // import QuizPopup from "~/components/quiz-popup";

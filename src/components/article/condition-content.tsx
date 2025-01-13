@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import Spinner from "~/components/spinner";
+import Spinner from "~/components/utils/spinner";
 import getArticlesByCondition from "~/utils/supabase/getArticlesByCondition";
 
 import ArticleListClient from "./article-list";

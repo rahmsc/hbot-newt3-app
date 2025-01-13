@@ -4,7 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 
-import RichText from "~/components/rich-text";
+import RichText from "~/components/utils/rich-text";
 
 export interface BlogPagePost {
   id: string;

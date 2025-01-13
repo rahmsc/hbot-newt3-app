@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 
-import { ChambersSection } from "~/components/new-landing/chambers-section";
-import { CTASection } from "~/components/new-landing/cta-section";
-import { HeroText } from "~/components/new-landing/header/hero-text";
-import { WellnessMarketplace } from "~/components/new-landing/marketplace-section";
-import ProvidersSection from "~/components/new-landing/providers-section";
-import ResearchDashboard from "~/components/new-landing/research-section";
-import TrendingSection from "~/components/new-landing/trending-section";
-import ContactSection from "~/components/sections/contact-section";
-import EmailInputForm from "~/components/sections/email-input-form";
+import { HeroText } from "~/components/header/hero-text";
+import { ChambersSection } from "~/components/landing/chambers-section";
+import ContactSection from "~/components/landing/contact-section";
+import { CTASection } from "~/components/landing/cta-section";
+import EmailInputForm from "~/components/landing/email-input-form";
+import { WellnessMarketplace } from "~/components/landing/marketplace-section";
+import ProvidersSection from "~/components/landing/providers-section";
+import ResearchDashboard from "~/components/landing/research-section";
+import TrendingSection from "~/components/landing/trending-section";
 import { HydrateClient } from "~/trpc/server";
 
 export const metadata: Metadata = {

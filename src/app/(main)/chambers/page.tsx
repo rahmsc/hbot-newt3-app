@@ -1,7 +1,7 @@
-import { ChambersGrid } from "~/components/new-landing/components/chambers/chambers-grid";
-import { ResearchCategories } from "~/components/new-landing/components/chambers/research-categories";
-import { TrustedPartners } from "~/components/new-landing/components/chambers/trusted-partners";
-import { WhyWorkSection } from "~/components/new-landing/components/chambers/why-work-with-us";
+import { ChambersGrid } from "~/components/chambers/chambers-grid";
+import { ResearchCategories } from "~/components/chambers/research-categories";
+import { TrustedPartners } from "~/components/chambers/trusted-partners";
+import { WhyWorkSection } from "~/components/chambers/why-work-with-us";
 // import { BenefitsSection } from "~/components/chambers/ui/benefits-section";
 // import { ResearchSection } from "~/components/chambers/ui/research-section";
 // import { NewsletterSignup } from "~/components/chambers/ui/newsletter-signup";

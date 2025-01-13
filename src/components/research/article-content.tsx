@@ -1,65 +1,50 @@
-import { sendGAEvent } from "@next/third-parties/google";
+"use client";
 
-import type { ArticleByIdFieldsItemProps } from "~/utils/airtable/getArticleById";
+import { format } from "date-fns";
+
+import type { ArticlesProps } from "~/utils/supabase/getArticleById";
 
 import AccordionTemplate from "../utils/accordion-template";
+import FaqAccordion from "../article/faq-accordion";
 import ParallaxImage from "../utils/parralex-image";
 import RichText from "../utils/rich-text";
-import FaqAccordion, { type FaqItem } from "./faq-accordion";
 
-function ArticleContent({
-  foundArticle,
-}: {
-  foundArticle: ArticleByIdFieldsItemProps;
-}) {
+function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
   const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/research-articles/";
 
-  const parseFaqArray = (faqString: string): FaqItem[] => {
-    try {
-      return JSON.parse(faqString) as FaqItem[];
-    } catch (error) {
-      console.error("Error parsing FAQ array:", error);
-      return [];
-    }
-  };
-
-  const faqArray =
-    typeof foundArticle.fields.faqArray === "string"
-      ? parseFaqArray(foundArticle.fields.faqArray)
-      : [];
   return (
     <div className="space-y-8">
       <div className="space-y-4 text-center">
         <p className="uppercase tracking-widest text-gray-500">
-          {foundArticle.fields.category} CATEGORY
+          {foundArticle.conditionId} CATEGORY
         </p>
         <h1 className="text-4xl font-bold leading-tight">
-          {foundArticle.fields.heading}
+          {foundArticle.heading}
         </h1>
       </div>
       <div className="my-12 flex items-center justify-center">
         <ParallaxImage
-          src={`${imageUrl}${foundArticle.fields.id}.png`}
-          alt={foundArticle.fields.heading}
+          src={`${imageUrl}${foundArticle.id}.png`}
+          alt={foundArticle.heading}
         />
       </div>
 
       <div className="flex flex-col justify-between space-y-4 text-left md:flex-row md:space-x-8 md:space-y-0">
         <div className="flex-1 space-y-2">
           <p className="font-bold text-red-600">CONDITION</p>
-          <p>{foundArticle.fields.condition}</p>
+          <p>{foundArticle.conditionId}</p>
         </div>
         <div className="flex-1 space-y-2">
           <p className="font-bold text-red-600">PRESSURE USED</p>
-          <p>{foundArticle.fields.pressureUsed}</p>
+          <p>{foundArticle.pressureUsed}</p>
         </div>
         <div className="flex-1 space-y-2">
           <p className="font-bold text-red-600"># OF SESSIONS</p>
-          <p>{foundArticle.fields.numberOfTreatments}</p>
+          <p>{foundArticle.numberOfTreatments}</p>
         </div>
         <div className="flex-1 space-y-2">
           <p className="font-bold text-red-600">PUBLISHED DATE</p>
-          <p>{foundArticle.fields.publishedDate}</p>
+          <p>{format(new Date(foundArticle.publishedDate), "MM/dd/yyyy")}</p>
         </div>
       </div>
 
@@ -72,7 +57,7 @@ function ArticleContent({
               }
               content={
                 <RichText
-                  content={foundArticle.fields.outcomes}
+                  content={foundArticle.summary}
                   className="leading-relaxed text-gray-700"
                 />
               }
@@ -84,7 +69,7 @@ function ArticleContent({
               trigger={<h2 className="text-3xl font-semibold">Introduction</h2>}
               content={
                 <RichText
-                  content={foundArticle.fields.introduction}
+                  content={foundArticle.introduction}
                   className="leading-relaxed text-gray-700"
                 />
               }
@@ -96,7 +81,7 @@ function ArticleContent({
               trigger={<h2 className="text-3xl font-semibold">Results</h2>}
               content={
                 <RichText
-                  content={foundArticle.fields.results}
+                  content={foundArticle.results}
                   className="leading-relaxed text-gray-700"
                 />
               }
@@ -108,35 +93,7 @@ function ArticleContent({
               trigger={<h2 className="text-3xl font-semibold">Conclusion</h2>}
               content={
                 <RichText
-                  content={foundArticle.fields.conclusion || ""}
-                  className="leading-relaxed text-gray-700"
-                />
-              }
-            />
-          </div>
-
-          <div className="space-y-4">
-            <AccordionTemplate
-              trigger={
-                <h2 className="text-3xl font-semibold">
-                  Conflicts of Interest
-                </h2>
-              }
-              content={
-                <RichText
-                  content={foundArticle.fields.conflictsOfInterest}
-                  className="leading-relaxed text-gray-700"
-                />
-              }
-            />
-          </div>
-
-          <div className="space-y-4">
-            <AccordionTemplate
-              trigger={<h2 className="text-3xl font-semibold">Funding</h2>}
-              content={
-                <RichText
-                  content={foundArticle.fields.funding}
+                  content={foundArticle.conclusion || ""}
                   className="leading-relaxed text-gray-700"
                 />
               }
@@ -147,13 +104,7 @@ function ArticleContent({
         <div className="mt-8 lg:mt-0 lg:w-1/3">
           <div className="top-24 space-y-4">
             <h2 className="mb-4 text-3xl font-semibold">FAQs</h2>
-            {faqArray.length > 0 ? (
-              <FaqAccordion faqData={faqArray} />
-            ) : (
-              <p className="text-gray-700">
-                No FAQs available for this article.
-              </p>
-            )}
+            <p className="text-gray-700">No FAQs available for this article.</p>
           </div>
         </div>
       </div>
