@@ -11,6 +11,7 @@ import Footer from "~/components/landing/footer";
 import { Toaster } from "~/components/ui/toaster";
 import Hotjar from "~/components/utils/hotjar";
 import { AuthProvider } from "~/contexts/AuthContext";
+import ReactQueryProvider from "~/providers/react-query-provider";
 import { TRPCReactProvider } from "~/trpc/react";
 // import QuizPopup from "~/components/quiz-popup";
 
@@ -40,16 +41,18 @@ export default function RootLayout({
         className={`font-sans ${workSans.variable} ${raleway.variable} w-full overflow-x-hidden`}
       >
         <TRPCReactProvider>
-          <AuthProvider>
-            <TopNav />
-            <MainNav />
-            <main className="flex min-h-screen w-full flex-col items-center justify-between">
-              {children}
-            </main>
-            <Footer />
-            <Toaster />
-            {/* <QuizPopup /> */}
-          </AuthProvider>
+          <ReactQueryProvider>
+            <AuthProvider>
+              <TopNav />
+              <MainNav />
+              <main className="flex min-h-screen w-full flex-col items-center justify-between">
+                {children}
+              </main>
+              <Footer />
+              <Toaster />
+              {/* <QuizPopup /> */}
+            </AuthProvider>
+          </ReactQueryProvider>
         </TRPCReactProvider>
         <GoogleAnalytics gaId={"G-KZMJT45KDX"} />
         <Hotjar />

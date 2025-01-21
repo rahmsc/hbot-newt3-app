@@ -1,4 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+import type { PostgrestError } from "@supabase/supabase-js";
+
 import { createClient } from "./client";
+
+interface StudyRecord {
+  id: number;
+  heading: string;
+  condition_id: number;
+  summary: string | null;
+  pressure_used: string | null;
+  number_of_treatments: number | null;
+  published_date: string | null;
+  peer_reviewed: boolean | null;
+  public_data: boolean | null;
+  funded: boolean | null;
+  outcome_rating: string | null;
+}
 
 export interface RandomArticleItemProps {
   id: number;
@@ -15,61 +33,81 @@ export interface RandomArticleItemProps {
 }
 
 export default async function getRandomArticles(
-  count = 4,
+  count = 5,
   conditionId?: string,
 ): Promise<RandomArticleItemProps[]> {
   const supabase = createClient();
-  try {
-    let query = supabase
-      .from("studies")
-      .select(
-        `
-        id,
-        heading,
-        condition_id,
-        summary,
-        pressure_used,
-        number_of_treatments,
-        published_date,
-        peer_reviewed,
-        public_data,
-        funded,
-        outcome_rating
-      `,
-      )
-      .lte("id", 99)
-      .limit(count);
 
-    if (conditionId) {
-      query = query.eq("condition_id", conditionId);
-    }
+  let query = supabase
+    .from("studies")
+    .select(
+      `
+      id,
+      heading,
+      condition_id,
+      summary,
+      pressure_used,
+      number_of_treatments,
+      published_date,
+      peer_reviewed,
+      public_data,
+      funded,
+      outcome_rating
+    `,
+    )
+    .lte("id", 99)
+    .limit(count);
 
-    const { data, error } = await query;
-
-    if (error) {
-      console.error("Error fetching data:", error);
-      throw error;
-    }
-
-    if (!data) {
-      return [];
-    }
-
-    return data.map((record) => ({
-      id: record.id as number,
-      heading: record.heading as string,
-      conditionId: record.condition_id as number,
-      summary: record.summary as string,
-      pressure_used: record.pressure_used as string,
-      number_of_treatments: record.number_of_treatments as number,
-      published_date: record.published_date as Date,
-      peer_reviewed: record.peer_reviewed as boolean,
-      public_data: record.public_data as boolean,
-      funded: record.funded as boolean,
-      outcome_rating: record.outcome_rating as string,
-    }));
-  } catch (error) {
-    console.error("Error in getRandomArticles:", error);
-    throw error;
+  // Handle multiple condition IDs
+  if (conditionId) {
+    const conditionIds = conditionId
+      .split(",")
+      .map((id) => Number.parseInt(id.trim()));
+    query = query.in("condition_id", conditionIds);
   }
+
+  return Promise.resolve(
+    query.then(
+      ({
+        data,
+        error,
+      }: {
+        data: StudyRecord[] | null;
+        error: PostgrestError | null;
+      }) => {
+        if (error) {
+          console.error("Error fetching data:", error);
+          throw new Error(error.message);
+        }
+
+        if (!data) {
+          return [];
+        }
+
+        return data.map(
+          (record: StudyRecord): RandomArticleItemProps => ({
+            id: record.id,
+            heading: record.heading,
+            conditionId: record.condition_id,
+            summary: record.summary ?? undefined,
+            pressure_used: record.pressure_used ?? undefined,
+            number_of_treatments: record.number_of_treatments ?? undefined,
+            published_date: record.published_date
+              ? new Date(record.published_date)
+              : undefined,
+            peer_reviewed: record.peer_reviewed ?? undefined,
+            public_data: record.public_data ?? undefined,
+            funded: record.funded ?? undefined,
+            outcome_rating: record.outcome_rating ?? undefined,
+          }),
+        );
+      },
+    ),
+  ).catch((error: unknown) => {
+    console.error("Error in getRandomArticles:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch articles: ${error.message}`);
+    }
+    throw new Error("Failed to fetch articles");
+  });
 }

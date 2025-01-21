@@ -7,7 +7,7 @@ import { Button } from "~/components/ui/button";
 
 import { WellnessProductCard } from "../wellness/wellness-product-card";
 
-const products = [
+export const wellnessProducts = [
   {
     image: "/wellness-product-images/1.png",
     publisher: "Guide by Hyperbaric HQ",
@@ -69,7 +69,7 @@ export function WellnessMarketplace() {
         <div className="relative">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex gap-8">
-              {products.map((product) => (
+              {wellnessProducts.map((product) => (
                 <div
                   className="flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_33.333%]"
                   key={product.title}

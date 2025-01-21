@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 
+import ChambersShowcase from "~/components/chambers/chambers-showcase";
 import RichText from "~/components/utils/rich-text";
 
 export interface BlogPagePost {
@@ -128,61 +129,70 @@ export default async function BlogPostPage({ params }: PageProps) {
       <Script id="structured-data" type="application/ld+json">
         {JSON.stringify(structuredData)}
       </Script>
-      <article className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <header className="mb-10 text-center">
-          <h1 className="mb-4 text-4xl font-bold leading-tight text-gray-900 sm:text-5xl">
-            {post.fields.Title}
-          </h1>
-        </header>
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="flex gap-8">
+          <article className="max-w-4xl flex-1">
+            <header className="mb-10">
+              <h1 className="text-4xl font-bold">{post.fields.Title}</h1>
+            </header>
 
-        <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
-          <Image
-            src={`https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`}
-            alt={post.fields.Title}
-            width={1000}
-            height={500}
-            className="w-full object-cover"
-          />
-        </div>
+            <div className="prose prose-lg">
+              <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
+                <Image
+                  src={`https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`}
+                  alt={post.fields.Title}
+                  width={1000}
+                  height={500}
+                  className="w-full object-cover"
+                />
+              </div>
 
-        <div className="mb-10 text-lg">
-          <RichText
-            content={post.fields.Introduction}
-            className="leading-relaxed"
-          />
-        </div>
+              <div className="mb-10 text-lg">
+                <RichText
+                  content={post.fields.Introduction}
+                  className="leading-relaxed"
+                />
+              </div>
 
-        <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
-          <Image
-            src={`https://d144dqt8e4woe2.cloudfront.net/blogs/bodyimage1/${post.fields["ID Blog"]}.png`}
-            alt={post.fields.Title}
-            width={1000}
-            height={500}
-            className="w-full object-cover"
-          />
-        </div>
+              <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
+                <Image
+                  src={`https://d144dqt8e4woe2.cloudfront.net/blogs/bodyimage1/${post.fields["ID Blog"]}.png`}
+                  alt={post.fields.Title}
+                  width={1000}
+                  height={500}
+                  className="w-full object-cover"
+                />
+              </div>
 
-        <div className="mb-10 text-lg">
-          <RichText content={post.fields.Body} className="leading-relaxed" />
-        </div>
+              <div className="mb-10 text-lg">
+                <RichText
+                  content={post.fields.Body}
+                  className="leading-relaxed"
+                />
+              </div>
 
-        <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
-          <Image
-            src={`https://d144dqt8e4woe2.cloudfront.net/blogs/bodyimage2/${post.fields["ID Blog"]}.png`}
-            alt={post.fields.Title}
-            width={1000}
-            height={500}
-            className="w-full object-cover"
-          />
-        </div>
+              <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
+                <Image
+                  src={`https://d144dqt8e4woe2.cloudfront.net/blogs/bodyimage2/${post.fields["ID Blog"]}.png`}
+                  alt={post.fields.Title}
+                  width={1000}
+                  height={500}
+                  className="w-full object-cover"
+                />
+              </div>
 
-        <div className="mb-10 text-lg">
-          <RichText
-            content={post.fields.Conclusion}
-            className="leading-relaxed"
-          />
+              <div className="mb-10 text-lg">
+                <RichText
+                  content={post.fields.Conclusion}
+                  className="leading-relaxed"
+                />
+              </div>
+            </div>
+          </article>
+
+          <ChambersShowcase />
         </div>
-      </article>
+      </div>
     </>
   );
 }

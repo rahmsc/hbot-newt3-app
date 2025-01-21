@@ -6,6 +6,7 @@ import {
   type TrendingArticleProps,
   TrendingCard,
 } from "../trending/trending-card";
+import TitlePill from "./title-pill";
 
 const articles: TrendingArticleProps[] = [
   {
@@ -82,12 +83,10 @@ export default function TrendingSection() {
     <section className="w-full px-4 py-12 md:px-6">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex items-center justify-between">
-          <div className="rounded-full bg-black px-6 py-2 text-white">
-            <h2 className="text-lg font-semibold">Trending</h2>
-          </div>
+          <TitlePill>Trending</TitlePill>
           <Button
             variant="outline"
-            className="rounded-full bg-black text-white hover:bg-black/90"
+            className="rounded-full bg-black text-xl text-white hover:bg-black/90"
           >
             Filter
           </Button>

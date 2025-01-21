@@ -12,6 +12,7 @@ import type { chambersDataProp } from "~/data/rebrandData";
 
 import { ChamberCard } from "../chambers/chambers-card";
 import { ChamberQuickView } from "../chambers/chambers-quick-view";
+import TitlePill from "./title-pill";
 
 export function ChambersSection() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
@@ -36,9 +37,9 @@ export function ChambersSection() {
     <section className="w-full bg-gray-50 py-16">
       <div className="container mx-auto">
         <div className="mb-8 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Explore Chambers</h2>
+          <TitlePill>Explore Chambers</TitlePill>
           <Link href="/chambers">
-            <Button variant="outline" className="gap-2">
+            <Button variant="default" className="gap-2 text-xl">
               View all
               <ChevronRight className="h-4 w-4" />
             </Button>

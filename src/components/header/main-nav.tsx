@@ -3,15 +3,15 @@
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef,useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const navItems = [
-  "NURESEARCH",
+  "RESEARCH",
   "CHAMBERS",
   "TRENDING",
   "PROVIDERS",
   "MARKET",
-  "JOIN HQ",
+  "JOIN-HQ",
 ];
 
 export function MainNav() {

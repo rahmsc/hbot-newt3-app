@@ -61,7 +61,7 @@ export function Sidebar({
               <AccordionItem
                 key={category.categoryId}
                 value={category.categoryId.toString()}
-                className="border-2 border-black first:rounded-t-md last:rounded-b-md [&:not(:first-child)]:-mt-[2px]"
+                className="first:rounded-t-md last:rounded-b-md [&:not(:first-child)]:-mt-[2px]"
               >
                 <AccordionTrigger className="px-4 hover:no-underline">
                   <div className="flex w-full items-center justify-between py-2">
@@ -69,35 +69,36 @@ export function Sidebar({
                       {category.categoryName}
                     </span>
                     <div className="flex items-center gap-2">
-                      <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
-                        {category.conditions.length}
-                      </span>
                       {/* <ChevronDown className="h-4 w-4 text-gray-500" /> */}
                     </div>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="flex flex-col divide-y divide-gray-200">
-                    {category.conditions.map((condition) => (
-                      <Button
-                        key={condition.id}
-                        variant="ghost"
-                        className={`w-full justify-start rounded-none px-4 py-3 text-left text-sm hover:bg-gray-50 ${
-                          condition.id === selectedConditionId
-                            ? "bg-gray-100 font-medium text-gray-900"
-                            : "text-gray-600"
-                        }`}
-                        onClick={() => onConditionSelect(condition.id)}
-                      >
-                        <div className="flex w-full items-center justify-between">
-                          <span>{condition.name}</span>
-                          {condition.articleCount !== undefined && (
-                            <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
-                              {condition.articleCount}
-                            </span>
-                          )}
-                        </div>
-                      </Button>
+                    {category.conditions.map((condition, index, array) => (
+                      <div key={condition.id}>
+                        <Button
+                          variant="ghost"
+                          className={`w-full justify-start rounded-none px-4 py-3 text-left text-sm hover:bg-gray-50 ${
+                            condition.id === selectedConditionId
+                              ? "bg-gray-100 font-medium text-gray-900"
+                              : "text-gray-600"
+                          }`}
+                          onClick={() => onConditionSelect(condition.id)}
+                        >
+                          <div className="flex w-full items-center justify-between">
+                            <span>{condition.name}</span>
+                            {condition.articleCount !== undefined && (
+                              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                                {condition.articleCount}
+                              </span>
+                            )}
+                          </div>
+                        </Button>
+                        {index < array.length - 1 && (
+                          <div className="mx-4 border-t border-gray-200" />
+                        )}
+                      </div>
                     ))}
                   </div>
                 </AccordionContent>

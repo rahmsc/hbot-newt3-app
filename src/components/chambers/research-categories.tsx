@@ -35,7 +35,7 @@ export function ResearchCategories() {
   const router = useRouter();
 
   const handleCategoryClick = (categoryId: number) => {
-    router.push(`/nuresearch?selectedCategory=${categoryId}`);
+    router.push(`/research?selectedCategory=${categoryId}`);
   };
 
   return (

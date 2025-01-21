@@ -1,7 +1,7 @@
 "use client";
 
 import { SlidersHorizontal } from "lucide-react";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -106,7 +106,7 @@ export function FilterDialog({
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="bg-black text-white hover:bg-black/90"
+          className="bg-black text-xl text-white hover:bg-black/90"
         >
           <SlidersHorizontal className="mr-2 h-4 w-4" />
           Filter

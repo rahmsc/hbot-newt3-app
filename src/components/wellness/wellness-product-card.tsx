@@ -10,6 +10,7 @@ interface WellnessProductCardProps {
   title: string;
   description: string;
   productUrl: string;
+  price: number;
 }
 
 export function WellnessProductCard({
@@ -18,13 +19,14 @@ export function WellnessProductCard({
   title,
   description,
   productUrl,
+  price,
 }: WellnessProductCardProps) {
   return (
     <Card className="h-full">
       <CardContent className="p-6">
         <div className="aspect-square overflow-hidden rounded-lg">
           <Image
-            src={image}
+            src={"https://picsum.photos/200"}
             alt={title}
             width={400}
             height={400}
@@ -35,6 +37,7 @@ export function WellnessProductCard({
           <p className="text-sm text-muted-foreground">{publisher}</p>
           <h3 className="text-2xl font-bold">{title}</h3>
           <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="text-sm text-muted-foreground">${price}</p>
         </div>
       </CardContent>
       <CardFooter className="flex flex-col items-stretch gap-3 p-6 pt-0">

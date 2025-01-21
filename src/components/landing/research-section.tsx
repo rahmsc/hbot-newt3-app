@@ -12,9 +12,9 @@ import getRandomArticles, {
   type RandomArticleItemProps,
 } from "~/utils/supabase/getRandomArticles";
 
-import { FilterDialog } from "./filter-dialog";
 import { ArticleCard } from "../research/article-card";
 import { FeaturedArticleCard } from "../research/feature-article-card";
+import { FilterDialog } from "./filter-dialog";
 
 export default function ResearchDashboard() {
   const [selectedConditions, setSelectedConditions] = useState<number[]>([]);

@@ -1,6 +1,6 @@
 import Airtable from "airtable";
 
-import type { BlogPost } from "~/app/(main)/blog/page";
+import type { BlogPost } from "~/types/blog";
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
   const base = new Airtable({
