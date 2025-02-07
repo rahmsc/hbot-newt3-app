@@ -16,11 +16,11 @@ export async function GET(request: Request) {
       );
     }
 
-    console.log(`Fetching record with ID: ${recordId}`);
+    // console.log(`Fetching record with ID: ${recordId}`);
 
     const record = await base("Guides").find(recordId);
 
-    console.log("Fetched record:", record);
+    // console.log("Fetched record:", record);
 
     if (!record) {
       return NextResponse.json({ error: "Guide not found" }, { status: 404 });

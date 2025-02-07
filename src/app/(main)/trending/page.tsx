@@ -1,16 +1,18 @@
 import { TrendingContent } from "~/components/trending/trending-content";
 import { getBlogPosts } from "~/utils/airtable/blogs/getBlogPosts";
+import { getTrendingArticles } from "~/utils/supabase/getTrendingArticles";
 
 export default async function TrendingPage() {
   const allBlogPosts = await getBlogPosts();
   const approvedBlogPosts = allBlogPosts.filter((post) => post.fields.Approved);
 
-  const headerPost = approvedBlogPosts[0];
-  const featuredPost = approvedBlogPosts[1];
-  const gridPosts = approvedBlogPosts.slice(2, 5);
-  const listPosts = approvedBlogPosts.slice(5);
+  const articles = await getTrendingArticles();
 
-  if (!headerPost || !featuredPost) {
+  const [headerPost, ...restPosts] = articles;
+  const featuredPosts = restPosts.slice(0, 6);
+  const listPosts = restPosts.slice(6);
+
+  if (!headerPost || !featuredPosts) {
     return (
       <div className="flex h-[calc(100vh-127px)] items-center justify-center">
         <div className="text-center">
@@ -24,8 +26,7 @@ export default async function TrendingPage() {
   return (
     <TrendingContent
       headerPost={headerPost}
-      featuredPost={featuredPost}
-      gridPosts={gridPosts}
+      featuredPosts={featuredPosts}
       listPosts={listPosts}
     />
   );

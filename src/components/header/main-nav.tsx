@@ -4,11 +4,12 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { cn } from "~/lib/utils";
 
 const navItems = [
-  "RESEARCH",
   "CHAMBERS",
   "TRENDING",
+  "RESEARCH",
   "PROVIDERS",
   "MARKET",
   "JOIN-HQ",
@@ -18,15 +19,15 @@ export function MainNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    // Close menu on route change
     setIsMenuOpen(false);
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
-    // Handle clicking outside of menu
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
@@ -37,54 +38,104 @@ export function MainNav() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+
+      setIsScrolled(currentScrollY > 0);
+
+      if (currentScrollY < lastScrollY || currentScrollY <= 0) {
+        // Scrolling up or at the top
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down and past the initial view
+        setIsVisible(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   return (
-    <nav className="w-full border-y">
-      <div className="container mx-auto">
+    <nav
+      className={cn(
+        "fixed left-0 right-0 z-40 shadow-md transition-all duration-300",
+        isScrolled ? "top-12" : "top-16", // Adjust based on TopNav height
+        isVisible ? "translate-y-0" : "-translate-y-full",
+      )}
+    >
+      <div className="h-px w-full bg-gray-200" />
+      <div className="">
         <div className="relative" ref={menuRef}>
           {/* Mobile menu button */}
           <button
             type="button"
-            className="absolute left-4 top-3 z-20 md:hidden"
+            className="absolute left-4 top-3 z-20 text-gray-600 transition-colors hover:text-gray-900 md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
-            <Menu className="h-6 w-6" />
+            <Menu className="h-5 w-5" />
           </button>
 
           {/* Desktop menu */}
-          <ul className="hidden justify-between md:flex">
-            {navItems.map((item) => (
-              <li key={item} className="flex-1">
-                <Link
-                  href={`/${item.toLowerCase()}`}
-                  className="flex h-12 w-full items-center justify-center text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
-                >
-                  {item}
-                </Link>
-              </li>
-            ))}
+          <ul className="hidden md:flex">
+            {navItems.map((item, index) => {
+              const isActive = pathname === `/${item.toLowerCase()}`;
+              return (
+                <li key={item} className="flex flex-1 items-center">
+                  <Link
+                    href={`/${item.toLowerCase()}`}
+                    className={`group flex h-12 w-full items-center justify-center font-['Raleway'] text-sm tracking-[0.2em] transition-all hover:bg-gray-50 ${
+                      isActive ? "text-gray-900" : "text-gray-600"
+                    }`}
+                  >
+                    <span className="relative">
+                      {item}
+                      <span
+                        className={`absolute -bottom-1 left-0 h-px w-full scale-x-0 bg-gray-900 transition-transform duration-300 group-hover:scale-x-100 ${isActive ? "scale-x-100" : ""}`}
+                      />
+                    </span>
+                  </Link>
+                  {index < navItems.length - 1 && (
+                    <div className="h-12 w-px self-center bg-gray-100" />
+                  )}
+                </li>
+              );
+            })}
           </ul>
 
           {/* Mobile menu */}
           <ul
-            className={`absolute left-0 right-0 top-0 z-10 flex flex-col bg-white py-2 md:hidden ${
-              isMenuOpen ? "block" : "hidden"
+            className={`absolute left-0 right-0 top-0 z-10 flex flex-col bg-white/95 py-2 shadow-lg backdrop-blur-sm transition-all md:hidden ${
+              isMenuOpen
+                ? "translate-y-0 opacity-100"
+                : "pointer-events-none -translate-y-2 opacity-0"
             }`}
           >
-            {navItems.map((item) => (
-              <li key={item}>
-                <Link
-                  href={`/${item.toLowerCase()}`}
-                  className="block px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item}
-                </Link>
-              </li>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === `/${item.toLowerCase()}`;
+              return (
+                <li key={item}>
+                  <Link
+                    href={`/${item.toLowerCase()}`}
+                    className={`block px-6 py-3 font-['Raleway'] text-sm tracking-[0.2em] transition-colors hover:bg-gray-50 ${
+                      isActive ? "text-gray-900" : "text-gray-600"
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
+      <div className="h-px w-full bg-gray-200" />
     </nav>
   );
 }

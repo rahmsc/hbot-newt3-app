@@ -1,4 +1,6 @@
 export interface BlogPostFields {
+  [x: string]: any;
+  Category: any;
   "ID Blog": string;
   "Content Idea": string;
   "Enriched Blog": string;

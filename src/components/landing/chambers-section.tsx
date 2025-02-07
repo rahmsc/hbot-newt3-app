@@ -4,22 +4,20 @@ import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { ChamberCard } from "~/components/chambers/chambers-card";
+import { ChamberQuickView } from "~/components/chambers/chambers-quick-view";
 import { Button } from "~/components/ui/button";
 import { combinedChamberData } from "~/data/combinedChambersData";
 import type { chambersDataProp } from "~/data/rebrandData";
-
-import { ChamberCard } from "../chambers/chambers-card";
-import { ChamberQuickView } from "../chambers/chambers-quick-view";
-import TitlePill from "./title-pill";
+import { cn } from "~/lib/utils";
 
 export function ChambersSection() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [selectedChamber, setSelectedChamber] =
     useState<chambersDataProp | null>(null);
 
-  // Initialize the carousel with autoplay
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
       loop: true,
@@ -33,77 +31,82 @@ export function ChambersSection() {
     [Autoplay()],
   );
 
+  useEffect(() => {
+    const ids = combinedChamberData.map((chamber) => chamber.uniqueId);
+    const uniqueIds = new Set(ids);
+    if (ids.length !== uniqueIds.size) {
+      console.warn("Duplicate uniqueIds found in chambers data");
+    }
+  }, []);
+
   return (
-    <section className="w-full bg-gray-50 py-16">
-      <div className="container mx-auto">
-        <div className="mb-8 flex items-center justify-between">
-          <TitlePill>Explore Chambers</TitlePill>
-          <Link href="/chambers">
-            <Button variant="default" className="gap-2 text-xl">
-              View all
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-
-        <div className="relative">
-          {/* Carousel Container */}
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex">
-              {combinedChamberData.map((chamber) => (
-                <div
-                  key={chamber.id}
-                  className="min-w-0 flex-[0_0_100%] pl-4 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
-                >
-                  <ChamberCard
-                    id={chamber.id}
-                    name={chamber.name}
-                    type={chamber.type}
-                    pressure={chamber.pressure}
-                    persons={chamber.persons}
-                    brand={chamber.brand}
-                    image={chamber.image}
-                    description={chamber.description}
-                    onQuickView={() => {
-                      setSelectedChamber(chamber);
-                      setIsQuickViewOpen(true);
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Navigation Buttons */}
+    <section className="w-full">
+      <div className="h-px w-full bg-gray-600" />
+      <div className="flex items-center justify-between px-16 py-2">
+        <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700">
+          EXPLORE CHAMBERS
+        </h2>
+        <Link href="/chambers">
           <Button
-            variant="outline"
-            size="icon"
-            className="absolute left-0 top-1/2 -translate-x-4 -translate-y-1/2 rounded-full"
-            onClick={() => emblaApi?.scrollPrev()}
+            variant="default"
+            className="bg-emerald-700 transition-all duration-200 hover:bg-emerald-800"
           >
-            <ChevronLeft className="h-4 w-4" />
+            View Chambers
           </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 rounded-full"
-            onClick={() => emblaApi?.scrollNext()}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-
-        {selectedChamber && (
-          <ChamberQuickView
-            isOpen={isQuickViewOpen}
-            onClose={() => {
-              setIsQuickViewOpen(false);
-              setSelectedChamber(null);
-            }}
-            chamber={selectedChamber}
-          />
-        )}
+        </Link>
       </div>
+      {/* <div className="h-px w-full bg-gray-600" /> */}
+
+      <div className="relative pt-12">
+        {/* Carousel Container */}
+        <div className="overflow-hidden" ref={emblaRef}>
+          <div className="flex">
+            {combinedChamberData.map((chamber) => (
+              <div
+                key={chamber.uniqueId}
+                className="min-w-0 flex-[0_0_100%] px-1 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
+              >
+                <ChamberCard
+                  chamber={chamber}
+                  onQuickView={() => {
+                    setSelectedChamber(chamber);
+                    setIsQuickViewOpen(true);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Navigation Buttons */}
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute -left-5 top-1/2 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+          onClick={() => emblaApi?.scrollPrev()}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute -right-5 top-1/2 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+          onClick={() => emblaApi?.scrollNext()}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {selectedChamber && (
+        <ChamberQuickView
+          isOpen={isQuickViewOpen}
+          onClose={() => {
+            setIsQuickViewOpen(false);
+            setSelectedChamber(null);
+          }}
+          chamber={selectedChamber}
+        />
+      )}
     </section>
   );
 }

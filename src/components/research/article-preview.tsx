@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import type { ConditionIdArticlesProps } from "~/utils/supabase/getArticlesByCondition";
+import { FeatureArticleActions } from "./feature-article-actions";
 
 interface ArticlePreviewProps {
   article: ConditionIdArticlesProps | null;
@@ -15,87 +15,75 @@ export function ArticlePreview({ article }: ArticlePreviewProps) {
     );
   }
 
+  const formattedDate = article.published_date
+    ? new Date(article.published_date).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "";
+
   return (
-    <div className="space-y-6 p-6">
-      {/* Header Section */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-gray-900">{article.heading}</h2>
-        <div className="flex flex-wrap gap-2">
-          {article.outcome_rating && (
-            <span className="rounded-full bg-yellow-50 px-3 py-1 text-sm font-medium text-yellow-700">
-              Outcome: {article.outcome_rating}
-            </span>
-          )}
-          {article.peer_reviewed && (
-            <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
-              Peer Reviewed
-            </span>
-          )}
-          {article.public_data && (
-            <span className="rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-700">
-              Public Data
-            </span>
-          )}
-          {article.funded && (
-            <span className="rounded-full bg-purple-50 px-3 py-1 text-sm font-medium text-purple-700">
-              Funded Research
-            </span>
-          )}
+    <div className="flex h-full flex-col p-8">
+      {/* Author and Date */}
+      <div className="mb-6">
+        <div className="flex items-center gap-4 font-mono text-sm text-gray-600">
+          {article.authors && <span>{article.authors}</span>}
+          <span>•</span>
+          <span>{formattedDate}</span>
         </div>
       </div>
 
-      {/* Meta Information */}
-      <div className="space-y-3 rounded-lg bg-gray-50 p-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm font-medium text-gray-500">Published Date</p>
-            <p className="text-gray-900">
-              {new Date(article.published_date).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Authors</p>
-            <p className="text-gray-900">
-              {article.authors || "Not specified"}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Treatments</p>
-            <p className="text-gray-900">{article.number_of_treatments}</p>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Pressure Used</p>
-            <p className="text-gray-900">
-              {article.pressure_used || "Not specified"}
-            </p>
-          </div>
+      {/* Main Content */}
+      <div className="mb-8 flex-grow">
+        <h2 className="font-heading mb-4 font-['Raleway'] text-3xl leading-tight text-gray-900">
+          {article.heading}
+        </h2>
+        <div className="prose prose-sm max-w-none text-gray-600">
+          <p>{article.summary}</p>
         </div>
       </div>
 
-      {/* Study Link */}
-      {article.study_link && (
-        <a
-          href={article.study_link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 hover:text-gray-900"
-        >
-          View Full Study
-          <ExternalLink className="h-4 w-4" />
-        </a>
-      )}
+      <FeatureArticleActions outcome_rating={article.outcome_rating} />
 
-      {/* Summary Section */}
-      {article.summary && (
-        <div>
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">Summary</h3>
-          <p className="text-gray-700">{article.summary}</p>
-        </div>
-      )}
+      {/* Metadata */}
+      <div className="mt-8 grid grid-cols-2 gap-6 border-t border-gray-200 py-8">
+        <MetadataItem label="CONDITION" value={article.condition_name} />
+        <MetadataItem
+          label="ATA"
+          value={article.pressure_used || "Not specified"}
+        />
+        <MetadataItem
+          label="# OF SESSIONS"
+          value={
+            article.number_of_treatments
+              ? article.number_of_treatments.toString()
+              : "Not specified"
+          }
+        />
+        <MetadataItem
+          label="PEER REVIEWED"
+          value={article.peer_reviewed ? "Yes" : "No"}
+        />
+        <MetadataItem
+          label="PUBLIC DATA"
+          value={article.public_data ? "Yes" : "No"}
+        />
+        <MetadataItem label="FUNDED" value={article.funded ? "Yes" : "N/A"} />
+      </div>
+    </div>
+  );
+}
+
+function MetadataItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="space-y-1">
+      <div className="font-mono text-xs uppercase tracking-[0.2em] text-orange-600">
+        {label}
+      </div>
+      <div className="font-['Roboto'] text-sm font-medium text-gray-900">
+        {value}
+      </div>
     </div>
   );
 }

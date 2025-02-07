@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Badge } from "~/components/ui/badge";
 
 export interface TrendingArticleProps {
   category: {
@@ -10,70 +11,57 @@ export interface TrendingArticleProps {
   description: string;
   image: string;
   link: string;
+  date: string;
+  type: "blog" | "guide";
 }
 
-export function TrendingCard({ article }: { article: TrendingArticleProps }) {
+interface TrendingCardProps {
+  article: TrendingArticleProps;
+  size: "small" | "medium" | "large";
+}
+
+export function TrendingCard({ article, size }: TrendingCardProps) {
   return (
-    <div className="overflow-hidden rounded-3xl bg-white">
-      <div className="relative h-[200px] w-full">
+    <Link href={article.link} className="group block h-full">
+      <article className="relative h-full w-full overflow-hidden rounded-[2rem] bg-white">
         <Image
-          src={article.image}
+          src={article.image || "/placeholder.svg"}
           alt={article.title}
           fill
-          className="object-cover"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
-      </div>
-      <div className="space-y-3 p-5">
-        <div className="flex items-center gap-2">
-          {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
+
+        <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
+          <Badge
+            className="mb-4 w-fit bg-orange-500 font-mono text-xs uppercase tracking-wider text-white hover:bg-orange-600"
+            variant="secondary"
           >
-            <path
-              d="M19 5v14H5V5h14zm0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
-              fill="currentColor"
-            />
-            <path
-              d="M14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
-              fill="currentColor"
-            />
-          </svg>
-          <span className="text-sm font-medium text-gray-600">
-            {article.category.main}
-          </span>
-          <span className="text-sm font-medium text-gray-600">/</span>
-          <span className="text-sm font-medium text-gray-600">
-            {article.category.sub}
-          </span>
+            {article.type === "blog" ? "Blog" : "Guide"}
+          </Badge>
+
+          <h3
+            className={`mb-2 font-['Raleway'] font-normal leading-tight ${size === "large" ? "text-3xl" : size === "medium" ? "text-2xl" : "text-xl"}`}
+          >
+            {article.title}
+          </h3>
+
+          {(size === "large" || size === "medium") && (
+            <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-gray-300">
+              {article.description}
+            </p>
+          )}
+
+          <div className="font-['Space_Mono'] text-xs uppercase tracking-wider text-gray-400">
+            {new Date(article.date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })}
+          </div>
         </div>
-        <h3 className="text-2xl font-bold leading-tight">{article.title}</h3>
-        <p className="text-base text-gray-600">{article.description}</p>
-        <Link
-          href={article.link}
-          className="inline-flex items-center gap-2 font-semibold"
-        >
-          See More
-          {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-          >
-            <path
-              d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"
-              fill="currentColor"
-            />
-          </svg>
-        </Link>
-      </div>
-    </div>
+      </article>
+    </Link>
   );
 }

@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 import { Card } from "~/components/ui/card";
 
 const partners = [
@@ -37,37 +36,34 @@ const partners = [
 
 export function TrustedPartners() {
   return (
-    <section className="w-full bg-gray-50/50 py-20">
-      <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-6xl">
-          <div className="relative mb-16">
-            <h2 className="text-4xl font-bold tracking-tight">
-              Member&apos;s Only Benefits on Leading Chambers, Products and
-              Services.
-            </h2>
-            {/* <span className="absolute -right-4 top-0 rounded-full bg-orange-100 px-4 py-1 text-sm text-orange-600">
-              Our Curation Standard
-            </span> */}
-          </div>
+    <section className="w-full">
+      <div className="mx-auto max-w-6xl space-y-12">
+        <div className="space-y-4">
+          <h2 className="font-['Raleway'] text-4xl font-medium tracking-[0.3em] text-gray-900">
+            MEMBER BENEFITS
+          </h2>
+          <p className="text-xl font-light text-gray-600">
+            Exclusive access to leading chambers, products and services
+          </p>
+        </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {partners.map((partner) => (
-              <Card
-                key={partner.name}
-                className="group flex items-center justify-center p-8 transition-shadow hover:shadow-md"
-              >
-                <div className="relative h-16 w-full">
-                  <Image
-                    src={partner.logo}
-                    alt={partner.alt}
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                </div>
-              </Card>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {partners.map((partner) => (
+            <Card
+              key={partner.name}
+              className="group flex items-center justify-center border-none bg-white p-8 shadow-md transition-shadow hover:shadow-lg"
+            >
+              <div className="relative h-16 w-full">
+                <Image
+                  src={partner.logo || "/placeholder.svg"}
+                  alt={partner.alt}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
+              </div>
+            </Card>
+          ))}
         </div>
       </div>
     </section>

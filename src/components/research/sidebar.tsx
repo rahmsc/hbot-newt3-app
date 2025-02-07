@@ -1,16 +1,12 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
-
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
+import { Search, ChevronDown, Shield, Activity, Users } from "lucide-react";
+import { useState } from "react";
+import { cn } from "~/lib/utils";
+import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
-// Make sure to export the interface if you need it elsewhere
 export interface SidebarProps {
   categories: {
     categoryId: number;
@@ -29,7 +25,6 @@ export interface SidebarProps {
   onSidebarToggle: () => void;
 }
 
-// Make sure to export the component
 export function Sidebar({
   categories,
   isSidebarOpen,
@@ -38,74 +33,118 @@ export function Sidebar({
   onCategoryChange,
   onConditionSelect,
 }: SidebarProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Map category to icon
+  const getCategoryIcon = (categoryName: string) => {
+    switch (categoryName.toLowerCase()) {
+      case "neurological":
+        return <Activity className="h-4 w-4" />;
+      case "autoimmune":
+        return <Shield className="h-4 w-4" />;
+      default:
+        return <Users className="h-4 w-4" />;
+    }
+  };
+
   return (
     <div
-      className={`h-[calc(100vh-127px)] overflow-hidden transition-all duration-300 ${
-        isSidebarOpen ? "w-[400px]" : "w-0"
-      }`}
+      className={`h-full overflow-hidden transition-all duration-300 ${isSidebarOpen ? "w-[280px]" : "w-0"}`}
     >
-      <div className="flex h-full w-[400px] flex-col bg-white shadow-xl">
-        <div className="sticky top-0 z-20 bg-white px-4 py-3 shadow-sm">
-          <h2 className="text-lg font-semibold">Categories</h2>
+      <div className="flex h-full w-[280px] flex-col">
+        {/* Search Section */}
+        <div className="sticky top-0 z-20 space-y-4 p-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Search conditions..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-9 w-full rounded-md border border-gray-200 bg-white pl-9 pr-4 text-sm focus-visible:ring-1 focus-visible:ring-gray-200"
+            />
+            <div className="pointer-events-none absolute right-3 top-2.5 rounded-sm bg-gray-100/80 px-1.5 text-[10px] font-medium text-gray-400">
+              ⌘K
+            </div>
+          </div>
         </div>
 
-        <div className="custom-scrollbar flex-1 overflow-y-auto px-4 py-4">
-          <Accordion
-            type="single"
-            collapsible
-            value={openCategory}
-            onValueChange={onCategoryChange}
-            className="w-full divide-y divide-black"
-          >
+        {/* Categories List */}
+        <ScrollArea className="flex-1 px-3">
+          <div className="space-y-1 pb-4">
             {categories.map((category) => (
-              <AccordionItem
-                key={category.categoryId}
-                value={category.categoryId.toString()}
-                className="first:rounded-t-md last:rounded-b-md [&:not(:first-child)]:-mt-[2px]"
-              >
-                <AccordionTrigger className="px-4 hover:no-underline">
-                  <div className="flex w-full items-center justify-between py-2">
-                    <span className="text-base font-medium text-gray-900">
-                      {category.categoryName}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      {/* <ChevronDown className="h-4 w-4 text-gray-500" /> */}
-                    </div>
+              <div key={category.categoryId} className="space-y-1">
+                {/* Category Header */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    onCategoryChange(category.categoryId.toString())
+                  }
+                  className={cn(
+                    "group flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100",
+                    openCategory === category.categoryId.toString() &&
+                      "text-gray-900",
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    {getCategoryIcon(category.categoryName)}
+                    <span>{category.categoryName}</span>
                   </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex flex-col divide-y divide-gray-200">
-                    {category.conditions.map((condition, index, array) => (
-                      <div key={condition.id}>
+                  <ChevronDown
+                    className={cn(
+                      "h-4 w-4 text-gray-400 transition-transform duration-200",
+                      openCategory === category.categoryId.toString() &&
+                        "rotate-180",
+                    )}
+                  />
+                </button>
+
+                {/* Conditions List */}
+                {openCategory === category.categoryId.toString() && (
+                  <div className="ml-7 space-y-1">
+                    {category.conditions
+                      .filter((condition) =>
+                        condition.name
+                          .toLowerCase()
+                          .includes(searchQuery.toLowerCase()),
+                      )
+                      .map((condition) => (
                         <Button
+                          key={condition.id}
                           variant="ghost"
-                          className={`w-full justify-start rounded-none px-4 py-3 text-left text-sm hover:bg-gray-50 ${
-                            condition.id === selectedConditionId
-                              ? "bg-gray-100 font-medium text-gray-900"
-                              : "text-gray-600"
-                          }`}
                           onClick={() => onConditionSelect(condition.id)}
+                          className={cn(
+                            "group relative w-full justify-start rounded-md px-3 py-1.5 text-left text-sm transition-all",
+                            condition.id === selectedConditionId
+                              ? "bg-emerald-50 font-medium text-emerald-700"
+                              : "text-gray-600 hover:bg-gray-50",
+                          )}
                         >
                           <div className="flex w-full items-center justify-between">
-                            <span>{condition.name}</span>
+                            <span className="truncate">{condition.name}</span>
                             {condition.articleCount !== undefined && (
-                              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                              <span
+                                className={cn(
+                                  "ml-2 rounded-full px-2 py-0.5 text-xs",
+                                  condition.id === selectedConditionId
+                                    ? "bg-emerald-100 text-emerald-700"
+                                    : "bg-gray-100 text-gray-500",
+                                )}
+                              >
                                 {condition.articleCount}
                               </span>
                             )}
                           </div>
+                          {condition.id === selectedConditionId && (
+                            <div className="absolute inset-y-0 -left-4 w-0.5 bg-emerald-700" />
+                          )}
                         </Button>
-                        {index < array.length - 1 && (
-                          <div className="mx-4 border-t border-gray-200" />
-                        )}
-                      </div>
-                    ))}
+                      ))}
                   </div>
-                </AccordionContent>
-              </AccordionItem>
+                )}
+              </div>
             ))}
-          </Accordion>
-        </div>
+          </div>
+        </ScrollArea>
       </div>
     </div>
   );

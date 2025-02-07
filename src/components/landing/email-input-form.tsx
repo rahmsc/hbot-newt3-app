@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,21 +5,20 @@ import { sendGAEvent } from "@next/third-parties/google";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { ArrowRight } from "lucide-react";
 
 import { api } from "~/trpc/react";
 
-import { Button } from "../../components/ui/button";
+import { Button } from "~/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
-} from "../../components/ui/form";
-import { Input } from "../../components/ui/input";
-import { useToast } from "../../hooks/use-toast";
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { useToast } from "~/hooks/use-toast";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -71,54 +67,65 @@ export default function EmailSubscriptionForm() {
   }
 
   return (
-    <section className="bg-white py-16">
+    <section className="w-full bg-[#FAF7F4] py-24">
       <div className="container mx-auto px-4">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900">HQ INSIDER</h2>
-          <p className="text-4xl text-gray-700">
-            YOUR MONTHLY DIVE INTO HBOT!
-            <br />
-            <br />
-            STAY INFORMED WITH THE LATEST NEWS,
-            <br /> RESEARCH, NEW WELLNESS PRODUCTS AND <br /> UNBEATABLE
-            DEALS—ALL DELIVERED STRAIGHT TO
-            <br /> YOUR INBOX.
-          </p>
-        </div>
+        <div className="mx-auto max-w-4xl space-y-12 text-center">
+          <h2 className="font-['Raleway'] text-4xl font-medium tracking-[0.3em] text-gray-900">
+            HQ INSIDER
+          </h2>
+          <div className="space-y-6">
+            <p className="text-2xl font-light text-gray-600">
+              YOUR MONTHLY DIVE INTO HBOT!
+            </p>
+            <p className="text-lg text-gray-800">
+              STAY INFORMED WITH THE LATEST NEWS, RESEARCH, NEW WELLNESS
+              PRODUCTS AND UNBEATABLE DEALS—ALL DELIVERED STRAIGHT TO YOUR
+              INBOX.
+            </p>
+          </div>
 
-        <div className="mx-auto max-w-md">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your email" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      We&apos;ll never share your email with anyone else.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isLoading}
-                onClick={() =>
-                  sendGAEvent("event", "buttonClicked", {
-                    value: "Subscribe(HQ Insider)",
-                  })
-                }
+          <div className="mx-auto max-w-md">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
               >
-                {isLoading ? "Subscribing..." : "Subscribe"}
-              </Button>
-            </form>
-          </Form>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your email"
+                          {...field}
+                          className="rounded-full border-gray-300 px-6 py-3 text-lg"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className="w-full rounded-full bg-gray-900 px-6 py-3 text-lg font-medium text-white transition-colors hover:bg-gray-800"
+                  disabled={isLoading}
+                  onClick={() =>
+                    sendGAEvent("event", "buttonClicked", {
+                      value: "Subscribe(HQ Insider)",
+                    })
+                  }
+                >
+                  {isLoading ? "Subscribing..." : "Subscribe"}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </form>
+            </Form>
+          </div>
+
+          <p className="text-sm text-gray-500">
+            We'll never share your email with anyone else.
+          </p>
         </div>
       </div>
     </section>

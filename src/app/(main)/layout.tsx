@@ -2,7 +2,7 @@ import "~/styles/globals.css";
 import "~/styles/embla.css";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { Raleway, Work_Sans } from "next/font/google";
+import { Raleway, Roboto, Space_Mono } from "next/font/google";
 import Script from "next/script";
 
 import { MainNav } from "~/components/header/main-nav";
@@ -13,17 +13,24 @@ import Hotjar from "~/components/utils/hotjar";
 import { AuthProvider } from "~/contexts/AuthContext";
 import ReactQueryProvider from "~/providers/react-query-provider";
 import { TRPCReactProvider } from "~/trpc/react";
-// import QuizPopup from "~/components/quiz-popup";
 
-const workSans = Work_Sans({
+const roboto = Roboto({
   subsets: ["latin"],
-  variable: "--font-work-sans",
+  weight: ["300", "400", "500", "700"],
+  variable: "--font-roboto",
   display: "swap",
 });
 
 const raleway = Raleway({
   subsets: ["latin"],
   variable: "--font-raleway",
+  display: "swap",
+});
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
   display: "swap",
 });
 
@@ -38,19 +45,18 @@ export default function RootLayout({
         <Script id="structured-data" type="application/ld+json" />
       </head>
       <body
-        className={`font-sans ${workSans.variable} ${raleway.variable} w-full overflow-x-hidden`}
+        className={`${roboto.variable} ${raleway.variable} ${spaceMono.variable} font-body w-full overflow-x-hidden`}
       >
         <TRPCReactProvider>
           <ReactQueryProvider>
             <AuthProvider>
               <TopNav />
               <MainNav />
-              <main className="flex min-h-screen w-full flex-col items-center justify-between">
+              <main className="flex min-h-screen w-full flex-col items-center justify-between pt-28">
                 {children}
               </main>
               <Footer />
               <Toaster />
-              {/* <QuizPopup /> */}
             </AuthProvider>
           </ReactQueryProvider>
         </TRPCReactProvider>

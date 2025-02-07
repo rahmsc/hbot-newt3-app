@@ -1,130 +1,143 @@
+"use client";
+
 import { BookmarkIcon } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
-import type { RandomArticleItemProps } from "~/utils/supabase/getRandomArticles";
+import type { RandomArticleItemProps } from "~/utils/supabase/getLatestArticles";
 
-export function FeaturedArticleCard({
+import { FeatureArticleActions } from "./feature-article-actions";
+
+interface FeaturedArticleCardProps
+  extends Omit<RandomArticleItemProps, "conditionId"> {
+  conditionName: string;
+}
+
+export default function FeaturedArticleCard({
   id,
   heading,
   summary,
   pressure_used,
   number_of_treatments,
+  authors = "John Doe, Kylie Smith",
   published_date,
   peer_reviewed,
   public_data,
   funded,
   outcome_rating,
-}: RandomArticleItemProps) {
+  conditionName,
+}: FeaturedArticleCardProps) {
   const imageUrl =
     "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
 
+  const formattedDate = published_date
+    ? new Date(published_date).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "";
+
+  const truncatedSummary =
+    summary?.length > 120 ? `${summary.slice(0, 120)}...` : summary;
+
   return (
-    <Card className="overflow-hidden">
-      {/* Image Section */}
-      <div className="relative h-[240px] w-full">
-        <Image
-          src={`${imageUrl}${id}.png`}
-          alt={heading}
-          fill
-          className="object-cover"
-          priority
-        />
-      </div>
+    <div className="group relative h-[650px] w-full overflow-hidden rounded-[2rem]">
+      {/* Background Image */}
+      <Image
+        src={`${imageUrl}${id}.png`}
+        alt={heading}
+        fill
+        className="object-cover transition-transform duration-300 group-hover:scale-105"
+        priority
+      />
 
-      {/* Content Section */}
-      <div className="space-y-6 p-8">
-        {/* Category & Save Button */}
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
+
+      {/* Content */}
+      <div className="absolute inset-0 flex flex-col justify-between p-12 text-white">
+        {/* Top Section */}
         <div className="flex items-center justify-between">
-          <Badge className="rounded-full bg-black px-4 py-1.5 text-sm font-medium text-white">
-            Neurological
-          </Badge>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 rounded-full p-0"
-          >
-            <BookmarkIcon className="h-4 w-4" />
-            <span className="sr-only">Save article</span>
-          </Button>
-        </div>
-
-        {/* Title & Summary */}
-        <div className="space-y-4">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-            {heading}
-          </h2>
-          <p className="text-lg leading-relaxed text-gray-600">{summary}</p>
-        </div>
-
-        {/* Metadata Grid */}
-        <div className="grid grid-cols-2 gap-x-12 gap-y-4">
-          <div className="space-y-1">
-            <p className="text-sm font-semibold text-red-600">CONDITION</p>
-            <p className="text-gray-900">Stroke</p>
+          <div className="inline-flex items-center gap-2 rounded-full bg-black/50 px-4 py-2 backdrop-blur-sm">
+            {authors && (
+              <span className="font-['Space_Mono'] text-xs uppercase tracking-wider text-white">
+                {authors
+                  .split(/[,]/)
+                  .filter((author) => author.trim())
+                  .slice(0, 2)
+                  .map((author) => author.trim())
+                  .join(", ") +
+                  (authors.split(/[,]/).length > 3 ? " et al." : "")}
+              </span>
+            )}
+            <span className="text-white">•</span>
+            <span className="font-['Space_Mono'] text-xs uppercase tracking-wider text-white">
+              {formattedDate}
+            </span>
           </div>
-          <div className="space-y-1">
-            <p className="text-sm font-semibold text-red-600">ATA</p>
-            <p className="text-gray-900">{pressure_used}</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-sm font-semibold text-red-600"># OF SESSIONS</p>
-            <p className="text-gray-900">{number_of_treatments}</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-sm font-semibold text-red-600">PUBLISHED DATE</p>
-            <p className="text-gray-900">
-              {published_date
-                ? new Date(published_date).toLocaleDateString("en-US", {
-                    month: "long",
-                    year: "numeric",
-                  })
-                : "N/A"}
+          <div className="flex items-center gap-2">
+            <span className="text-white">
+              <BookmarkIcon className="h-5 w-5" />
+            </span>
+            <p className="font-['Space_Mono'] text-xs uppercase tracking-wider text-white">
+              Save
             </p>
           </div>
-          <div className="space-y-1">
-            <p className="text-sm font-semibold text-red-600">PEER REVIEWED</p>
-            <p className="text-gray-900">{peer_reviewed ? "Yes" : "No"}</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-sm font-semibold text-red-600">PUBLIC DATA</p>
-            <p className="text-gray-900">{public_data ? "Yes" : "No"}</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-sm font-semibold text-red-600">FUNDED</p>
-            <p className="text-gray-900">{funded ? "Yes" : "N/A"}</p>
-          </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center justify-between pt-4">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" className="gap-2">
-              <BookmarkIcon className="h-4 w-4" />
-              Save
-            </Button>
-            <Link href={`/new-research/${id}`}>
-              <Button className="gap-2">
-                Read More
-                <span className="text-lg">→</span>
-              </Button>
-            </Link>
+        {/* Main Content */}
+        <div className="grid grid-cols-3 gap-8">
+          {/* Left side (2/3) */}
+          <div className="col-span-2 flex flex-col">
+            <h2 className="mb-4 font-['Raleway'] text-3xl font-normal leading-tight text-white drop-shadow-md">
+              {heading}
+            </h2>
+            <p className="text-md mb-6 leading-relaxed text-gray-200 drop-shadow">
+              {truncatedSummary}
+            </p>
+
+            <FeatureArticleActions outcome_rating={outcome_rating} />
           </div>
-          <Badge
-            variant="secondary"
-            className={`rounded-full px-6 py-1.5 ${
-              outcome_rating?.toLowerCase() === "positive"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {outcome_rating}
-          </Badge>
+
+          {/* Metadata - Right side (1/3) */}
+          <div className="flex flex-col space-y-2 uppercase">
+            <MetadataItem label="CONDITION" value={conditionName} />
+            <MetadataItem label="ATA" value={pressure_used} />
+            {number_of_treatments && (
+              <MetadataItem
+                label="# OF SESSIONS"
+                value={number_of_treatments.toString()}
+              />
+            )}
+            <MetadataItem
+              label="PEER REVIEWED"
+              value={peer_reviewed ? "Yes" : "No"}
+            />
+            <MetadataItem
+              label="PUBLIC DATA"
+              value={public_data ? "Yes" : "No"}
+            />
+            <MetadataItem label="FUNDED" value={funded ? "Yes" : "N/A"} />
+          </div>
         </div>
       </div>
-    </Card>
+    </div>
+  );
+}
+
+export function MetadataItem({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded bg-black/30 p-2 backdrop-blur-sm">
+      <div className="font-['Space_Mono'] text-xs tracking-[0.2em] text-gray-300">
+        {label}
+      </div>
+      <div className="font-['Roboto'] text-sm text-white">{value}</div>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 import Airtable from "airtable";
 
-import type { GuidePageProp } from "~/app/(main)/guides/provider/[id]/page";
+import type { GuidePageProp } from "~/types/guide";
 
 export async function getGuideById(id: string): Promise<GuidePageProp | null> {
   const base = new Airtable({
@@ -27,7 +27,7 @@ export async function getGuideById(id: string): Promise<GuidePageProp | null> {
         if (record) {
           resolve({
             id: record.id,
-            fields: record.fields as GuidePageProp["fields"],
+            fields: record.fields as unknown as GuidePageProp["fields"],
           });
         } else {
           resolve(null);

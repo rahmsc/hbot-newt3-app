@@ -66,7 +66,7 @@ export function ChambersContactForm({
       //   chamberName: chamber.name,
       // });
 
-      console.log("Form submitted:", { ...data, chamber });
+      // console.log("Form submitted:", { ...data, chamber });
       onClose();
       // You might want to show a success toast here
     } catch (error) {

@@ -8,6 +8,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        body: ["var(--font-roboto)", "sans-serif"],
+        display: ["var(--font-raleway)", "sans-serif"],
+        mono: ["var(--font-space-mono)", "monospace"],
         sans: ["Inter", "sans-serif"],
         "editors-note": ["EditorsNote", "serif"],
       },

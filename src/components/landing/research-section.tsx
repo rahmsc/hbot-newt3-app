@@ -1,151 +1,172 @@
 "use client";
 
-import { XIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { Button } from "~/components/ui/button";
+import { FilterNav } from "~/components/landing/filter-nav";
+import { ArticleCard } from "~/components/research/article-card";
+import FeaturedArticleCard from "~/components/research/feature-article-card";
 import {
   type CategoryWithConditions,
   getCategoryWithConditions,
 } from "~/utils/supabase/getCategoryWithConditions";
-import getRandomArticles, {
+import getLatestArticles, {
   type RandomArticleItemProps,
-} from "~/utils/supabase/getRandomArticles";
-
-import { ArticleCard } from "../research/article-card";
-import { FeaturedArticleCard } from "../research/feature-article-card";
-import { FilterDialog } from "./filter-dialog";
+} from "~/utils/supabase/getLatestArticles";
+import { getConditionData } from "~/utils/supabase/getConditionData";
+import TitlePill from "./title-pill";
 
 export default function ResearchDashboard() {
   const [selectedConditions, setSelectedConditions] = useState<number[]>([]);
   const [articles, setArticles] = useState<RandomArticleItemProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<CategoryWithConditions[]>([]);
+  const [conditionNames, setConditionNames] = useState<Record<number, string>>(
+    {},
+  );
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const categoriesData = await getCategoryWithConditions();
+  const fetchCategories = useCallback(async () => {
+    try {
+      const categoriesData = await getCategoryWithConditions();
+      if (categoriesData) {
         setCategories(categoriesData);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
+        // console.log("Categories fetched:", categoriesData);
+      } else {
+        setError("Failed to fetch categories. Please try again later.");
       }
-    };
-
-    void fetchCategories();
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setError("Failed to fetch categories. Please try again later.");
+    }
   }, []);
 
-  const fetchArticles = async (conditionIds?: number[]) => {
+  const fetchArticles = useCallback(async (conditionIds?: number[]) => {
     setIsLoading(true);
+    setError(null);
     try {
-      const fetchedArticles = await getRandomArticles(
-        4,
+      // console.log("Fetching articles with condition IDs:", conditionIds);
+      const fetchedArticles = await getLatestArticles(
+        6,
         conditionIds?.length ? conditionIds.map(String).join(",") : undefined,
       );
+      // console.log("Fetched articles:", fetchedArticles);
       setArticles(fetchedArticles);
     } catch (error) {
       console.error("Error fetching articles:", error);
+      setArticles([]);
+      setError("Failed to fetch articles. Please try again later.");
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleConditionsSelect = (conditionIds: number[]) => {
-    setSelectedConditions(conditionIds);
-    void fetchArticles(conditionIds);
-  };
-
-  const handleClearFilter = () => {
-    setSelectedConditions([]);
-    void fetchArticles();
-  };
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    void fetchArticles();
   }, []);
 
+  const handleConditionsSelect = useCallback(
+    (conditionIds: number[]) => {
+      // console.log("Selected condition IDs:", conditionIds);
+      setSelectedConditions(conditionIds);
+      void fetchArticles(conditionIds);
+    },
+    [fetchArticles],
+  );
+
+  const fetchConditionName = useCallback(async (conditionId: number) => {
+    try {
+      const name = await getConditionData(conditionId);
+      setConditionNames((prev) => ({ ...prev, [conditionId]: name }));
+    } catch (error) {
+      console.error("Error fetching condition name:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    void fetchCategories();
+  }, [fetchCategories]);
+
+  useEffect(() => {
+    void fetchArticles();
+  }, [fetchArticles]);
+
+  useEffect(() => {
+    if (articles.length > 0) {
+      for (const article of articles) {
+        if (article.conditionId && !conditionNames[article.conditionId]) {
+          void fetchConditionName(article.conditionId);
+        }
+      }
+    }
+  }, [articles, conditionNames, fetchConditionName]);
+
   return (
-    <section className="bg-gradient-to-b from-white to-gray-50">
-      <div className="container mx-auto px-4 py-16">
-        {/* Header Section */}
-        <div className="mb-12 flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
-          <div className="space-y-4 md:max-w-2xl">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-              The Best In Hyperbaric Research
-            </h1>
-            <p className="text-lg leading-relaxed text-gray-600">
-              We use a weighted analysis system with carefully selected
-              categories to evaluate peer reviewed research
+    <section className="w-full">
+      {/* <div className="h-px w-full bg-gray-600" />     */}
+      <div className="py-4 pl-16">
+        <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700">
+          LATEST RESEARCH
+        </h2>
+      </div>
+      {/* <div className="h-[2px] w-full bg-gray-600" /> / */}
+      <FilterNav
+        categoriesWithConditions={categories}
+        onConditionsSelect={handleConditionsSelect}
+        selectedConditions={selectedConditions}
+      />
+
+      <div className="mx-auto max-w-[1400px] px-8 py-2">
+        {isLoading ? (
+          <div className="flex h-96 items-center justify-center">
+            <p className="text-lg font-medium text-gray-900">
+              Loading articles...
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            {selectedConditions.length > 0 && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleClearFilter}
-                className="h-10 w-10 rounded-full border border-gray-200 hover:bg-gray-100"
-              >
-                <XIcon className="h-4 w-4 text-gray-600" />
-              </Button>
-            )}
-            <FilterDialog
-              categoriesWithConditions={categories}
-              onConditionsSelect={handleConditionsSelect}
-              selectedConditions={selectedConditions}
-            />
-          </div>
-        </div>
-
-        {/* Loading State */}
-        {isLoading ? (
-          <div className="flex h-96 items-center justify-center rounded-xl border border-gray-100 bg-white shadow-sm">
-            <div className="flex flex-col items-center gap-4">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
-              <p className="text-sm text-gray-500">Loading articles...</p>
-            </div>
+        ) : error ? (
+          <div className="flex h-96 items-center justify-center">
+            <p className="text-lg font-medium text-red-600">{error}</p>
           </div>
         ) : (
-          // Articles Grid
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="grid grid-cols-10">
             {articles.length > 0 ? (
               <>
-                <div className="flex flex-col justify-between rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition duration-200 hover:shadow-md">
-                  <FeaturedArticleCard
-                    id={articles[0]?.id ?? 0}
-                    heading={articles[0]?.heading ?? ""}
-                    conditionId={articles[0]?.conditionId ?? 0}
-                    summary={articles[0]?.summary ?? ""}
-                    pressure_used={articles[0]?.pressure_used ?? ""}
-                    number_of_treatments={
-                      articles[0]?.number_of_treatments ?? 0
-                    }
-                    outcome_rating={articles[0]?.outcome_rating ?? ""}
-                  />
+                <div className="col-span-5">
+                  <div className="h-[600px] rounded-xl border border-gray-100 bg-white shadow-sm transition duration-200 hover:shadow-md">
+                    <FeaturedArticleCard
+                      {...articles[0]}
+                      conditionName={
+                        conditionNames[articles[0]?.conditionId ?? 0] ??
+                        "Unknown"
+                      }
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-col justify-between space-y-6">
-                  {articles.slice(1, 4).map((article) => (
-                    <div
-                      key={article.id}
-                      className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition duration-200 hover:shadow-md"
-                    >
-                      <ArticleCard
-                        id={article.id ?? 0}
-                        heading={article.heading ?? ""}
-                        conditionId={article.conditionId ?? 0}
-                        summary={article.summary ?? ""}
-                        pressure_used={article.pressure_used ?? ""}
-                        number_of_treatments={article.number_of_treatments ?? 0}
-                        outcome_rating={article.outcome_rating ?? ""}
-                      />
-                    </div>
-                  ))}
+
+                <div className="col-span-5 flex h-[600px] flex-col gap-2">
+                  <div className="grid flex-1 grid-cols-2 grid-rows-2">
+                    {articles.slice(1, 5).map((article) => (
+                      <div
+                        key={article.id}
+                        className="rounded-xl border border-gray-100 bg-white shadow-sm transition duration-200 hover:shadow-md"
+                      >
+                        <ArticleCard
+                          id={article.id ?? 0}
+                          heading={article.heading ?? ""}
+                          conditionId={article.conditionId ?? 0}
+                          conditionName={
+                            conditionNames[article.conditionId ?? 0] ??
+                            "Unknown"
+                          }
+                          summary={article.summary ?? ""}
+                          pressure_used={article.pressure_used ?? ""}
+                          number_of_treatments={
+                            article.number_of_treatments ?? 0
+                          }
+                          outcome_rating={article.outcome_rating ?? ""}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </>
             ) : (
-              // Empty State
-              <div className="col-span-2 flex h-96 items-center justify-center rounded-xl border border-gray-100 bg-white p-8 shadow-sm">
+              <div className="col-span-10 flex h-96 items-center justify-center rounded-xl border border-gray-100 bg-white p-8 shadow-sm">
                 <div className="text-center">
                   <p className="text-lg font-medium text-gray-900">
                     No articles found

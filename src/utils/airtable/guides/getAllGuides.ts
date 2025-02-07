@@ -1,6 +1,6 @@
 import Airtable from "airtable";
 
-import type { GuidePageProp } from "~/app/(main)/guides/user/[id]/page";
+import type { GuidePageProp } from "~/types/guide";
 
 export async function getAllGuides(): Promise<GuidePageProp[]> {
   const base = new Airtable({
@@ -11,10 +11,11 @@ export async function getAllGuides(): Promise<GuidePageProp[]> {
     base("Guides")
       .select({
         view: "Grid view",
+        maxRecords: 10,
       })
       .all((err, records) => {
         if (err) {
-          console.error("Error fetching data:", err);
+          console.error("Error fetching guides:", err);
           reject(new Error(String(err)));
           return;
         }
@@ -22,21 +23,12 @@ export async function getAllGuides(): Promise<GuidePageProp[]> {
         const guidePosts =
           records?.map((record) => ({
             id: record.id,
-            fields: record.fields as GuidePageProp["fields"],
+            fields: record.fields as unknown as GuidePageProp["fields"],
           })) ?? [];
 
-        const fullGuidePosts = guidePosts.map((post) => ({
-          ...post,
-          fields: {
-            ...post.fields,
-            "ID Blog": 0, // Default value, adjust as needed
-            "Guide Heading": "", // Default value, adjust as needed
-            "Guide Introduction": "", // Default value, adjust as needed
-            "Guide Body": "", // Default value, adjust as needed
-          },
-        }));
+        // console.log("Fetched guides:", guidePosts);
 
-        resolve(fullGuidePosts);
+        resolve(guidePosts);
       });
   });
 }

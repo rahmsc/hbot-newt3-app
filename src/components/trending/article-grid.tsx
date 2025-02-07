@@ -1,95 +1,68 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 
-import RichText from "~/components/utils/rich-text";
-import type { BlogPost } from "~/types/blog";
+import { Badge } from "~/components/ui/badge";
+import type { TrendingArticle } from "~/utils/supabase/getTrendingArticles";
 
 interface ArticleGridProps {
-  featured: BlogPost;
-  articles: BlogPost[];
+  articles: TrendingArticle[];
 }
 
-export function ArticleGrid({ featured, articles }: ArticleGridProps) {
-  const formatDate = (dateString: string | Date) => {
-    const date =
-      typeof dateString === "string" ? new Date(dateString) : dateString;
-
-    if (Number.isNaN(date.getTime())) {
-      return "Invalid date";
-    }
-
-    const dd = String(date.getDate()).padStart(2, "0");
-    const mm = String(date.getMonth() + 1).padStart(2, "0");
-    const yyyy = date.getFullYear();
-
-    return `${dd}.${mm}.${yyyy}`;
-  };
+export function ArticleGrid({ articles }: ArticleGridProps) {
+  if (!articles || articles.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <hr className="my-8 w-full border-2 border-t border-gray-700" />
-      <h2 className="mb-6 text-lg font-medium uppercase tracking-wider text-gray-500">
-        READ
-      </h2>
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* Featured Article */}
-        <Link
-          href={`/trending/${featured.fields["URL Slug"]}`}
-          className="group"
-        >
-          <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {articles.map((article) => (
+        <Link key={article.link} href={article.link} className="group block">
+          <article className="relative h-[300px] overflow-hidden rounded-2xl bg-white sm:h-[350px] sm:rounded-[2rem] md:h-[400px]">
+            {/* Image */}
             <Image
-              src={`https://d144dqt8e4woe2.cloudfront.net/blogs/header/${featured.fields["ID Blog"]}.png`}
-              alt={featured.fields["Content Idea"]}
+              src={article.image}
+              alt={article.title}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
-          </div>
-          <div className="mt-4">
-            <span className="text-sm text-blue-600">Blog || </span>
-            <span className="text-sm">{formatDate(featured.fields.Date)}</span>
-            <h3 className="mt-2 text-2xl font-bold">
-              {featured.fields["Content Idea"]}
-            </h3>
-            <div className="mt-2 text-gray-600">
-              <RichText content={featured.fields.Introduction.slice(0, 200)} />
-            </div>
-          </div>
-        </Link>
 
-        {/* Secondary Articles */}
-        <div className="space-y-6">
-          {articles.slice(0, 4).map((article) => (
-            <Link
-              key={article.id}
-              href={`/trending/${article.fields["URL Slug"]}`}
-              className="group flex gap-4"
-            >
-              <div className="relative h-36 w-36 flex-shrink-0 overflow-hidden rounded-lg">
-                <Image
-                  src={`https://d144dqt8e4woe2.cloudfront.net/blogs/header/${article.fields["ID Blog"]}.png`}
-                  alt={article.fields["Content Idea"]}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+
+            {/* Content */}
+            <div className="absolute bottom-0 left-0 p-6 text-white">
+              <div className="mb-4 flex gap-2">
+                <Badge
+                  variant="secondary"
+                  className={`backdrop-blur-sm ${
+                    article.category.main.toLowerCase() === "blog"
+                      ? "bg-emerald-700"
+                      : article.category.main.toLowerCase() === "guide"
+                        ? "bg-orange-700"
+                        : "bg-white/20"
+                  }`}
+                >
+                  {article.category.main}
+                </Badge>
+                <Badge
+                  variant="secondary"
+                  className="bg-white/50 backdrop-blur-sm"
+                >
+                  {article.category.sub}
+                </Badge>
               </div>
-              <div className="flex flex-col justify-center">
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-blue-600">Blog || </span>
-                  <span className="text-gray-500">
-                    {formatDate(article.fields.Date)}
-                  </span>
-                </div>
-                <h3 className="mt-1 line-clamp-2 text-xl font-bold">
-                  {article.fields["Content Idea"]}
-                </h3>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
+
+              <h2 className="mb-2 text-xl font-bold sm:text-2xl">
+                {article.title}
+              </h2>
+
+              <p className="line-clamp-2 text-sm text-gray-200">
+                {article.description}
+              </p>
+            </div>
+          </article>
+        </Link>
+      ))}
     </div>
   );
 }

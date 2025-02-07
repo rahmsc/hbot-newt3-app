@@ -21,6 +21,7 @@ import {
   AccordionTrigger,
 } from "~/components/ui/accordion";
 import { Button } from "~/components/ui/button";
+import { Card, CardContent } from "~/components/ui/card";
 import { Pagination } from "~/components/ui/pagination";
 import { WellnessProductCard } from "~/components/wellness/wellness-product-card";
 import { combinedChamberData } from "~/data/combinedChambersData";
@@ -128,30 +129,27 @@ const MarketPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="relative h-[300px] w-full">
-        <div className="absolute inset-0">
-          <Image
-            src="/wellness-product-images/wellness-page-header.png"
-            alt="Wellness Market Hero"
-            fill
-            className="object-cover opacity-55"
-          />
-        </div>
-        <div className="container relative mx-auto h-full">
-          <div className="relative z-10 flex h-full flex-col justify-center px-6 sm:px-12">
-            <div className="max-w-2xl">
-              <h1 className="mb-2 text-4xl font-bold tracking-tight text-white">
-                WELLNESS MARKET
-              </h1>
-              <p className="text-lg text-white">
-                Find the very best our industry has to offer.
-              </p>
-            </div>
+      <section className="relative h-[300px] w-full">
+        <Image
+          src="/wellness-product-images/wellness-page-header.png"
+          alt="Wellness Market Hero"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="container relative z-10 mx-auto flex h-full flex-col justify-center">
+          <div className="max-w-2xl">
+            <h1 className="mb-2 font-['Raleway'] text-4xl font-bold tracking-tight text-white sm:text-5xl">
+              WELLNESS MARKET
+            </h1>
+            <p className="text-lg text-white sm:text-xl">
+              Find the very best our industry has to offer.
+            </p>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Filter Tabs */}
       <FilterTabs onTabChange={handleTabChange} />
@@ -160,55 +158,59 @@ const MarketPage = () => {
         // Home view with carousels
         <>
           {/* Products Grid with Carousel */}
-          <div className="relative mx-auto max-w-7xl px-4">
-            <div className="overflow-hidden" ref={productsEmblaRef}>
-              <div className="flex gap-8">
-                {marketplaceProducts
-                  .filter((product) => product.featured)
-                  .map((product) => (
-                    <div
-                      className="flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_33.333%]"
-                      key={product.id}
-                    >
-                      <WellnessProductCard
-                        title={product.name}
-                        description={product.description}
-                        price={product.price}
-                        image={product.image}
-                        publisher={product.publisher}
-                        productUrl={product.productUrl}
-                      />
-                    </div>
-                  ))}
+          <section className="py-16">
+            <div className="container relative mx-auto">
+              <div className="overflow-hidden" ref={productsEmblaRef}>
+                <div className="flex gap-8">
+                  {marketplaceProducts
+                    .filter((product) => product.featured)
+                    .map((product) => (
+                      <div
+                        className="flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_33.333%]"
+                        key={product.id}
+                      >
+                        <WellnessProductCard
+                          title={product.name}
+                          description={product.description}
+                          price={product.price}
+                          image={product.image}
+                          publisher={product.publisher}
+                          productUrl={product.productUrl}
+                        />
+                      </div>
+                    ))}
+                </div>
               </div>
-            </div>
 
-            {/* Products Navigation Buttons */}
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute -left-4 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full bg-white shadow-md hover:bg-gray-50"
-              onClick={() => productsEmblaApi?.scrollPrev()}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute -right-4 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full bg-white shadow-md hover:bg-gray-50"
-              onClick={() => productsEmblaApi?.scrollNext()}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+              {/* Products Navigation Buttons */}
+              <Button
+                variant="outline"
+                size="icon"
+                className="absolute -left-4 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full bg-background shadow-md"
+                onClick={() => productsEmblaApi?.scrollPrev()}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="absolute -right-4 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full bg-background shadow-md"
+                onClick={() => productsEmblaApi?.scrollNext()}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </section>
 
           {/* Chambers Section */}
-          <div className="mt-16 bg-gray-50 py-16">
+          <section className="bg-muted py-16">
             <div className="container mx-auto">
               <div className="mb-8 flex items-center justify-between">
-                <h2 className="text-xl font-semibold">Chambers</h2>
+                <h2 className="font-['Raleway'] text-2xl font-semibold sm:text-3xl">
+                  Chambers
+                </h2>
                 <Link href="/chambers">
-                  <Button variant="default" className="gap-2 text-xl">
+                  <Button variant="default" className="gap-2">
                     View all
                     <ChevronRight className="h-4 w-4" />
                   </Button>
@@ -254,221 +256,242 @@ const MarketPage = () => {
                 </Button>
               </div>
             </div>
-          </div>
+          </section>
         </>
       ) : (
         // Marketplace view with grid layout and pagination
-        <div className="mx-auto max-w-7xl px-4 py-8">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {getCurrentPageItems().map((product) => (
-              <WellnessProductCard
-                key={product.id}
-                title={product.name}
-                description={product.description}
-                price={product.price}
-                image={product.image}
-                publisher={product.publisher}
-                productUrl={product.productUrl}
-              />
-            ))}
-          </div>
+        <section className="py-16">
+          <div className="container mx-auto">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {getCurrentPageItems().map((product) => (
+                <WellnessProductCard
+                  key={product.id}
+                  title={product.name}
+                  description={product.description}
+                  price={product.price}
+                  image={product.image}
+                  publisher={product.publisher}
+                  productUrl={product.productUrl}
+                />
+              ))}
+            </div>
 
-          {/* Only show pagination if there's more than one page */}
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={(page) => {
-                setCurrentPage(page);
-                // Scroll to top of grid when changing pages
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            />
-          )}
-        </div>
+            {/* Only show pagination if there's more than one page */}
+            {totalPages > 1 && (
+              <div className="mt-8">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={(page) => {
+                    setCurrentPage(page);
+                    // Scroll to top of grid when changing pages
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </section>
       )}
 
       {/* Consultation Section */}
-      <div className="mx-auto max-w-7xl px-4 py-16">
-        <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-          <div className="flex flex-col md:flex-row">
-            {/* Text Content */}
-            <div className="flex flex-1 flex-col justify-center p-8">
-              <h2 className="mb-4 text-2xl font-bold">
-                Not Sure Where To Start?
-              </h2>
-              <p className="mb-6 text-gray-600">
-                Speak To Our Expert Consultants One-On-One.
-              </p>
-              <button
-                type="button"
-                className="w-full rounded bg-black px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 md:w-auto"
-              >
-                Book Consultation
-              </button>
-            </div>
+      <section className="py-16">
+        <div className="container mx-auto">
+          <Card>
+            <CardContent className="p-0">
+              <div className="flex flex-col md:flex-row">
+                {/* Text Content */}
+                <div className="flex flex-1 flex-col justify-center p-8">
+                  <h2 className="mb-4 font-['Raleway'] text-2xl font-bold sm:text-3xl">
+                    Not Sure Where To Start?
+                  </h2>
+                  <p className="mb-6 text-muted-foreground">
+                    Speak To Our Expert Consultants One-On-One.
+                  </p>
+                  <Button className="w-full md:w-auto">
+                    Book Consultation
+                  </Button>
+                </div>
 
-            {/* Image */}
-            <div className="relative aspect-[4/3] md:w-1/2">
-              <Image
-                src="/wellness-product-images/pete-wellness.png" // Add your consultation image here
-                alt="Hyperbaric Chamber Consultation"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
+                {/* Image */}
+                <div className="relative aspect-[4/3] md:w-1/2">
+                  <Image
+                    src="/wellness-product-images/pete-wellness.png"
+                    alt="Hyperbaric Chamber Consultation"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </div>
+      </section>
 
       <WhyWorkSection />
 
       {/* Buyer's Guide */}
-      <div className="mx-auto max-w-7xl px-4 py-16">
-        <h2 className="mb-8 text-2xl font-bold">Buyer&apos;s Guide</h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Guide Card 1 */}
-          <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-            <div className="relative aspect-video">
-              <Image
-                src="/images/guide-1.jpg"
-                alt="Wellness Centres are LOVING HBOT"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="p-6">
-              <h3 className="mb-2 text-lg font-medium">
-                Wellness Centres are LOVING HBOT
-              </h3>
-              <p className="mb-4 text-sm text-gray-600">
-                Wellness centres getting an ROI shocking rate in new and old
-                clients at record high levels.
-              </p>
-              <button
-                type="button"
-                className="flex items-center text-sm font-medium"
-              >
-                See More
-                <ChevronRight className="ml-1 h-4 w-4" />
-              </button>
-            </div>
-          </div>
+      <section className="py-16">
+        <div className="container mx-auto">
+          <h2 className="mb-8 font-['Raleway'] text-2xl font-bold sm:text-3xl">
+            Buyer&apos;s Guide
+          </h2>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Guide Card 1 */}
+            <Card>
+              <CardContent className="p-0">
+                <div className="relative aspect-video">
+                  <Image
+                    src="/images/guide-1.jpg"
+                    alt="Wellness Centres are LOVING HBOT"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="mb-2 text-lg font-medium">
+                    Wellness Centres are LOVING HBOT
+                  </h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    Wellness centres getting an ROI shocking rate in new and old
+                    clients at record high levels.
+                  </p>
+                  <Button variant="link" className="p-0">
+                    See More
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
-          {/* Guide Card 2 */}
-          <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-            <div className="relative aspect-video">
-              <Image
-                src="/wellness-product-images/pete-wellness.png"
-                alt="Home Hyperbaric Set Ups"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="p-6">
-              <h3 className="mb-2 text-lg font-medium">
-                Home Hyperbaric Set Ups
-              </h3>
-              <p className="mb-4 text-sm text-gray-600">
-                The easiest home hyperbaric setups we've seen that are ready to
-                be used in minutes!
-              </p>
-              <button
-                type="button"
-                className="flex items-center text-sm font-medium"
-              >
-                See More
-                <ChevronRight className="ml-1 h-4 w-4" />
-              </button>
-            </div>
-          </div>
+            {/* Guide Card 2 */}
+            <Card>
+              <CardContent className="p-0">
+                <div className="relative aspect-video">
+                  <Image
+                    src="/wellness-product-images/pete-wellness.png"
+                    alt="Home Hyperbaric Set Ups"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="mb-2 text-lg font-medium">
+                    Home Hyperbaric Set Ups
+                  </h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    The easiest home hyperbaric setups we've seen that are ready
+                    to be used in minutes!
+                  </p>
+                  <Button variant="link" className="p-0">
+                    See More
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
-          {/* Guide Card 3 */}
-          <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-            <div className="relative aspect-video">
-              <Image
-                src="/images/guide-3.jpg"
-                alt="Home Hyperbaric Set Ups"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="p-6">
-              <h3 className="mb-2 text-lg font-medium">
-                Home Hyperbaric Set Ups
-              </h3>
-              <p className="mb-4 text-sm text-gray-600">
-                The easiest home hyperbaric setups we&apos;ve seen that are
-                ready to be used in minutes!
-              </p>
-              <button
-                type="button"
-                className="flex items-center text-sm font-medium"
-              >
-                See More
-                <ChevronRight className="ml-1 h-4 w-4" />
-              </button>
-            </div>
+            {/* Guide Card 3 */}
+            <Card>
+              <CardContent className="p-0">
+                <div className="relative aspect-video">
+                  <Image
+                    src="/images/guide-3.jpg"
+                    alt="Home Hyperbaric Set Ups"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="mb-2 text-lg font-medium">
+                    Home Hyperbaric Set Ups
+                  </h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    The easiest home hyperbaric setups we&apos;ve seen that are
+                    ready to be used in minutes!
+                  </p>
+                  <Button variant="link" className="p-0">
+                    See More
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* FAQ Section */}
-      <div className="bg-[#F2F2F2] py-16">
-        <div className="mx-auto max-w-7xl px-4">
-          <h2 className="mb-8 text-center text-3xl font-bold">
+      <section className="bg-muted py-16">
+        <div className="container mx-auto">
+          <h2 className="mb-8 text-center font-['Raleway'] text-3xl font-bold sm:text-4xl">
             FAQs | Frequently Asked Questions
           </h2>
           <div className="space-y-4">
             <Accordion type="single" collapsible className="space-y-4">
-              <AccordionItem value="item-1" className="border-none">
-                <AccordionTrigger className="rounded-lg bg-white px-6 py-4 text-left hover:no-underline">
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="rounded-lg bg-background px-6 py-4 text-left hover:no-underline">
                   How does HBOT Work?
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pt-2">
-                  {/* Add content here */}
+                  HBOT works by increasing the amount of oxygen your blood can
+                  carry. An increase in blood oxygen temporarily restores normal
+                  levels of blood gases and tissue function to promote healing
+                  and fight infection.
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="item-2" className="border-none">
-                <AccordionTrigger className="rounded-lg bg-white px-6 py-4 text-left hover:no-underline">
-                  Do I need my Doctors clearance?
+              <AccordionItem value="item-2">
+                <AccordionTrigger className="rounded-lg bg-background px-6 py-4 text-left hover:no-underline">
+                  Do I need my Doctor&apos;s clearance?
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pt-2">
-                  {/* Add content here */}
+                  While HBOT is generally safe, it's always recommended to
+                  consult with your doctor before starting any new treatment,
+                  especially if you have any pre-existing medical conditions.
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="item-3" className="border-none">
-                <AccordionTrigger className="rounded-lg bg-white px-6 py-4 text-left hover:no-underline">
+              <AccordionItem value="item-3">
+                <AccordionTrigger className="rounded-lg bg-background px-6 py-4 text-left hover:no-underline">
                   Is HBOT Safe for kids?
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pt-2">
-                  {/* Add content here */}
+                  HBOT can be safe for children when administered under proper
+                  medical supervision. However, it's crucial to consult with a
+                  pediatrician or specialist before considering HBOT for a
+                  child.
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="item-4" className="border-none">
-                <AccordionTrigger className="rounded-lg bg-white px-6 py-4 text-left hover:no-underline">
+              <AccordionItem value="item-4">
+                <AccordionTrigger className="rounded-lg bg-background px-6 py-4 text-left hover:no-underline">
                   Do I need a protocol?
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pt-2">
-                  {/* Add content here */}
+                  Yes, a treatment protocol is essential for HBOT. The number of
+                  sessions, duration, and pressure levels will be determined
+                  based on your specific condition and health status.
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="item-5" className="border-none">
-                <AccordionTrigger className="rounded-lg bg-white px-6 py-4 text-left hover:no-underline">
+              <AccordionItem value="item-5">
+                <AccordionTrigger className="rounded-lg bg-background px-6 py-4 text-left hover:no-underline">
                   How often can I do HBOT?
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pt-2">
-                  {/* Add content here */}
+                  The frequency of HBOT sessions can vary depending on your
+                  condition and treatment plan. Typically, treatments are
+                  administered daily for acute conditions and may be less
+                  frequent for chronic conditions. Always follow your healthcare
+                  provider's recommendations.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
           </div>
         </div>
-      </div>
+      </section>
+
       <EmailInputForm />
       <ContactSection />
 

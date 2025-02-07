@@ -4,12 +4,12 @@ import Script from "next/script";
 import { HeroText } from "~/components/header/hero-text";
 import { ChambersSection } from "~/components/landing/chambers-section";
 import ContactSection from "~/components/landing/contact-section";
-import { CTASection } from "~/components/landing/cta-section";
+import { CTASubscriptionSection } from "~/components/landing/cta-section";
 import EmailInputForm from "~/components/landing/email-input-form";
 import { WellnessMarketplace } from "~/components/landing/marketplace-section";
 import ProvidersSection from "~/components/landing/providers-section";
 import ResearchDashboard from "~/components/landing/research-section";
-import TrendingSection from "~/components/landing/trending-section";
+import TrendingSection from "~/components/landing/trending/trending-section";
 import { HydrateClient } from "~/trpc/server";
 
 export const metadata: Metadata = {
@@ -85,15 +85,15 @@ export default async function Home(): Promise<JSX.Element> {
       </Script>
       <main className="flex w-full flex-row items-center justify-center">
         <div className="w-full">
-          <HeroText />
+          {/* <HeroText /> */}
           <div className="space-y-24">
             <ResearchDashboard />
             <ChambersSection />
             <TrendingSection />
             <ProvidersSection />
             <WellnessMarketplace />
-            <CTASection />
-            <EmailInputForm />
+            <CTASubscriptionSection />
+            {/* <EmailInputForm /> */}
             <ContactSection />
           </div>
         </div>

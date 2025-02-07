@@ -1,136 +1,123 @@
-"use client";
-
 import { sendGAEvent } from "@next/third-parties/google";
+import { BookmarkIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-import getArticlesByCondition, {
-  type ConditionIdArticlesProps,
-} from "~/utils/supabase/getArticlesByCondition";
+import type { ConditionIdArticlesProps } from "~/utils/supabase/getArticlesByCondition";
 
-interface ArticlesListProps {
-  selectedConditionId: number | null;
-  onArticleHover: (article: ConditionIdArticlesProps) => void;
+export interface ArticlesListProps {
+  articles: ConditionIdArticlesProps[];
+  isLoading: boolean;
+  onArticleHover: (article: ConditionIdArticlesProps | null) => void;
 }
 
 export function ArticlesList({
-  selectedConditionId,
+  articles,
+  isLoading,
   onArticleHover,
 }: ArticlesListProps) {
-  const [articles, setArticles] = useState<ConditionIdArticlesProps[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [prevConditionId, setPrevConditionId] = useState<number | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchArticles() {
-      // Don't show loading state if we're just reselecting the same condition
-      if (selectedConditionId === prevConditionId) return;
-
-      setIsLoading(true);
-
-      try {
-        const data = await getArticlesByCondition(selectedConditionId);
-        if (isMounted) {
-          setArticles(data || []);
-          // Set the first article as the default preview when articles load
-          if (data?.[0]) {
-            onArticleHover(data[0]);
-          }
-          setPrevConditionId(selectedConditionId);
-        }
-      } catch (err) {
-        console.error("Error fetching articles:", err);
-        if (isMounted) {
-          setArticles([]);
-        }
-      } finally {
-        if (isMounted) {
-          // Add a small delay before removing loading state to prevent flicker
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 300);
-        }
-      }
-    }
-
-    if (selectedConditionId) {
-      void fetchArticles();
-    } else {
-      setArticles([]);
-      setPrevConditionId(null);
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [selectedConditionId, onArticleHover, prevConditionId]);
-
-  const content = (
-    <div className="divide-y divide-gray-200">
-      {articles.map((article) => (
-        <Link
-          key={article.id}
-          href={`/new-research/${article.id}`}
-          onMouseEnter={() => onArticleHover(article)}
-          onClick={() =>
-            sendGAEvent("event", "articleClicked", {
-              value: `Research Article ${article.id}`,
-            })
-          }
-          className="block py-6 transition-colors hover:bg-gray-50"
-        >
-          <article>
-            <h2 className="mb-2 text-xl font-semibold text-gray-900">
-              {article.heading}
-            </h2>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <span>{article.authors}</span>
-              <span>•</span>
-              <span>{new Date(article.published_date).getFullYear()}</span>
-            </div>
-          </article>
-        </Link>
-      ))}
-    </div>
-  );
-
-  if (!selectedConditionId) {
+  if (isLoading) {
     return (
-      <div className="flex h-full items-center justify-center p-6">
-        <p className="text-gray-500">Select a condition to view articles.</p>
+      <div className="flex h-full items-center justify-center">
+        Loading articles...
       </div>
     );
   }
 
-  return (
-    <div className="relative h-full">
-      {/* Loading Overlay */}
-      <div
-        className={`absolute inset-0 z-10 flex items-center justify-center bg-white/80 transition-opacity duration-300 ${
-          isLoading ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-      >
-        <div className="flex flex-col items-center gap-2">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900" />
-          <span className="text-sm text-gray-600">Loading articles...</span>
-        </div>
+  if (articles.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        No articles found. Please select a condition.
       </div>
+    );
+  }
 
-      {/* Content */}
-      <div
-        className={`h-full transition-opacity duration-300 ${
-          isLoading ? "opacity-50" : "opacity-100"
-        }`}
-      >
-        {articles.length > 0 ? (
-          content
-        ) : (
-          <div className="flex h-full items-start justify-center p-6 pt-12 text-gray-500">
-            No articles found for this condition.
-          </div>
-        )}
+  // Custom imageUrl function
+  const getImageUrl = (articleId: number) => {
+    return `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/${articleId}.png`;
+  };
+
+  return (
+    <div className="h-full overflow-y-auto">
+      <div className="space-y-4 p-4">
+        {articles.map((article) => (
+          <Link
+            key={article.id}
+            href={`/research/${article.id}`}
+            onMouseEnter={() => onArticleHover(article)}
+            onClick={() =>
+              sendGAEvent("event", "articleClicked", {
+                value: `Research Article ${article.id}`,
+              })
+            }
+          >
+            <div className="group relative h-[180px] w-full overflow-hidden rounded-xl border border-gray-200 transition-shadow hover:shadow-md">
+              {/* Background Image */}
+              <Image
+                src={getImageUrl(article.id) || "/placeholder.svg"}
+                alt={article.heading}
+                fill
+                className="object-cover transition-transform duration-200 group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/60" />
+
+              {/* Content */}
+              <div className="absolute inset-0 flex flex-col justify-between p-4">
+                {/* Top Section */}
+                <div className="space-y-1">
+                  {/* Author and Date */}
+                  <div className="flex items-center gap-2 font-mono text-xs text-gray-200">
+                    <span>{article.authors}</span>
+                    <span>•</span>
+                    <span>
+                      {new Date(article.published_date).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        },
+                      )}
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="line-clamp-2 font-serif text-lg font-medium leading-tight text-white">
+                    {article.heading}
+                  </h3>
+                </div>
+
+                {/* Bottom Section */}
+                <div className="flex items-center justify-between font-mono text-xs">
+                  <div className="flex items-center gap-2 text-gray-200">
+                    {article.condition_name && (
+                      <span>{article.condition_name}</span>
+                    )}
+                    {article.number_of_treatments && (
+                      <>
+                        <span>•</span>
+                        <span>{article.number_of_treatments} Sessions</span>
+                      </>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    className="text-gray-400 transition-colors hover:text-white"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      // Add bookmark functionality here
+                    }}
+                  >
+                    <BookmarkIcon className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );
