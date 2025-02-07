@@ -65,7 +65,7 @@ export default function SignUpPage() {
             Create an Account
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-6 py-4">
           <form onSubmit={handleSignUp} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -99,10 +99,13 @@ export default function SignUpPage() {
             </Button>
           </form>
 
-          <div className="my-4 flex items-center">
-            <Separator className="flex-grow" />
-            <span className="mx-4 text-sm text-gray-500">OR</span>
-            <Separator className="flex-grow" />
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <Separator className="w-full" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-muted-foreground">OR</span>
+            </div>
           </div>
 
           <div className="space-y-2">

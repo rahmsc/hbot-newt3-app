@@ -113,7 +113,7 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="my-4 flex items-center">
+          <div className="my-4 flex w-full items-center">
             <Separator className="flex-grow" />
             <span className="mx-4 text-sm text-gray-500">OR</span>
             <Separator className="flex-grow" />
