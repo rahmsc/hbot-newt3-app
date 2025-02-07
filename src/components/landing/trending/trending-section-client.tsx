@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+
 import {
-  TrendingCard,
   type TrendingArticleProps,
+  TrendingCard,
 } from "~/components/trending/trending-card";
 import { TrendingFilter } from "~/components/trending/trending-filter";
 
