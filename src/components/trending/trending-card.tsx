@@ -35,7 +35,11 @@ export function TrendingCard({ article, size }: TrendingCardProps) {
 
         <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
           <Badge
-            className="mb-4 w-fit bg-orange-500 font-mono text-xs uppercase tracking-wider text-white hover:bg-orange-600"
+            className={`mb-4 w-fit font-mono text-xs uppercase tracking-wider text-white ${
+              article.type === "blog"
+                ? "bg-emerald-700 hover:bg-emerald-800"
+                : "bg-orange-500 hover:bg-orange-600"
+            }`}
             variant="secondary"
           >
             {article.type === "blog" ? "Blog" : "Guide"}
