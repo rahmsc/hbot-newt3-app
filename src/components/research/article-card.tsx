@@ -39,7 +39,7 @@ export function ArticleCard({
     : "Unknown Author";
 
   return (
-    <Link href={`/new-research/${id}`}>
+    <Link href={`/research/${id}`}>
       <div className="group relative h-[325px] w-full overflow-hidden rounded-[2rem]">
         {/* Background Image */}
         <Image

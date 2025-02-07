@@ -28,7 +28,14 @@ export function ChambersSection() {
         "(min-width: 1024px)": { slidesToScroll: 3 },
       },
     },
-    [Autoplay()],
+    [
+      Autoplay({
+        delay: 3000,
+        stopOnInteraction: false,
+        stopOnMouseEnter: true,
+        rootNode: (emblaRoot) => emblaRoot.parentElement,
+      }),
+    ],
   );
 
   useEffect(() => {
@@ -57,7 +64,7 @@ export function ChambersSection() {
       </div>
       {/* <div className="h-px w-full bg-gray-600" /> */}
 
-      <div className="relative pt-12">
+      <div className="relative px-8 pt-12">
         {/* Carousel Container */}
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex">
@@ -82,7 +89,7 @@ export function ChambersSection() {
         <Button
           variant="outline"
           size="icon"
-          className="absolute -left-5 top-1/2 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+          className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
           onClick={() => emblaApi?.scrollPrev()}
         >
           <ChevronLeft className="h-4 w-4" />
@@ -90,7 +97,7 @@ export function ChambersSection() {
         <Button
           variant="outline"
           size="icon"
-          className="absolute -right-5 top-1/2 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+          className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
           onClick={() => emblaApi?.scrollNext()}
         >
           <ChevronRight className="h-4 w-4" />
