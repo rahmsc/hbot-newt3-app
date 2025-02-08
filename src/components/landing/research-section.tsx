@@ -159,6 +159,10 @@ export default function ResearchDashboard() {
                             article.number_of_treatments ?? 0
                           }
                           outcome_rating={article.outcome_rating ?? ""}
+                          published_date={
+                            new Date(article.published_date ?? "")
+                          }
+                          authors={article.authors ?? ""}
                         />
                       </div>
                     ))}

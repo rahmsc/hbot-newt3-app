@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export function CTASubscriptionSection() {
   return (
-    <section className="relative w-full">
+    <section className="relative w-full py-4">
       {/* Background Image */}
       <div className="absolute inset-0 h-full w-full">
         <Image

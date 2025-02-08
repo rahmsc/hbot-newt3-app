@@ -1,84 +1,128 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { sendGAEvent } from "@next/third-parties/google";
+import { ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 import { Button } from "~/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { useToast } from "~/hooks/use-toast";
+import { api } from "~/trpc/react";
+
+const formSchema = z.object({
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+});
 
 const ContactSection = () => {
-  const imageUrl =
-    "https://d144dqt8e4woe2.cloudfront.net/chambers/gallery/6.png";
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  const emailMutation = api.email.saveEmail.useMutation({
+    onSuccess: () => {
+      toast({
+        title: "Subscribed!",
+        description: "Thank you for subscribing to our newsletter.",
+      });
+      form.reset();
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    try {
+      await emailMutation.mutateAsync(values);
+    } catch (error) {
+      // Error is handled in the onError callback of the mutation
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
-    <section className="relative w-full py-24">
-      <div className="absolute inset-0">
-        <Image
-          src={imageUrl || "/placeholder.svg"}
-          alt="Hyperbaric chamber"
-          fill
-          className="h-full w-full object-cover"
-        />
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50" />
-
-      <div className="relative z-10 mx-auto max-w-[1400px] px-8">
-        <div className="flex flex-col items-center justify-center md:flex-row md:items-stretch md:justify-between">
-          <div className="mb-8 max-w-xl text-center md:mb-0 md:text-left">
-            <h2 className="mb-6 font-['Raleway'] text-4xl font-bold tracking-[0.3em] text-white sm:text-5xl">
-              LET&rsquo;S TALK HBOT
-            </h2>
-            <p className="text-xl text-gray-200">
-              Discover how our cutting-edge hyperbaric oxygen therapy solutions
-              can transform your health and wellness journey.
+    <section className="relative w-full">
+      <div className="container mx-auto max-w-3xl px-4 pt-8 text-center">
+        <div className="space-y-6">
+          <h3 className="font-['Raleway'] text-3xl font-medium tracking-[0.2em] text-gray-900">
+            HQ INSIDER
+          </h3>
+          <div className="space-y-4">
+            <p className="text-xl font-medium text-gray-600">
+              YOUR MONTHLY DIVE INTO HBOT!
+            </p>
+            <p className="mx-auto max-w-4xl text-lg text-gray-800">
+              STAY INFORMED WITH THE LATEST NEWS, RESEARCH, NEW WELLNESS
+              PRODUCTS AND UNBEATABLE DEALS—ALL DELIVERED STRAIGHT TO YOUR
+              INBOX.
             </p>
           </div>
-
-          <Card className="w-full max-w-md bg-white/90 backdrop-blur-sm md:ml-8">
-            <CardHeader>
-              <CardTitle className="font-['Raleway'] text-sm font-medium uppercase tracking-[0.2em] text-gray-900">
-                Expert Consultation
-              </CardTitle>
-              <CardDescription className="mt-2 text-3xl font-bold text-gray-900">
-                Explore Hyperbaric Solutions
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-6 text-lg text-gray-600">
-                Book a consultation with our experts to learn how our advanced
-                hyperbaric oxygen therapy can address a wide range of medical
-                conditions and enhance your overall well-being.
-              </p>
-              <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-                <Button
-                  asChild
-                  className="rounded-full bg-gray-900 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-gray-800"
-                >
-                  <a
-                    href="https://calendly.com/your-link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Book a Consultation
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="rounded-full border-gray-900 px-6 py-3 text-base font-medium text-gray-900 transition-colors hover:bg-gray-100"
-                >
-                  <Link href="/contact">Request Information</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
         </div>
+
+        <div className="mx-auto mt-12 max-w-sm">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your email"
+                        {...field}
+                        className="h-12 rounded-full border-gray-300 px-6 text-lg shadow-sm transition-all focus:border-emerald-500 focus:ring-emerald-500"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                className="h-12 w-full rounded-full bg-black px-6 text-lg font-medium text-white transition-all hover:bg-emerald-600"
+                disabled={isLoading}
+                onClick={() =>
+                  sendGAEvent("event", "buttonClicked", {
+                    value: "Subscribe(HQ Insider)",
+                  })
+                }
+              >
+                {isLoading ? "Subscribing..." : "Subscribe"}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </form>
+          </Form>
+        </div>
+
+        <p className="mt-6 text-center text-sm text-gray-500">
+          We&apos;ll never share your email with anyone else.
+        </p>
       </div>
     </section>
   );
