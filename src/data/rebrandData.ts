@@ -11,6 +11,7 @@ export interface chambersDataProp {
 
 export const chamberData = [
   {
+    uniqueId: "zeugma",
     id: 1,
     name: "Zeugma",
     type: "Sit Up Hard Shell",
@@ -22,6 +23,7 @@ export const chamberData = [
       "Professional grade hard shell hyperbaric chamber for single person use",
   },
   {
+    uniqueId: "thepro",
     id: 2,
     name: "The Pro",
     type: "Lay Down Hard Shell",
@@ -33,6 +35,7 @@ export const chamberData = [
       "Professional grade hard shell hyperbaric chamber for single person use",
   },
   {
+    uniqueId: "thesitup",
     id: 3,
     name: "The Sit Up",
     type: "Sit Up Hard Shell",
@@ -44,6 +47,7 @@ export const chamberData = [
       "Professional grade hard shell hyperbaric chamber for single person use",
   },
   {
+    uniqueId: "giza",
     id: 4,
     name: "Giza",
     type: "4 x Seater Sit Up Hard Shell",
@@ -55,6 +59,7 @@ export const chamberData = [
       "Professional grade hard shell hyperbaric chamber for single person use",
   },
   {
+    uniqueId: "atlantis",
     id: 5,
     name: "Atlantis",
     type: "2 x Seater Sit Up Hard Shell",
@@ -66,6 +71,7 @@ export const chamberData = [
       "Professional grade hard shell hyperbaric chamber for single person use",
   },
   {
+    uniqueId: "thesitup2",
     id: 6,
     name: "The Sit Up",
     type: "Sit Up Hard Shell",
@@ -77,6 +83,7 @@ export const chamberData = [
       "Professional grade hard shell hyperbaric chamber for single person use",
   },
   {
+    uniqueId: "thesitup3",
     id: 7,
     name: "The Sit Up",
     type: "Sit Up Hard Shell",
@@ -88,6 +95,7 @@ export const chamberData = [
       "Professional grade hard shell hyperbaric chamber for single person use",
   },
   {
+    uniqueId: "thepro2",
     id: 8,
     name: "The Pro",
     type: "Lay Down Hard Shell",
@@ -99,6 +107,7 @@ export const chamberData = [
       "Professional grade hard shell hyperbaric chamber for single person use",
   },
   {
+    uniqueId: "thepro3",
     id: 9,
     name: "The Pro",
     type: "Lay Down Hard Shell",

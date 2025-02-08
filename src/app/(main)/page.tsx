@@ -91,7 +91,7 @@ export default async function Home(): Promise<JSX.Element> {
             <ChambersSection />
             <TrendingSection />
             <ProvidersSection />
-            <WellnessMarketplace />
+            {/* <WellnessMarketplace /> */}
             <CTASubscriptionSection />
             {/* <EmailInputForm /> */}
             <ContactSection />
