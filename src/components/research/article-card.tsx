@@ -17,14 +17,6 @@ export function ArticleCard({
   const imageUrl =
     "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
 
-  const formattedDate = published_date
-    ? new Date(published_date).toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
-    : "January 28, 2024";
-
   const showCondition =
     conditionName && conditionName.toLowerCase() !== "unknown";
   const showTreatments = number_of_treatments && number_of_treatments > 0;
@@ -33,7 +25,7 @@ export function ArticleCard({
     ? authors
         .split(/[,]/)
         .filter((author) => author.trim())
-        .slice(0, 2)
+        .slice(0, 1)
         .map((author) => author.trim())
         .join(", ") + (authors.split(/[,]/).length > 3 ? " et al." : "")
     : "Unknown Author";
@@ -57,15 +49,15 @@ export function ArticleCard({
         <div className="absolute inset-0 flex flex-col justify-between p-6 text-white">
           {/* Top Section */}
           <div className="flex items-center justify-between">
-            <div className="inline-flex items-center rounded-full bg-black/30 px-2 py-1 backdrop-blur-sm">
-              <span className="font-['Space_Mono'] text-xs uppercase tracking-wider text-white">
-                {processedAuthors}
-              </span>
-              <span className="text-white">•</span>
-              <span className="font-['Space_Mono'] text-xs uppercase tracking-wider text-white">
-                {formattedDate}
-              </span>
-            </div>
+            {/* Condition and Sessions */}
+            {showCondition && (
+              <div className="flex w-full items-center justify-between gap-4 rounded-full px-6 py-1.5">
+                <span className="font-mono text-xs uppercase tracking-wider text-white backdrop-blur-sm">
+                  {conditionName}
+                </span>
+              </div>
+            )}
+
             <button
               type="button"
               className="rounded-full p-2 text-gray-400 transition-colors hover:text-white"
@@ -85,26 +77,20 @@ export function ArticleCard({
               {heading}
             </h3>
 
-            {/* Condition and Sessions */}
-            {showCondition && (
-              <div className="flex w-full items-center justify-between gap-4 rounded-full px-6 py-1.5">
-                <span className="font-['Space_Mono'] text-xs uppercase tracking-wider text-white backdrop-blur-sm">
-                  {conditionName}
-                </span>
-                {number_of_treatments === 0
-                  ? null
-                  : number_of_treatments &&
-                    number_of_treatments > 0 && (
-                      <>
-                        <span className="text-white/50">•</span>
-                        <span className="font-['Space_Mono'] text-xs uppercase tracking-wider text-white backdrop-blur-sm">
-                          {number_of_treatments}{" "}
-                          {number_of_treatments === 1 ? "Session" : "Sessions"}
-                        </span>
-                      </>
-                    )}
-              </div>
-            )}
+            <div className="inline-flex w-full items-center justify-between rounded-full bg-black/30 px-2 py-1 backdrop-blur-sm">
+              <span className="font-mono text-xs uppercase tracking-wider text-white">
+                {processedAuthors}
+              </span>
+              <span className="font-mono text-xs uppercase tracking-wider text-white">
+                {published_date
+                  ? published_date.toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "2-digit",
+                    })
+                  : "N/A"}
+              </span>
+            </div>
           </div>
         </div>
       </div>

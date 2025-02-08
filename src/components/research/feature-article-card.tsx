@@ -29,13 +29,13 @@ export default function FeaturedArticleCard({
   const imageUrl =
     "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
 
-  const formattedDate = published_date
-    ? new Date(published_date).toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
-    : "";
+  // const formattedDate = published_date
+  //   ? new Date(published_date).toLocaleDateString("en-US", {
+  //       month: "long",
+  //       day: "numeric",
+  //       year: "numeric",
+  //     })
+  //   : "";
 
   const truncatedSummary =
     summary?.length > 120 ? `${summary.slice(0, 120)}...` : summary;
@@ -64,7 +64,7 @@ export default function FeaturedArticleCard({
                 {authors
                   .split(/[,]/)
                   .filter((author) => author.trim())
-                  .slice(0, 2)
+                  .slice(0, 3)
                   .map((author) => author.trim())
                   .join(", ") +
                   (authors.split(/[,]/).length > 3 ? " et al." : "")}
@@ -72,7 +72,13 @@ export default function FeaturedArticleCard({
             )}
             <span className="text-white">•</span>
             <span className="font-['Space_Mono'] text-xs uppercase tracking-wider text-white">
-              {formattedDate}
+              {published_date
+                ? published_date.toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "2-digit",
+                  })
+                : "N/A"}
             </span>
           </div>
           <div className="flex items-center gap-2">
