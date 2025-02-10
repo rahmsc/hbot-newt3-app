@@ -23,8 +23,7 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     nextAvailable: "Today",
     phone: "0434 567 890",
     hours: "Mon - Sun: 7am - 9pm",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-23%20at%2010.01.54%E2%80%AFam-5BkAXd8dbDRTpT6LXcg2qlN74X0YSQ.png",
+    image: "/providers-images/provider_4.png",
   },
   {
     name: "Vitality HBOT Center",
@@ -35,8 +34,7 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     nextAvailable: "Today",
     phone: "0456 789 123",
     hours: "Mon - Sat: 8am - 8pm",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-23%20at%2010.01.54%E2%80%AFam-5BkAXd8dbDRTpT6LXcg2qlN74X0YSQ.png",
+    image: "/providers-images/provider_5.png",
   },
   {
     name: "OxygenPlus Therapy",
@@ -47,8 +45,7 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     nextAvailable: "Tomorrow",
     phone: "0467 234 567",
     hours: "Mon - Sun: 6am - 7pm",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-23%20at%2010.01.54%E2%80%AFam-5BkAXd8dbDRTpT6LXcg2qlN74X0YSQ.png",
+    image: "/providers-images/provider_1.png",
   },
   {
     name: "Heal & Thrive",
@@ -59,8 +56,7 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     nextAvailable: "Tomorrow",
     phone: "0478 901 234",
     hours: "Mon - Fri: 8am - 6pm",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-23%20at%2010.01.54%E2%80%AFam-5BkAXd8dbDRTpT6LXcg2qlN74X0YSQ.png",
+    image: "/providers-images/provider_2.png",
   },
   {
     name: "Pure Oxygen Wellness",
@@ -71,8 +67,7 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     nextAvailable: "Today",
     phone: "0489 012 345",
     hours: "Mon - Sun: 9am - 8pm",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-23%20at%2010.01.54%E2%80%AFam-5BkAXd8dbDRTpT6LXcg2qlN74X0YSQ.png",
+    image: "/providers-images/provider_3.png",
   },
 ];
 
@@ -97,8 +92,8 @@ export default function ProvidersSection() {
   return (
     <section className="w-full">
       <div className="h-px w-full bg-gray-600" />
-      <div className="flex items-center justify-between p-2 pl-6">
-        <h2 className="font-['Raleway'] text-4xl tracking-[0.3em] text-gray-900">
+      <div className="py-4 pl-16">
+        <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700">
           VERIFIED PROVIDERS
         </h2>
       </div>
