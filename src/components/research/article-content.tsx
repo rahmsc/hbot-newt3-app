@@ -4,8 +4,8 @@ import { format } from "date-fns";
 
 import type { ArticlesProps } from "~/utils/supabase/getArticleById";
 
-import AccordionTemplate from "../utils/accordion-template";
 import FaqAccordion from "../article/faq-accordion";
+import AccordionTemplate from "../utils/accordion-template";
 import ParallaxImage from "../utils/parralex-image";
 import RichText from "../utils/rich-text";
 
@@ -44,7 +44,12 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
         </div>
         <div className="flex-1 space-y-2">
           <p className="font-bold text-red-600">PUBLISHED DATE</p>
-          <p>{format(new Date(foundArticle.publishedDate), "MM/dd/yyyy")}</p>
+          <p>
+            {foundArticle.publishedDate &&
+            !Number.isNaN(new Date(foundArticle.publishedDate).getTime())
+              ? format(new Date(foundArticle.publishedDate), "MM/dd/yyyy")
+              : "Date not available"}
+          </p>
         </div>
       </div>
 

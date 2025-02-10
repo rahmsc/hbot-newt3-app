@@ -3,8 +3,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-import { Button } from "~/components/ui/button";
 import type { chambersDataProp } from "~/data/rebrandData";
+import GlowingButton from "../utils/glowing-button";
 
 interface ChamberCardProps {
   chamber: chambersDataProp;
@@ -51,7 +51,7 @@ export function ChamberCard({
 
         <div className="absolute inset-0 flex flex-col justify-between p-6 text-white">
           <div className="space-y-2">
-            <h3 className="font-['Raleway'] text-2xl font-bold uppercase tracking-wider">
+            <h3 className="font-['Raleway'] text-4xl uppercase tracking-wider">
               {name}
             </h3>
             <div className="space-y-2">
@@ -101,16 +101,14 @@ export function ChamberCard({
           </div>
 
           <div className="flex flex-row items-center justify-center">
-            <Button
-              variant="default"
-              className="bg-emerald-700 px-4 py-1 text-base text-white transition-all hover:bg-emerald-600"
+            <GlowingButton
+              text="View Details"
               onClick={(e) => {
                 e.stopPropagation();
                 onQuickView(chamber);
               }}
-            >
-              View Details
-            </Button>
+              className="w-full max-w-[200px]"
+            />
           </div>
         </div>
       </div>

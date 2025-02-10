@@ -4,6 +4,7 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+
 import { cn } from "~/lib/utils";
 
 const navItems = [
@@ -63,8 +64,8 @@ export function MainNav() {
   return (
     <nav
       className={cn(
-        "fixed left-0 right-0 z-40 shadow-md transition-all duration-300",
-        isScrolled ? "top-12" : "top-16", // Adjust based on TopNav height
+        "fixed left-0 right-0 z-40 bg-[#f9f7f4] shadow-md transition-all duration-150",
+        isScrolled ? "top-12" : "top-16",
         isVisible ? "translate-y-0" : "-translate-y-full",
       )}
     >

@@ -127,7 +127,7 @@ export default function ResearchDashboard() {
             {articles.length > 0 ? (
               <>
                 <div className="col-span-5">
-                  <div className="h-[600px] rounded-xl border border-gray-100 bg-white shadow-sm transition duration-200 hover:shadow-md">
+                  <div className="h-[600px] rounded-[2rem] border border-gray-100 bg-white shadow-sm transition duration-200 hover:shadow-md">
                     <FeaturedArticleCard
                       {...articles[0]}
                       conditionName={
@@ -143,7 +143,7 @@ export default function ResearchDashboard() {
                     {articles.slice(1, 5).map((article) => (
                       <div
                         key={article.id}
-                        className="rounded-xl border border-gray-100 bg-white shadow-sm transition duration-200 hover:shadow-md"
+                        className="rounded-[2rem] border border-gray-100 bg-white shadow-sm transition duration-200 hover:shadow-md"
                       >
                         <ArticleCard
                           id={article.id ?? 0}

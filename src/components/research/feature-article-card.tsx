@@ -29,14 +29,6 @@ export default function FeaturedArticleCard({
   const imageUrl =
     "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
 
-  // const formattedDate = published_date
-  //   ? new Date(published_date).toLocaleDateString("en-US", {
-  //       month: "long",
-  //       day: "numeric",
-  //       year: "numeric",
-  //     })
-  //   : "";
-
   const truncatedSummary =
     summary?.length > 120 ? `${summary.slice(0, 120)}...` : summary;
 
@@ -58,9 +50,9 @@ export default function FeaturedArticleCard({
       <div className="absolute inset-0 flex flex-col justify-between p-12 text-white">
         {/* Top Section */}
         <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-2 rounded-full bg-black/50 px-4 py-2 backdrop-blur-sm">
-            {authors && (
-              <span className="font-['Space_Mono'] text-xs uppercase tracking-wider text-white">
+          <div className="inline-flex items-center gap-2 overflow-hidden rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
+            {/* {authors && (
+              <span className="font-['Space_Mono'] text-xs uppercase tracking-wider text-gray-300">
                 {authors
                   .split(/[,]/)
                   .filter((author) => author.trim())
@@ -69,9 +61,9 @@ export default function FeaturedArticleCard({
                   .join(", ") +
                   (authors.split(/[,]/).length > 3 ? " et al." : "")}
               </span>
-            )}
-            <span className="text-white">•</span>
-            <span className="font-['Space_Mono'] text-xs uppercase tracking-wider text-white">
+            )} */}
+            {/* <span className="text-white">•</span> */}
+            <span className="font-mono text-sm uppercase tracking-wider text-white">
               {published_date
                 ? published_date.toLocaleDateString("en-GB", {
                     day: "2-digit",
@@ -82,12 +74,9 @@ export default function FeaturedArticleCard({
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-white">
-              <BookmarkIcon className="h-5 w-5" />
+            <span className="overflow-hidden rounded-full p-2 text-white backdrop-blur-sm">
+              <BookmarkIcon className="h-8 w-8" />
             </span>
-            <p className="font-['Space_Mono'] text-xs uppercase tracking-wider text-white">
-              Save
-            </p>
           </div>
         </div>
 
@@ -139,11 +128,13 @@ export function MetadataItem({
   value: string;
 }) {
   return (
-    <div className="rounded bg-black/30 p-2 backdrop-blur-sm">
-      <div className="font-['Space_Mono'] text-xs tracking-[0.2em] text-gray-300">
+    <div className="flex flex-col items-center justify-between overflow-hidden rounded-full bg-white/10 p-2 backdrop-blur-sm">
+      <div className="font-mono text-xs tracking-[0.2em] text-gray-300">
         {label}
       </div>
-      <div className="font-['Roboto'] text-sm text-white">{value}</div>
+      <div className="font-['Roboto'] text-sm tracking-widest text-white">
+        {value}
+      </div>
     </div>
   );
 }

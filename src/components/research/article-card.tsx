@@ -49,39 +49,8 @@ export function ArticleCard({
         <div className="absolute inset-0 flex flex-col justify-between p-6 text-white">
           {/* Top Section */}
           <div className="flex items-center justify-between">
-            {/* Condition and Sessions */}
-            {showCondition && (
-              <div className="flex w-full items-center justify-between gap-4 rounded-full px-6 py-1.5">
-                <span className="font-mono text-xs uppercase tracking-wider text-white backdrop-blur-sm">
-                  {conditionName}
-                </span>
-              </div>
-            )}
-
-            <button
-              type="button"
-              className="rounded-full p-2 text-gray-400 transition-colors hover:text-white"
-              onClick={(e) => {
-                e.preventDefault();
-                // Add bookmark functionality here
-              }}
-            >
-              <BookmarkIcon className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Bottom Section */}
-          <div className="space-y-4">
-            {/* Title */}
-            <h3 className="mt-2 font-['Raleway'] text-2xl font-normal leading-tight text-white drop-shadow-md">
-              {heading}
-            </h3>
-
-            <div className="inline-flex w-full items-center justify-between rounded-full bg-black/30 px-2 py-1 backdrop-blur-sm">
-              <span className="font-mono text-xs uppercase tracking-wider text-white">
-                {processedAuthors}
-              </span>
-              <span className="font-mono text-xs uppercase tracking-wider text-white">
+            <div className="inline-flex items-center gap-2 overflow-hidden rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
+              <span className="font-mono text-sm uppercase tracking-wider text-white">
                 {published_date
                   ? published_date.toLocaleDateString("en-GB", {
                       day: "2-digit",
@@ -91,6 +60,31 @@ export function ArticleCard({
                   : "N/A"}
               </span>
             </div>
+            <button
+              type="button"
+              className="overflow-hidden rounded-full p-2 text-white backdrop-blur-sm"
+              onClick={(e) => {
+                e.preventDefault();
+                // Add bookmark functionality here
+              }}
+            >
+              <BookmarkIcon className="h-6 w-6" />
+            </button>
+          </div>
+
+          {/* Bottom Section */}
+          <div className="space-y-4">
+            <h3 className="font-['Raleway'] text-2xl font-normal leading-tight text-white drop-shadow-md">
+              {heading}
+            </h3>
+
+            {showCondition && (
+              <div className="flex flex-col items-center justify-between overflow-hidden rounded-full bg-white/10 p-2 backdrop-blur-sm">
+                <div className="font-['Roboto'] text-sm tracking-widest text-white">
+                  {conditionName}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

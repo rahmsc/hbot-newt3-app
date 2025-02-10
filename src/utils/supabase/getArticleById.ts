@@ -36,7 +36,7 @@ export default async function getArticleById(
     const supabase = createClient();
 
     // Add logging to debug the connection and ID
-    console.log("Fetching article with ID:", id);
+    // console.log("Fetching article with ID:", id);
 
     const { data, error } = await supabase
       .from("studies")
