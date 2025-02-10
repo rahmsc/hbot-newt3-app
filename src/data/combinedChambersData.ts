@@ -2,6 +2,7 @@ import type { chambersDataProp } from "~/data/rebrandData";
 
 export const combinedChamberData: chambersDataProp[] = [
   {
+    uniqueId: "zeugma",
     id: 1,
     name: "Zeugma",
     type: "Sit Up Hard Shell",
@@ -13,6 +14,7 @@ export const combinedChamberData: chambersDataProp[] = [
       "Experience advanced hyperbaric therapy with the Zeugma chamber, featuring state-of-the-art pressure control and superior comfort for optimal treatment sessions.",
   },
   {
+    uniqueId: "thepro",
     id: 2,
     name: "The Pro",
     type: "Lay Down Hard Shell",
@@ -24,6 +26,7 @@ export const combinedChamberData: chambersDataProp[] = [
       "The Pro offers a premium lay-down experience with precise pressure control and maximum comfort for extended treatment sessions.",
   },
   {
+    uniqueId: "thesitup",
     id: 3,
     name: "The Sit Up",
     type: "Sit Up Soft Shell",
@@ -35,6 +38,7 @@ export const combinedChamberData: chambersDataProp[] = [
       "A versatile soft-shell chamber that provides reliable hyperbaric therapy with easy entry and exit for comfortable treatment sessions.",
   },
   {
+    uniqueId: "granddive",
     id: 4,
     name: "Grand Dive",
     type: "Multi-Person Hard Shell",
@@ -46,6 +50,7 @@ export const combinedChamberData: chambersDataProp[] = [
       "The Grand Dive is our premium multi-person chamber, perfect for clinics and facilities requiring simultaneous treatment capabilities.",
   },
   {
+    uniqueId: "summitelite",
     id: 5,
     name: "Summit Elite",
     type: "Lay Down Hard Shell",
@@ -57,6 +62,7 @@ export const combinedChamberData: chambersDataProp[] = [
       "Summit Elite combines luxury with performance, offering a premium single-person treatment experience with advanced features.",
   },
   {
+    uniqueId: "horizonplus",
     id: 6,
     name: "Horizon Plus",
     type: "Sit Up Hard Shell",

@@ -82,7 +82,7 @@ export function ProviderCard({
 
       {/* Verified Badge */}
       <div className="absolute left-6 top-6">
-        <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-gray-900">
+        <span className="mb-2 inline-block rounded-full border border-emerald-700 bg-gray-100 px-3 py-1 font-mono text-xs uppercase tracking-wide text-emerald-700">
           Verified
         </span>
       </div>

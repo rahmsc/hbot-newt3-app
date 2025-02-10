@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import { Card } from "~/components/ui/card";
 
 const partners = [
@@ -38,7 +39,7 @@ export function TrustedPartners() {
   return (
     <section className="w-full">
       <div className="mx-auto max-w-6xl space-y-12">
-        <div className="space-y-4">
+        <div className="mx-auto flex flex-col items-center justify-center space-y-4">
           <h2 className="font-['Raleway'] text-4xl font-medium tracking-[0.3em] text-gray-900">
             MEMBER BENEFITS
           </h2>

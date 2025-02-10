@@ -1,5 +1,6 @@
 export interface chambersDataProp {
   uniqueId?: string;
+  id: number;
   name: string;
   type: string;
   pressure: string;

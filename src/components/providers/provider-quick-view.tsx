@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Clock, MapPin, Phone, Star } from "lucide-react";
+import { Clock, MapPin, Phone, Star, X } from "lucide-react";
 import type { ProviderCardProps } from "./provider-card";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
-import { Button } from "~/components/ui/button";
-import Link from "next/link";
+import GlowingButton from "../utils/glowing-button";
 
 interface ProviderQuickViewProps {
   isOpen: boolean;
@@ -21,6 +20,14 @@ export function ProviderQuickView({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl overflow-hidden p-0">
+        {/* <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-2 top-2 rounded-full p-2 text-gray-400 hover:text-gray-600"
+          aria-label="Close dialog"
+        >
+          <X className="h-6 w-6" />
+        </button> */}
         <div className="flex flex-col md:flex-row">
           {/* Image Section */}
           <div className="relative h-64 w-full md:h-auto md:w-1/2">
@@ -36,7 +43,7 @@ export function ProviderQuickView({
           <div className="flex flex-1 flex-col gap-6 p-6">
             {/* Header */}
             <div>
-              <span className="mb-2 inline-block rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-900">
+              <span className="mb-2 inline-block rounded-full border border-emerald-700 bg-gray-100 px-3 py-1 font-mono text-xs uppercase tracking-wide text-emerald-700">
                 Verified
               </span>
               <h2 className="font-['Raleway'] text-4xl font-light tracking-wide text-gray-900">
@@ -89,7 +96,7 @@ export function ProviderQuickView({
                 {provider.categories.map((category) => (
                   <span
                     key={category}
-                    className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
+                    className="rounded-full border border-emerald-700 bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
                   >
                     {category}
                   </span>
@@ -97,23 +104,16 @@ export function ProviderQuickView({
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="mt-auto flex gap-3">
-              <Button
-                variant="outline"
-                className="flex-1 rounded-full"
-                onClick={onClose}
-              >
-                Close
-              </Button>
-              <Link
-                href={`/book-consultation?provider=${encodeURIComponent(provider.name)}`}
-                className="flex-1"
-              >
-                <Button className="w-full rounded-full bg-gray-900 text-white hover:bg-gray-800">
-                  Book Consultation
-                </Button>
-              </Link>
+            {/* Action */}
+            <div className="mt-auto">
+              <GlowingButton
+                text="Visit Website"
+                onClick={() => {
+                  // Add logic to visit the provider's website
+                  console.log("Visiting website for", provider.name);
+                }}
+                className="w-full"
+              />
             </div>
           </div>
         </div>
