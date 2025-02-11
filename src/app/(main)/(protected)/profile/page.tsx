@@ -42,28 +42,28 @@ export default async function ProfilePage() {
       <div className="space-y-16">
         <section>
           <ProfileHeader profile={typedProfile} />
+          <section>
+            <h2 className="mb-8 border-b border-gray-200 pb-4 text-2xl font-bold">
+              Saved Research
+            </h2>
+            <SavedResearch userId={user.id} />
+          </section>
+
+          <section>
+            <h2 className="mb-8 border-b border-gray-200 pb-4 text-2xl font-bold">
+              Saved Chambers
+            </h2>
+            <SavedChambers userId={user.id} />
+          </section>
+
+          <section>
+            <h2 className="mb-8 border-b border-gray-200 pb-4 text-2xl font-bold">
+              Saved Articles
+            </h2>
+            <SavedArticles userId={user.id} />
+          </section>
+
           <ProfileForm profile={typedProfile} />
-        </section>
-
-        <section>
-          <h2 className="mb-8 border-b border-gray-200 pb-4 text-2xl font-bold">
-            Saved Research
-          </h2>
-          <SavedResearch userId={user.id} />
-        </section>
-
-        <section>
-          <h2 className="mb-8 border-b border-gray-200 pb-4 text-2xl font-bold">
-            Saved Chambers
-          </h2>
-          <SavedChambers userId={user.id} />
-        </section>
-
-        <section>
-          <h2 className="mb-8 border-b border-gray-200 pb-4 text-2xl font-bold">
-            Saved Articles
-          </h2>
-          <SavedArticles userId={user.id} />
         </section>
       </div>
     </div>

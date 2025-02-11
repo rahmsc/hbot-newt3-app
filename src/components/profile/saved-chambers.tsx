@@ -6,6 +6,7 @@ import { createClient } from "~/utils/supabase/client";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
+import { Skeleton } from "~/components/ui/skeleton";
 
 interface SavedChambersProps {
   userId: string;
@@ -13,6 +14,7 @@ interface SavedChambersProps {
 
 export function SavedChambers({ userId }: SavedChambersProps) {
   const [savedChambers, setSavedChambers] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
@@ -25,10 +27,46 @@ export function SavedChambers({ userId }: SavedChambersProps) {
       if (!error && data) {
         setSavedChambers(data);
       }
+      setIsLoading(false);
     };
 
     void fetchSavedChambers();
+
+    const subscription = supabase
+      .channel("saved_chambers")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "saved_chambers" },
+        fetchSavedChambers,
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, [userId, supabase]);
+
+  const removeChamber = async (chamberId: string) => {
+    const { error } = await supabase
+      .from("saved_chambers")
+      .delete()
+      .eq("user_id", userId)
+      .eq("chamber_id", chamberId);
+
+    if (error) {
+      console.error("Error removing chamber:", error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {[...Array(3)].map((_, index) => (
+          <Skeleton key={index} className="h-64 w-full" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -66,6 +104,7 @@ export function SavedChambers({ userId }: SavedChambersProps) {
                 <Button
                   variant="outline"
                   className="border-emerald-700 text-emerald-700 hover:bg-emerald-50"
+                  onClick={() => removeChamber(item.chambers.id)}
                 >
                   Remove
                 </Button>

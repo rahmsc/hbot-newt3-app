@@ -1,3 +1,16 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
+
+export type NotificationPreferences = {
+  email: boolean;
+  push: boolean;
+};
+
 export type Profile = {
   id: string;
   created_at: string;
@@ -14,10 +27,7 @@ export type Profile = {
   twitter_url: string | null;
   linkedin_url: string | null;
   github_url: string | null;
-  notification_preferences: {
-    email: boolean;
-    push: boolean;
-  };
+  notification_preferences: NotificationPreferences;
   theme_preference: "light" | "dark" | "system";
   saved_research: string[];
   saved_chambers: string[];
@@ -29,9 +39,10 @@ export type Database = {
     Tables: {
       profiles: {
         Row: Profile;
-        Insert: Omit<Profile, "id" | "created_at" | "updated_at">;
+        Insert: Omit<Profile, "created_at">;
         Update: Partial<Omit<Profile, "id">>;
       };
+      // Add other tables as needed
     };
   };
 };

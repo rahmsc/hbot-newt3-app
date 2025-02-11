@@ -2,6 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import type React from "react";
 import { useState } from "react";
 import type { Database, Profile } from "types/database";
 
@@ -10,6 +11,8 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
+import { useToast } from "~/hooks/use-toast";
+import { useSupabase } from "~/hooks/useSupabase";
 
 interface ProfileFormProps {
   profile: Profile | null;
@@ -17,8 +20,10 @@ interface ProfileFormProps {
 
 export function ProfileForm({ profile }: ProfileFormProps) {
   const router = useRouter();
-  const supabase = createClientComponentClient<Database>();
+  const supabase = useSupabase();
   const [formData, setFormData] = useState<Partial<Profile>>(profile ?? {});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -45,16 +50,31 @@ export function ProfileForm({ profile }: ProfileFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { error } = await supabase.from("profiles").upsert({
-      id: profile?.id,
-      ...formData,
-    });
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.from("profiles").upsert({
+        id: profile?.id,
+        ...formData,
+        updated_at: new Date().toISOString(),
+      });
 
-    if (error) {
-      console.error("Error updating profile:", error);
-      // Handle error, maybe show an error message to the user
-    } else {
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Profile updated successfully",
+        variant: "default",
+      });
       router.refresh();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -203,7 +223,9 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         </select>
       </div>
 
-      <Button type="submit">Save Changes</Button>
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Saving..." : "Save Changes"}
+      </Button>
     </form>
   );
 }

@@ -1,10 +1,14 @@
 "use client";
 
-import { Bookmark, Star } from "lucide-react";
+// import { HyperbaricCenter } from "~/types/map";
+import { motion } from "framer-motion";
+import { Bookmark, Clock, MapPin, Phone, Star } from "lucide-react";
+import Image from "next/image";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
-import { HyperbaricCenter } from "~/types/map";
+
+import GlowingButton from "../utils/glowing-button";
 
 interface Provider {
   id: string;
@@ -166,102 +170,165 @@ export const providers = [
 ];
 
 /// Renamed to ProviderCard for clarity
+interface Provider {
+  id: string;
+  name: string;
+  rating: number;
+  location: string;
+  address: string;
+  hours: string;
+  phone: string;
+  type: string;
+  pressure: string;
+  website: string;
+  directions: string;
+  image: string;
+}
+
+interface ProviderCardProps {
+  provider: Provider;
+}
+
 export function ProviderCard({ provider }: ProviderCardProps) {
   return (
-    <Card className="overflow-hidden border-2">
-      <CardContent className="p-4">
-        <div className="space-y-3">
-          {/* Header */}
-          <div>
-            <h3 className="font-['Raleway'] text-2xl font-medium tracking-wide text-gray-800">
-              {provider.name}
-            </h3>
-            <div className="mt-1 flex items-center gap-1">
-              <span className="text-sm font-medium">
-                {provider.rating.toFixed(1)}
-              </span>
-              <div className="flex">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-4 w-4 ${
-                      i < provider.rating
-                        ? "fill-yellow-400 text-yellow-400"
-                        : "fill-gray-200 text-gray-200"
-                    }`}
-                  />
-                ))}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className="group overflow-hidden rounded-3xl border-2 border-gray-100 bg-white transition-all hover:border-emerald-100 hover:shadow-lg hover:shadow-emerald-500/10">
+        <CardContent className="p-0">
+          {/* Image Section */}
+          <div className="relative h-64">
+            <Image
+              src={
+                provider.image ||
+                "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-02-10%20at%201.22.23%E2%80%AFpm-XJGwzA8NmXTOkXn9dCC6Q8jVpyUpPo.png"
+              }
+              alt={provider.name}
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+
+            {/* Header Content */}
+            <div className="absolute bottom-6 left-6 right-6">
+              <h3 className="font-['Raleway'] text-3xl font-light tracking-wide text-white">
+                {provider.name}
+              </h3>
+              <div className="mt-2 flex items-center gap-2">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="h-5 w-5 fill-yellow-400 text-yellow-400"
+                    />
+                  ))}
+                </div>
+                <span className="text-lg font-medium text-white">
+                  {provider.rating.toFixed(1)}
+                </span>
+              </div>
+              <div className="mt-2 flex items-center gap-2 text-gray-200">
+                <MapPin className="h-4 w-4" />
+                <span className="text-sm">{provider.location}</span>
               </div>
             </div>
-            <p className="mt-1 text-sm text-gray-600">{provider.location}</p>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2">
+          {/* Content Section */}
+          <div className="space-y-6 p-6">
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3">
+              <GlowingButton
+                text="Visit Website"
+                onClick={() => window.open(provider.website, "_blank")}
+                className="flex-1"
+              />
+              <Button
+                variant="outline"
+                size="lg"
+                className="flex-1 border-2"
+                onClick={() => window.open(provider.directions, "_blank")}
+              >
+                Get Directions
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-11 w-11 border-2"
+                aria-label="Save to bookmarks"
+              >
+                <Bookmark className="h-5 w-5" />
+              </Button>
+            </div>
+
+            {/* Details */}
+            <div className="space-y-3 rounded-2xl bg-gray-50 p-4">
+              <div className="flex items-start gap-3">
+                <MapPin className="mt-1 h-4 w-4 text-emerald-700" />
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Address
+                  </p>
+                  <p className="text-sm text-gray-700">{provider.address}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Clock className="mt-1 h-4 w-4 text-emerald-700" />
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Hours
+                  </p>
+                  <p className="text-sm text-gray-700">{provider.hours}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Phone className="mt-1 h-4 w-4 text-emerald-700" />
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Phone
+                  </p>
+                  <p className="text-sm text-gray-700">{provider.phone}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Chamber Info */}
+            <div className="grid grid-cols-2 gap-4 rounded-2xl bg-gray-50 p-4">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                  Chamber Type
+                </p>
+                <p className="mt-1 text-sm text-gray-700">{provider.type}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                  Pressure Capacity
+                </p>
+                <p className="mt-1 text-sm text-gray-700">
+                  {provider.pressure}
+                </p>
+              </div>
+            </div>
+
+            {/* Book Consultation Button */}
             <Button
-              variant="secondary"
-              size="sm"
-              className="bg-[#2B5741] text-white hover:bg-[#1e3d2d]"
-              onClick={() => window.open(provider.website, "_blank")}
+              size="lg"
+              className="w-full bg-[#2B5741] text-lg font-medium tracking-wide text-white transition-colors hover:bg-[#1e3d2d]"
             >
-              Visit Website
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="bg-black text-white hover:bg-gray-800"
-              onClick={() => window.open(provider.directions, "_blank")}
-            >
-              Get Directions
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="ml-auto h-8 w-8"
-              aria-label="Save to bookmarks"
-            >
-              <Bookmark className="h-4 w-4" />
+              Book Consultation
             </Button>
           </div>
-
-          {/* Details */}
-          <div className="space-y-1 text-xs text-gray-700">
-            <p>
-              <span className="font-medium">Address:</span> {provider.address}
-            </p>
-            <p>
-              <span className="font-medium">Hours:</span> {provider.hours}
-            </p>
-            <p>
-              <span className="font-medium">Phone:</span> {provider.phone}
-            </p>
-            <p>
-              <span className="font-medium">Type of Chamber:</span>{" "}
-              {provider.type}
-            </p>
-            <p>
-              <span className="font-medium">Pressure Capacity:</span>{" "}
-              {provider.pressure}
-            </p>
-          </div>
-
-          {/* Book Consultation Button */}
-          <Button
-            size="sm"
-            className="w-full bg-black text-white hover:bg-gray-800"
-          >
-            Book Consultation
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
 
-// Export the ProviderList component
 export function ProviderList() {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {providers.map((provider) => (
         <ProviderCard key={provider.id} provider={provider} />
       ))}

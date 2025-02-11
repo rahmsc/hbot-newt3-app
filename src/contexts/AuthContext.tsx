@@ -1,13 +1,14 @@
 "use client";
 
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { User } from "@supabase/supabase-js";
 import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-
-import { createClient } from "~/utils/supabase/client";
+import type { Database } from "types/database";
 
 type AuthContextType = {
   user: User | null;
+  supabase: ReturnType<typeof createClientComponentClient<Database>>;
   signIn: (provider: "google") => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -21,7 +22,7 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const supabase = createClient();
+  const [supabase] = useState(() => createClientComponentClient<Database>());
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     await supabase.auth.signOut();
   };
 
-  const value: AuthContextType = { user, signIn, signUp, signOut };
+  const value: AuthContextType = { user, supabase, signIn, signUp, signOut };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
@@ -69,4 +70,10 @@ export const useAuth = (): AuthContextType => {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
+};
+
+// Convenience hook for just the Supabase client
+export const useSupabase = () => {
+  const context = useAuth();
+  return context.supabase;
 };

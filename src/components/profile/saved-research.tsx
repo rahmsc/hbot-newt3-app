@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 
 import Image from "next/image";
@@ -5,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
+import { Skeleton } from "~/components/ui/skeleton";
 import { createClient } from "~/utils/supabase/client";
 
 interface SavedResearchProps {
@@ -13,6 +15,7 @@ interface SavedResearchProps {
 
 export function SavedResearch({ userId }: SavedResearchProps) {
   const [savedResearch, setSavedResearch] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
@@ -25,10 +28,47 @@ export function SavedResearch({ userId }: SavedResearchProps) {
       if (!error && data) {
         setSavedResearch(data);
       }
+      setIsLoading(false);
     };
 
     void fetchSavedResearch();
+
+    const subscription = supabase
+      .channel("saved_research")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "saved_research" },
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        fetchSavedResearch,
+      )
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(subscription);
+    };
   }, [userId, supabase]);
+
+  const removeResearch = async (researchId: string) => {
+    const { error } = await supabase
+      .from("saved_research")
+      .delete()
+      .eq("user_id", userId)
+      .eq("research_id", researchId);
+
+    if (error) {
+      console.error("Error removing research:", error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {[...Array(3)].map((_, index) => (
+          <Skeleton key={index} className="h-64 w-full" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -41,6 +81,7 @@ export function SavedResearch({ userId }: SavedResearchProps) {
             <div className="relative h-48 w-full">
               <Image
                 src={item.research.image_url || "/placeholder.jpg"}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 alt={item.research.title}
                 fill
                 className="object-cover"
@@ -63,6 +104,7 @@ export function SavedResearch({ userId }: SavedResearchProps) {
                 <Button
                   variant="outline"
                   className="border-emerald-700 text-emerald-700 hover:bg-emerald-50"
+                  onClick={() => removeResearch(item.research.id)}
                 >
                   Remove
                 </Button>

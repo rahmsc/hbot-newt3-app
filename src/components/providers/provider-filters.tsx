@@ -3,6 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -13,22 +20,13 @@ import {
   FormItem,
   FormLabel,
 } from "~/components/ui/form";
-import { Slider } from "~/components/ui/slider";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
 
 const filterSchema = z.object({
-  distance: z.number().min(0).max(100),
-  services: z.array(z.string()),
   chambers: z.array(z.string()),
   pressure: z.array(z.string()),
 });
 
-type FilterValues = z.infer<typeof filterSchema>;
+export type FilterValues = z.infer<typeof filterSchema>;
 
 const chamberTypes = [
   "Hard Shell Lay Down",
@@ -48,19 +46,21 @@ const pressureCapacities = [
   "3.0 ATA",
 ];
 
-export function ProviderFilters() {
+interface ProviderFiltersProps {
+  onFilterChange: (filters: FilterValues) => void;
+}
+
+export function ProviderFilters({ onFilterChange }: ProviderFiltersProps) {
   const form = useForm<FilterValues>({
     resolver: zodResolver(filterSchema),
     defaultValues: {
-      distance: 25,
-      services: [],
       chambers: [],
       pressure: [],
     },
   });
 
   function onSubmit(data: FilterValues) {
-    console.log(data);
+    onFilterChange(data);
   }
 
   return (
@@ -68,28 +68,9 @@ export function ProviderFilters() {
       <CardContent className="p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <h3 className="font-mono text-sm font-medium uppercase tracking-wider">
-                  My Collection
-                </h3>
-                <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium">
-                  27
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <h3 className="font-mono text-sm font-medium uppercase tracking-wider">
-                  My Studies
-                </h3>
-                <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium">
-                  27
-                </span>
-              </div>
-            </div>
-
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="chamber-type">
-                <AccordionTrigger className="font-mono text-sm uppercase tracking-wider">
+                <AccordionTrigger className="font-['Raleway'] text-sm uppercase tracking-wider text-gray-900">
                   Type of Chamber
                 </AccordionTrigger>
                 <AccordionContent>
@@ -117,10 +98,11 @@ export function ProviderFilters() {
                                               (value) => value !== chamber,
                                             );
                                         field.onChange(updated);
+                                        form.handleSubmit(onSubmit)();
                                       }}
                                     />
                                   </FormControl>
-                                  <FormLabel className="text-sm font-normal">
+                                  <FormLabel className="text-sm font-normal text-gray-700">
                                     {chamber}
                                   </FormLabel>
                                 </FormItem>
@@ -135,7 +117,7 @@ export function ProviderFilters() {
               </AccordionItem>
 
               <AccordionItem value="pressure">
-                <AccordionTrigger className="font-mono text-sm uppercase tracking-wider">
+                <AccordionTrigger className="font-['Raleway'] text-sm uppercase tracking-wider text-gray-900">
                   Pressure Capacity (ATA)
                 </AccordionTrigger>
                 <AccordionContent>
@@ -163,10 +145,11 @@ export function ProviderFilters() {
                                               (value) => value !== pressure,
                                             );
                                         field.onChange(updated);
+                                        form.handleSubmit(onSubmit)();
                                       }}
                                     />
                                   </FormControl>
-                                  <FormLabel className="text-sm font-normal">
+                                  <FormLabel className="text-sm font-normal text-gray-700">
                                     {pressure}
                                   </FormLabel>
                                 </FormItem>

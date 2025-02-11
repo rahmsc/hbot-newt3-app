@@ -1,6 +1,5 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaGithub, FaGoogle, FaTwitter } from "react-icons/fa";
@@ -10,12 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
+import { useSupabase } from "~/hooks/useSupabase";
 
 import type { Database } from "../../../../types/database";
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = createClientComponentClient<Database>();
+  const supabase = useSupabase();
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
