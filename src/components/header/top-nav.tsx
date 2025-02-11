@@ -8,7 +8,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
-import { subscribeToNewsletter } from "~/actions/subscribe";
+import {
+  subscribeToNewsletter,
+  type SubscriptionState,
+} from "~/actions/subscribe";
 import { LoginButton } from "~/components/auth/LoginButton";
 import { Button } from "~/components/ui/button";
 import {
@@ -35,8 +38,8 @@ export function TopNav() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const supabase = createClient();
   const router = useRouter();
-  const [state, formAction] = useFormState(
-    (formData: FormData) => subscribeToNewsletter(formData),
+  const [state, formAction] = useFormState<SubscriptionState, FormData>(
+    subscribeToNewsletter,
     null,
   );
 

@@ -4,7 +4,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { User } from "@supabase/supabase-js";
 import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import type { Database } from "types/database";
+import type { Database } from "~/types/profile";
 
 type AuthContextType = {
   user: User | null;

@@ -14,6 +14,7 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import type { HyperbaricCenter } from "~/types/map";
+import type { ProviderProps } from "~/types/providers";
 
 const defaultCenter = { lat: -27.4705, lng: 153.026 }; // Brisbane coordinates
 
@@ -21,10 +22,11 @@ export default function HyperbaricLocator() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentLocation, setCurrentLocation] = useState(defaultCenter);
   const [searchResults, setSearchResults] =
-    useState<HyperbaricCenter[]>(providers);
+    useState<ProviderProps[]>(providers);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedProvider, setSelectedProvider] =
-    useState<HyperbaricCenter | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<
+    HyperbaricCenter | ProviderProps | null
+  >(null);
 
   const calculateDistance = useCallback(
     (lat1: number, lon1: number, lat2: number, lon2: number): number => {
@@ -108,7 +110,7 @@ export default function HyperbaricLocator() {
                 {searchResults.length} locations found
                 {searchQuery && !isLoading && (
                   <span className="block text-sm text-gray-600">
-                    near "{searchQuery}"
+                    near &quot;{searchQuery}&quot;
                   </span>
                 )}
               </h3>
@@ -254,7 +256,7 @@ export default function HyperbaricLocator() {
           <div className="relative h-full flex-1">
             <LoadScript
               googleMapsApiKey={
-                process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
+                process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""
               }
             >
               <GoogleMap
@@ -297,11 +299,12 @@ export default function HyperbaricLocator() {
                           </a>
                         </p>
                       )}
-                      {selectedProvider.distance && (
-                        <p className="text-sm text-gray-600">
-                          Distance: {selectedProvider.distance.toFixed(1)} km
-                        </p>
-                      )}
+                      {"distance" in selectedProvider &&
+                        selectedProvider.distance !== undefined && (
+                          <p className="text-sm text-gray-600">
+                            Distance: {selectedProvider.distance.toFixed(1)} km
+                          </p>
+                        )}
                     </div>
                   </InfoWindow>
                 )}

@@ -10,7 +10,7 @@ import { ChamberCard } from "~/components/chambers/chambers-card";
 import { ChamberQuickView } from "~/components/chambers/chambers-quick-view";
 import { Button } from "~/components/ui/button";
 import { combinedChamberData } from "~/data/combinedChambersData";
-import type { chambersDataProp } from "~/data/rebrandData";
+import type { chambersDataProp } from "~/types/chambers";
 import { cn } from "~/lib/utils";
 
 export function ChambersSection() {

@@ -1,4 +1,4 @@
-import { JsonValue } from "@prisma/client/runtime/library";
+import type { JsonValue } from "@prisma/client/runtime/library";
 
 export interface Category {
   id: number;

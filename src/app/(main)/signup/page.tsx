@@ -10,13 +10,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
-import { useSupabase } from "~/hooks/useSupabase";
-
-import type { Database } from "../../../../types/database";
+import { createClient } from "~/utils/supabase/client";
 
 export default function SignUpPage() {
   const router = useRouter();
-  const supabase = useSupabase();
+  const supabase = createClient();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

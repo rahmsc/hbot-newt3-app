@@ -26,7 +26,7 @@ export async function getArticleCountsByCondition(): Promise<
     const conditionId = article.condition_id;
     if (conditionId) {
       // Add null check
-      acc[conditionId] = (acc[conditionId] || 0) + 1;
+      acc[conditionId] = (acc[conditionId] ?? 0) + 1;
     }
     return acc;
   }, {});

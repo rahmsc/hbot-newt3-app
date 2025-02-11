@@ -3,7 +3,8 @@
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import type { Profile } from "types/database";
+
+import type { Profile } from "~/types/profile";
 
 export async function updateProfile(data: Partial<Profile>) {
   const supabase = createServerActionClient({ cookies });

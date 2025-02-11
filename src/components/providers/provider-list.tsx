@@ -27,6 +27,7 @@ export const providers: ProviderProps[] = [
     directions: "https://maps.google.com/?q=123+Queen+Street+Brisbane",
     latitude: -27.4705,
     longitude: 153.026,
+    image: "/images/providers/provider-1.png",
   },
   {
     id: "bne2",
@@ -42,6 +43,7 @@ export const providers: ProviderProps[] = [
     directions: "https://maps.google.com/?q=45+Boundary+Street+Spring+Hill",
     latitude: -27.4705,
     longitude: 153.026,
+    image: "/images/providers/provider-2.png",
   },
   {
     id: "bne3",
@@ -58,6 +60,7 @@ export const providers: ProviderProps[] = [
       "https://maps.google.com/?q=789+Brunswick+Street+Fortitude+Valley",
     latitude: -27.4705,
     longitude: 153.026,
+    image: "/images/providers/provider-3.png",
   },
   {
     id: "bne4",
@@ -73,6 +76,7 @@ export const providers: ProviderProps[] = [
     directions: "https://maps.google.com/?q=234+Brunswick+Street+New+Farm",
     latitude: -27.4705,
     longitude: 153.026,
+    image: "/images/providers/provider-4.png",
   },
   {
     id: "bne5",
@@ -88,6 +92,7 @@ export const providers: ProviderProps[] = [
     directions: "https://maps.google.com/?q=567+Grey+Street+South+Brisbane",
     latitude: -27.4705,
     longitude: 153.026,
+    image: "/images/providers/provider-5.png",
   },
   {
     id: "bne6",
@@ -103,6 +108,7 @@ export const providers: ProviderProps[] = [
     directions: "https://maps.google.com/?q=890+Boundary+Street+West+End",
     latitude: -27.4705,
     longitude: 153.026,
+    image: "/images/providers/provider-1.png",
   },
   {
     id: "bne7",
@@ -118,6 +124,7 @@ export const providers: ProviderProps[] = [
     directions: "https://maps.google.com/?q=123+Main+Street+Kangaroo+Point",
     latitude: -27.4705,
     longitude: 153.026,
+    image: "/images/providers/provider-2.png",
   },
   {
     id: "bne8",
@@ -133,6 +140,7 @@ export const providers: ProviderProps[] = [
     directions: "https://maps.google.com/?q=456+Park+Road+Milton",
     latitude: -27.4705,
     longitude: 153.026,
+    image: "/images/providers/provider-3.png",
   },
   {
     id: "bne9",
@@ -148,6 +156,7 @@ export const providers: ProviderProps[] = [
     directions: "https://maps.google.com/?q=789+Given+Terrace+Paddington",
     latitude: -27.4705,
     longitude: 153.026,
+    image: "/images/providers/provider-4.png",
   },
 ];
 
@@ -182,6 +191,7 @@ export function ProviderCard({ provider }: ProviderMapCardProps) {
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
                     <Star
+                      // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                       key={i}
                       className="h-5 w-5 fill-yellow-400 text-yellow-400"
                     />
@@ -288,7 +298,7 @@ export function ProviderCard({ provider }: ProviderMapCardProps) {
   );
 }
 
-export function ProviderList() {
+export function ProviderList({ providers }: { providers: ProviderProps[] }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {providers.map((provider) => (

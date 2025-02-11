@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import type { Database, Profile } from "types/database";
 
 import { ProfileForm } from "~/components/profile/profile-form";
 import { ProfileHeader } from "~/components/profile/profile-header";
 import { SavedArticles } from "~/components/profile/saved-articles";
 import { SavedChambers } from "~/components/profile/saved-chambers";
 import { SavedResearch } from "~/components/profile/saved-research";
+import type { Database, Profile } from "~/types/profile";
 
 export default async function ProfilePage() {
   const supabase = createServerComponentClient<Database>({ cookies });
@@ -27,7 +28,7 @@ export default async function ProfilePage() {
     .eq("id", user.id)
     .single();
 
-  const profile = data as Profile | null;
+  const profile = data;
   const profileError = error;
 
   if (profileError) {
@@ -41,7 +42,7 @@ export default async function ProfilePage() {
     <div className="container mx-auto max-w-7xl px-4 py-8">
       <div className="space-y-16">
         <section>
-          <ProfileHeader profile={typedProfile} />
+          <ProfileHeader profile={typedProfile} isLoading={false} />
           <section>
             <h2 className="mb-8 border-b border-gray-200 pb-4 text-2xl font-bold">
               Saved Research

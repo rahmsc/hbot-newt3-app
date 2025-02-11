@@ -9,13 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
-import { useSupabase } from "~/hooks/useSupabase";
-
-import type { Database } from "../../../../types/database";
+import { createClient } from "~/utils/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = useSupabase();
+  const supabase = createClient();
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -59,6 +57,10 @@ export default function LoginPage() {
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
       },
     });
 
@@ -147,7 +149,7 @@ export default function LoginPage() {
           </div>
 
           <p className="mt-4 text-center text-sm text-gray-600">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <a href="/signup" className="text-blue-600 hover:underline">
               Sign up
             </a>

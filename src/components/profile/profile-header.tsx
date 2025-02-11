@@ -1,6 +1,6 @@
 import { Skeleton } from "~/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import type { Profile } from "types/database";
+import type { Profile } from "~/types/profile";
 
 interface ProfileHeaderProps {
   profile: Profile | null;

@@ -12,6 +12,17 @@ export interface TrendingArticle {
   link: string;
   date: string;
   type: "blog" | "guide";
+  article_id?: string;
+  heading?: string;
+  summary?: string;
+  published_date?: string;
+  pressureUsed?: string;
+  numberOfTreatments?: number;
+  conditionId?: string;
+  id?: string;
+  urlSlug?: string;
+  contentIdea?: string;
+  introduction?: string;
 }
 
 export async function getTrendingArticles(): Promise<TrendingArticle[]> {

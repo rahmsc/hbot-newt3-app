@@ -23,7 +23,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import type { chambersDataProp } from "~/data/rebrandData";
+import type { chambersDataProp } from "~/types/chambers";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),

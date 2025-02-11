@@ -59,7 +59,7 @@ export default async function ResearchPage({ searchParams }: Props) {
             existingCategory.conditions.push({
               id: curr.condition_id,
               name: curr.condition_name,
-              articleCount: articleCounts[curr.condition_id] || 0,
+              articleCount: articleCounts[curr.condition_id] ?? 0,
             });
           }
           return acc;
@@ -72,7 +72,7 @@ export default async function ResearchPage({ searchParams }: Props) {
             {
               id: curr.condition_id,
               name: curr.condition_name,
-              articleCount: articleCounts[curr.condition_id] || 0,
+              articleCount: articleCounts[curr.condition_id] ?? 0,
             },
           ],
         });
@@ -92,7 +92,7 @@ export default async function ResearchPage({ searchParams }: Props) {
 
     // Fetch initial articles
     const initialConditionId =
-      selectedCategoryId || groupedCategories[0]?.conditions[0]?.id || null;
+      selectedCategoryId ?? groupedCategories[0]?.conditions[0]?.id ?? null;
     const initialArticles = initialConditionId
       ? await getArticlesByCondition(initialConditionId)
       : [];

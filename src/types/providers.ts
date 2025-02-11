@@ -13,6 +13,7 @@ export interface ProviderProps {
   directions: string;
   latitude: number;
   longitude: number;
+  distance?: number;
 }
 
 export interface ProviderMapCardProps {

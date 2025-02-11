@@ -4,7 +4,6 @@ import { format } from "date-fns";
 
 import type { ArticlesProps } from "~/utils/supabase/getArticleById";
 
-import FaqAccordion from "../article/faq-accordion";
 import AccordionTemplate from "../utils/accordion-template";
 import ParallaxImage from "../utils/parralex-image";
 import RichText from "../utils/rich-text";

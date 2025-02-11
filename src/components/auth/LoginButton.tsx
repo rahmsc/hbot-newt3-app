@@ -12,11 +12,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { useSupabase } from "~/hooks/useSupabase";
+import { createClient } from "~/utils/supabase/client";
 
 export function LoginButton() {
   const [user, setUser] = useState<User | null>(null);
-  const supabase = useSupabase();
+  const supabase = createClient();
 
   useEffect(() => {
     const checkUser = async () => {

@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-import type { chambersDataProp } from "~/data/rebrandData";
+import type { chambersDataProp } from "~/types/chambers";
+
 import GlowingButton from "../utils/glowing-button";
 
 interface ChamberCardProps {

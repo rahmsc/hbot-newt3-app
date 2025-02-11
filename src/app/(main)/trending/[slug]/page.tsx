@@ -4,7 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 
-import ChambersShowcase from "~/components/chambers/chambers-showcase";
+// import ChambersShowcase from "~/components/chambers/chambers-showcase";
 import RichText from "~/components/utils/rich-text";
 
 export interface BlogPagePost {
@@ -190,7 +190,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             </div>
           </article>
 
-          <ChambersShowcase />
+          {/* <ChambersShowcase /> */}
         </div>
       </div>
     </>

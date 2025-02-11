@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import CallToAction from "~/components/landing/call-to-action";
+// import CallToAction from "~/components/landing/call-to-action";
 import ArticleContent from "~/components/research/article-content";
 import Spinner from "~/components/utils/spinner";
 import getArticleById from "~/utils/supabase/getArticleById";
@@ -48,7 +48,7 @@ const StudyPage = async ({ params }: PageProps) => {
             </Suspense>
           </div>
         </section>
-        <CallToAction />
+        {/* <CallToAction /> */}
       </div>
     );
   } catch (error) {

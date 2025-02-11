@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Clock, MapPin, Phone, Star, X } from "lucide-react";
-import type { ProviderCardProps } from "./provider-card";
+import type { ProviderCardProps } from "~/types/providers";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
 import GlowingButton from "../utils/glowing-button";
 

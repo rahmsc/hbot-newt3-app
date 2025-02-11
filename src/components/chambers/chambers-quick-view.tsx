@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Badge } from "~/components/ui/badge";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import type { chambersDataProp } from "~/data/rebrandData";
+import type { chambersDataProp } from "~/types/chambers";
 
 import GlowingButton from "../utils/glowing-button";
 

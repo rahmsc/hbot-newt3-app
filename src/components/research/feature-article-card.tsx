@@ -7,8 +7,19 @@ import type { RandomArticleItemProps } from "~/utils/supabase/getLatestArticles"
 
 import { FeatureArticleActions } from "./feature-article-actions";
 
-interface FeaturedArticleCardProps
-  extends Omit<RandomArticleItemProps, "conditionId"> {
+// Define required properties
+interface FeaturedArticleCardProps {
+  id: number;
+  heading: string;
+  summary: string;
+  pressure_used: string;
+  number_of_treatments: number;
+  authors?: string; // Optional with default value
+  published_date: Date;
+  peer_reviewed?: boolean;
+  public_data?: boolean;
+  funded?: boolean;
+  outcome_rating: string;
   conditionName: string;
 }
 
@@ -18,11 +29,11 @@ export default function FeaturedArticleCard({
   summary,
   pressure_used,
   number_of_treatments,
-  authors = "John Doe, Kylie Smith",
+  authors = "John Doe, Kylie Smith", // Default value
   published_date,
-  peer_reviewed,
-  public_data,
-  funded,
+  peer_reviewed = false, // Default value
+  public_data = false, // Default value
+  funded = false, // Default value
   outcome_rating,
   conditionName,
 }: FeaturedArticleCardProps) {

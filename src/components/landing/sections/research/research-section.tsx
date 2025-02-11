@@ -123,64 +123,54 @@ export default function ResearchDashboard() {
           </div>
         ) : (
           <div className="grid grid-cols-10">
-            {articles.length > 0 ? (
-              <>
-                <div className="col-span-5">
-                  <div className="h-[600px] rounded-[2rem] border border-gray-100 bg-white shadow-sm transition duration-200 hover:shadow-md">
-                    <FeaturedArticleCard
-                      {...articles[0]}
-                      conditionName={
-                        conditionNames[articles[0]?.conditionId ?? 0] ??
-                        "Unknown"
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="col-span-5 flex h-[600px] flex-col gap-2">
-                  <div className="grid flex-1 grid-cols-2 grid-rows-2">
-                    {articles.slice(1, 5).map((article) => (
-                      <div
-                        key={article.id}
-                        className="rounded-[2rem] border border-gray-100 bg-white shadow-sm transition duration-200 hover:shadow-md"
-                      >
-                        <ArticleCard
-                          id={article.id ?? 0}
-                          heading={article.heading ?? ""}
-                          conditionId={article.conditionId ?? 0}
-                          conditionName={
-                            conditionNames[article.conditionId ?? 0] ??
-                            "Unknown"
-                          }
-                          summary={article.summary ?? ""}
-                          pressure_used={article.pressure_used ?? ""}
-                          number_of_treatments={
-                            article.number_of_treatments ?? 0
-                          }
-                          outcome_rating={article.outcome_rating ?? ""}
-                          published_date={
-                            new Date(article.published_date ?? "")
-                          }
-                          authors={article.authors ?? ""}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="col-span-10 flex h-96 items-center justify-center rounded-xl border border-gray-100 bg-white p-8 shadow-sm">
-                <div className="text-center">
-                  <p className="text-lg font-medium text-gray-900">
-                    No articles found
-                  </p>
-                  <p className="mt-2 text-sm text-gray-500">
-                    Try adjusting your filters or check back later for new
-                    research.
-                  </p>
+            {articles.length > 0 && articles[0] && (
+              <div className="col-span-5">
+                <div className="h-[600px] rounded-[2rem] border border-gray-100 bg-white shadow-sm transition duration-200 hover:shadow-md">
+                  <FeaturedArticleCard
+                    id={articles[0].id ?? 0}
+                    heading={articles[0].heading ?? ""}
+                    summary={articles[0].summary ?? ""}
+                    pressure_used={articles[0].pressure_used ?? ""}
+                    number_of_treatments={articles[0].number_of_treatments ?? 0}
+                    published_date={new Date(articles[0].published_date ?? "")}
+                    outcome_rating={articles[0].outcome_rating ?? ""}
+                    conditionName={
+                      conditionNames[articles[0]?.conditionId ?? 0] ?? "Unknown"
+                    }
+                    authors={articles[0].authors}
+                    peer_reviewed={articles[0].peer_reviewed}
+                    public_data={articles[0].public_data}
+                    funded={articles[0].funded}
+                  />
                 </div>
               </div>
             )}
+
+            <div className="col-span-5 flex h-[600px] flex-col gap-2">
+              <div className="grid flex-1 grid-cols-2 grid-rows-2">
+                {articles.slice(1, 5).map((article) => (
+                  <div
+                    key={article.id}
+                    className="rounded-[2rem] border border-gray-100 bg-white shadow-sm transition duration-200 hover:shadow-md"
+                  >
+                    <ArticleCard
+                      id={article.id ?? 0}
+                      heading={article.heading ?? ""}
+                      conditionId={article.conditionId ?? 0}
+                      conditionName={
+                        conditionNames[article.conditionId ?? 0] ?? "Unknown"
+                      }
+                      summary={article.summary ?? ""}
+                      pressure_used={article.pressure_used ?? ""}
+                      number_of_treatments={article.number_of_treatments ?? 0}
+                      outcome_rating={article.outcome_rating ?? ""}
+                      published_date={new Date(article.published_date ?? "")}
+                      authors={article.authors ?? ""}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>

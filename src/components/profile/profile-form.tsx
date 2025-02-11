@@ -1,18 +1,16 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
-import type { Database, Profile } from "types/database";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import { useToast } from "~/hooks/use-toast";
-import { useSupabase } from "~/hooks/useSupabase";
+import type { Profile } from "~/types/profile";
+import { createClient } from "~/utils/supabase/client";
 
 interface ProfileFormProps {
   profile: Profile | null;
@@ -20,7 +18,7 @@ interface ProfileFormProps {
 
 export function ProfileForm({ profile }: ProfileFormProps) {
   const router = useRouter();
-  const supabase = useSupabase();
+  const supabase = createClient();
   const [formData, setFormData] = useState<Partial<Profile>>(profile ?? {});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -31,31 +29,38 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSwitchChange = (name: string) => (checked: boolean) => {
-    setFormData({
-      ...formData,
-      notification_preferences: {
-        ...formData.notification_preferences,
-        [name]: checked,
-      },
-    } as Partial<Profile>);
-  };
-
-  const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      theme_preference: e.target.value as "light" | "dark" | "system",
-    });
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
     try {
-      const { error } = await supabase.from("profiles").upsert({
-        id: profile?.id,
-        ...formData,
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error("No user found");
+      }
+
+      const updates = {
+        id: user.id,
+        full_name: formData.full_name,
+        username: formData.username,
+        email: formData.email,
+        website: formData.website,
+        bio: formData.bio,
+        location: formData.location,
+        occupation: formData.occupation,
+        company: formData.company,
+        twitter_url: formData.twitter_url,
+        linkedin_url: formData.linkedin_url,
+        github_url: formData.github_url,
         updated_at: new Date().toISOString(),
+      };
+
+      const { error } = await supabase.from("profiles").upsert(updates, {
+        onConflict: "id",
+        // defaultToNull: false,
       });
 
       if (error) throw error;
@@ -63,8 +68,8 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       toast({
         title: "Success",
         description: "Profile updated successfully",
-        variant: "default",
       });
+
       router.refresh();
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -186,46 +191,11 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             onChange={handleChange}
           />
         </div>
-      </div>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Notification Preferences</h3>
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="email_notifications"
-            checked={formData.notification_preferences?.email ?? false}
-            onCheckedChange={handleSwitchChange("email")}
-          />
-          <Label htmlFor="email_notifications">Email Notifications</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="push_notifications"
-            checked={formData.notification_preferences?.push ?? false}
-            onCheckedChange={handleSwitchChange("push")}
-          />
-          <Label htmlFor="push_notifications">Push Notifications</Label>
-        </div>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Saving..." : "Save Changes"}
+        </Button>
       </div>
-
-      <div>
-        <Label htmlFor="theme_preference">Theme Preference</Label>
-        <select
-          id="theme_preference"
-          name="theme_preference"
-          value={formData.theme_preference ?? "system"}
-          onChange={handleThemeChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-        >
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-          <option value="system">System</option>
-        </select>
-      </div>
-
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Saving..." : "Save Changes"}
-      </Button>
     </form>
   );
 }
