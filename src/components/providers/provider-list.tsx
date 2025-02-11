@@ -7,30 +7,12 @@ import Image from "next/image";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
+import type { ProviderMapCardProps, ProviderProps } from "~/types/providers";
 
 import GlowingButton from "../utils/glowing-button";
 
-interface Provider {
-  id: string;
-  name: string;
-  rating: number;
-  location: string;
-  address: string;
-  hours: string;
-  phone: string;
-  type: string;
-  pressure: string;
-  website: string;
-  directions: string;
-  position: [number, number];
-}
-
-interface ProviderCardProps {
-  provider: Provider;
-}
-
 // Export the providers array
-export const providers = [
+export const providers: ProviderProps[] = [
   {
     id: "bne1",
     name: "Brisbane City HBOT Center",
@@ -169,27 +151,7 @@ export const providers = [
   },
 ];
 
-/// Renamed to ProviderCard for clarity
-interface Provider {
-  id: string;
-  name: string;
-  rating: number;
-  location: string;
-  address: string;
-  hours: string;
-  phone: string;
-  type: string;
-  pressure: string;
-  website: string;
-  directions: string;
-  image: string;
-}
-
-interface ProviderCardProps {
-  provider: Provider;
-}
-
-export function ProviderCard({ provider }: ProviderCardProps) {
+export function ProviderCard({ provider }: ProviderMapCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -202,7 +164,7 @@ export function ProviderCard({ provider }: ProviderCardProps) {
           <div className="relative h-64">
             <Image
               src={
-                provider.image ||
+                provider.image ??
                 "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-02-10%20at%201.22.23%E2%80%AFpm-XJGwzA8NmXTOkXn9dCC6Q8jVpyUpPo.png"
               }
               alt={provider.name}

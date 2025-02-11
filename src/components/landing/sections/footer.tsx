@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import logo from "../../../public/logo/LOGO.png";
-import TikTokIcon from "../../../public/logo/tiktok";
+import logo from "../../../../public/logo/logo_resized.png";
+import TikTokIcon from "../../../../public/logo/tiktok";
 
 const Footer = () => {
   return (

@@ -6,12 +6,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "~/components/ui/button";
+import type { ProviderCardProps } from "~/types/providers";
 
-import {
-  ProviderCard,
-  type ProviderCardProps,
-} from "../providers/provider-card";
-import { ProviderQuickView } from "../providers/provider-quick-view";
+import { ProviderQuickView } from "../../providers/provider-quick-view";
+import { ProviderCard } from "~/components/providers/provider-card";
 
 const SAMPLE_PROVIDERS: ProviderCardProps[] = [
   {
@@ -23,7 +21,7 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     nextAvailable: "Today",
     phone: "0434 567 890",
     hours: "Mon - Sun: 7am - 9pm",
-    image: "/providers-images/provider_4.png",
+    image: "/images/providers/provider_4.png",
   },
   {
     name: "Vitality HBOT Center",
@@ -34,7 +32,7 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     nextAvailable: "Today",
     phone: "0456 789 123",
     hours: "Mon - Sat: 8am - 8pm",
-    image: "/providers-images/provider_5.png",
+    image: "/images/providers/provider_5.png",
   },
   {
     name: "OxygenPlus Therapy",
@@ -45,7 +43,7 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     nextAvailable: "Tomorrow",
     phone: "0467 234 567",
     hours: "Mon - Sun: 6am - 7pm",
-    image: "/providers-images/provider_1.png",
+    image: "/images/providers/provider_1.png",
   },
   {
     name: "Heal & Thrive",
@@ -56,7 +54,7 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     nextAvailable: "Tomorrow",
     phone: "0478 901 234",
     hours: "Mon - Fri: 8am - 6pm",
-    image: "/providers-images/provider_2.png",
+    image: "/images/providers/provider_2.png",
   },
   {
     name: "Pure Oxygen Wellness",
@@ -67,7 +65,7 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     nextAvailable: "Today",
     phone: "0489 012 345",
     hours: "Mon - Sun: 9am - 8pm",
-    image: "/providers-images/provider_3.png",
+    image: "/images/providers/provider_3.png",
   },
 ];
 

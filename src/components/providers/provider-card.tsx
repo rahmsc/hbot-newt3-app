@@ -1,16 +1,9 @@
 import { Star } from "lucide-react";
 import Image from "next/image";
 
-import GlowingButton from "../utils/glowing-button";
+import type { ProviderCardProps } from "~/types/providers";
 
-export interface ProviderCardProps {
-  name: string;
-  rating: number;
-  reviewCount: number;
-  location: string;
-  image: string;
-  onQuickView?: () => void;
-}
+import GlowingButton from "../utils/glowing-button";
 
 export function ProviderCard({
   name,

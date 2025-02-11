@@ -9,7 +9,7 @@ export function CTASubscriptionSection() {
       {/* Background Image */}
       <div className="absolute inset-0 h-full w-full">
         <Image
-          src="/hbot-chambers-images/1.png"
+          src="/images/chambers/1.png"
           alt="HBOT Chamber Background"
           fill
           className="object-cover brightness-[0.25]" // Darkens the image to make text more readable

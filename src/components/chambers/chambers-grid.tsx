@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useState } from "react";
 
-import type { chambersDataProp } from "~/data/rebrandData";
+import type { chambersDataProp } from "~/types/chambers";
 
 import GlowingButton from "../utils/glowing-button";
 import { ChambersFilter } from "./chambers-filter";

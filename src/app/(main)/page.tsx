@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 
-import { HeroText } from "~/components/header/hero-text";
-import { ChambersSection } from "~/components/landing/chambers-section";
-import ContactSection from "~/components/landing/contact-section";
-import { CTASubscriptionSection } from "~/components/landing/cta-section";
-import EmailInputForm from "~/components/landing/email-input-form";
-import { WellnessMarketplace } from "~/components/landing/marketplace-section";
-import ProvidersSection from "~/components/landing/providers-section";
-import ResearchDashboard from "~/components/landing/research-section";
-import TrendingSection from "~/components/landing/trending/trending-section";
+import { ChambersSection } from "~/components/landing/sections/chambers-section";
+import ContactSection from "~/components/landing/sections/contact-section";
+import { CTASubscriptionSection } from "~/components/landing/sections/cta-section";
+import ProvidersSection from "~/components/landing/sections/providers-section";
+import ResearchDashboard from "~/components/landing/sections/research/research-section";
+import TrendingSection from "~/components/landing/sections/trending/trending-section";
 import { HydrateClient } from "~/trpc/server";
 
 export const metadata: Metadata = {

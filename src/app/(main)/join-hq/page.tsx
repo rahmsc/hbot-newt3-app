@@ -1,5 +1,5 @@
 import Image from "next/image";
-import ContactSection from "~/components/landing/contact-section";
+import ContactSection from "~/components/landing/sections/contact-section";
 
 import { Button } from "~/components/ui/button";
 

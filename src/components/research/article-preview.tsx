@@ -1,5 +1,7 @@
 import { ExternalLink } from "lucide-react";
+
 import type { ConditionIdArticlesProps } from "~/utils/supabase/getArticlesByCondition";
+
 import { FeatureArticleActions } from "./feature-article-actions";
 
 interface ArticlePreviewProps {

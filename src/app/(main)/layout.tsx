@@ -7,7 +7,7 @@ import Script from "next/script";
 
 import { MainNav } from "~/components/header/main-nav";
 import { TopNav } from "~/components/header/top-nav";
-import Footer from "~/components/landing/footer";
+import Footer from "~/components/landing/sections/footer";
 import { Toaster } from "~/components/ui/toaster";
 import Hotjar from "~/components/utils/hotjar";
 import { AuthProvider } from "~/contexts/AuthContext";
@@ -45,7 +45,7 @@ export default function RootLayout({
         <Script id="structured-data" type="application/ld+json" />
       </head>
       <body
-        className={`${roboto.variable} ${raleway.variable} ${spaceMono.variable} font-body w-full overflow-x-hidden`}
+        className={`${roboto.variable} ${raleway.variable} ${spaceMono.variable} w-full overflow-x-hidden font-body`}
       >
         <TRPCReactProvider>
           <ReactQueryProvider>

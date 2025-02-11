@@ -2,18 +2,17 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { FilterNav } from "~/components/landing/filter-nav";
+import { FilterNav } from "~/components/landing/sections/research/filter-nav";
 import { ArticleCard } from "~/components/research/article-card";
 import FeaturedArticleCard from "~/components/research/feature-article-card";
 import {
   type CategoryWithConditions,
   getCategoryWithConditions,
 } from "~/utils/supabase/getCategoryWithConditions";
+import { getConditionData } from "~/utils/supabase/getConditionData";
 import getLatestArticles, {
   type RandomArticleItemProps,
 } from "~/utils/supabase/getLatestArticles";
-import { getConditionData } from "~/utils/supabase/getConditionData";
-import TitlePill from "./title-pill";
 
 export default function ResearchDashboard() {
   const [selectedConditions, setSelectedConditions] = useState<number[]>([]);

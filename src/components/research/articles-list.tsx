@@ -76,7 +76,7 @@ export function ArticlesList({
                       {new Date(article.published_date).toLocaleDateString(
                         "en-US",
                         {
-                          month: "short",
+                          month: "numeric",
                           day: "numeric",
                           year: "numeric",
                         },

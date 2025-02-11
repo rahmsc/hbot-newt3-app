@@ -5,32 +5,32 @@ import { Card } from "~/components/ui/card";
 const partners = [
   {
     name: "Troscriptions TX",
-    logo: "/chamber-associate-logos/troscription.png",
+    logo: "/images/chambers/member-benefits/troscription.png",
     alt: "Troscriptions TX by Smarter Not Harder Inc",
   },
   {
     name: "HPO Tech",
-    logo: "/chamber-associate-logos/hpotech.png",
+    logo: "/images/chambers/member-benefits/hpotech.png",
     alt: "HPO Tech logo",
   },
   {
     name: "OneBase",
-    logo: "/chamber-associate-logos/onebase.png",
+    logo: "/images/chambers/member-benefits/onebase.png",
     alt: "OneBase logo",
   },
   {
     name: "OXYREVO",
-    logo: "/chamber-associate-logos/oxyrevo.png",
+    logo: "/images/chambers/member-benefits/oxyrevo.png",
     alt: "OXYREVO Hyperbaric Chamber",
   },
   {
     name: "MACY-PAN",
-    logo: "/chamber-associate-logos/macy-pain.png",
+    logo: "/images/chambers/member-benefits/macy-pain.png",
     alt: "MACY-PAIN hyperbaric O2 chamber",
   },
   {
     name: "Feel Good",
-    logo: "/chamber-associate-logos/feelgood.png",
+    logo: "/images/chambers/member-benefits/feelgood.png",
     alt: "Feel Good",
   },
 ];
