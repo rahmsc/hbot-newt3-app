@@ -3,14 +3,13 @@
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
-
+import { createClient } from "~/utils/supabase/client";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { useToast } from "~/hooks/use-toast";
 import type { Profile } from "~/types/profile";
-import { createClient } from "~/utils/supabase/client";
 
 interface ProfileFormProps {
   profile: Profile | null;
@@ -46,21 +45,14 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         id: user.id,
         full_name: formData.full_name,
         username: formData.username,
-        email: formData.email,
-        website: formData.website,
-        bio: formData.bio,
-        location: formData.location,
+        avatar_url: formData.avatar_url,
         occupation: formData.occupation,
-        company: formData.company,
-        twitter_url: formData.twitter_url,
-        linkedin_url: formData.linkedin_url,
-        github_url: formData.github_url,
+        location: formData.location,
         updated_at: new Date().toISOString(),
       };
 
       const { error } = await supabase.from("profiles").upsert(updates, {
         onConflict: "id",
-        // defaultToNull: false,
       });
 
       if (error) throw error;
@@ -105,33 +97,12 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           />
         </div>
         <div>
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="occupation">Occupation</Label>
           <Input
-            id="email"
-            name="email"
-            type="email"
-            value={formData.email ?? ""}
+            id="occupation"
+            name="occupation"
+            value={formData.occupation ?? ""}
             onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Label htmlFor="website">Website</Label>
-          <Input
-            id="website"
-            name="website"
-            type="url"
-            value={formData.website ?? ""}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="md:col-span-2">
-          <Label htmlFor="bio">Bio</Label>
-          <Textarea
-            id="bio"
-            name="bio"
-            value={formData.bio ?? ""}
-            onChange={handleChange}
-            rows={4}
           />
         </div>
         <div>
@@ -144,57 +115,21 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           />
         </div>
         <div>
-          <Label htmlFor="occupation">Occupation</Label>
+          <Label htmlFor="avatar_url">Avatar URL</Label>
           <Input
-            id="occupation"
-            name="occupation"
-            value={formData.occupation ?? ""}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Label htmlFor="company">Company</Label>
-          <Input
-            id="company"
-            name="company"
-            value={formData.company ?? ""}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Label htmlFor="twitter_url">Twitter URL</Label>
-          <Input
-            id="twitter_url"
-            name="twitter_url"
+            id="avatar_url"
+            name="avatar_url"
             type="url"
-            value={formData.twitter_url ?? ""}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Label htmlFor="linkedin_url">LinkedIn URL</Label>
-          <Input
-            id="linkedin_url"
-            name="linkedin_url"
-            type="url"
-            value={formData.linkedin_url ?? ""}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Label htmlFor="github_url">GitHub URL</Label>
-          <Input
-            id="github_url"
-            name="github_url"
-            type="url"
-            value={formData.github_url ?? ""}
+            value={formData.avatar_url ?? ""}
             onChange={handleChange}
           />
         </div>
 
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Saving..." : "Save Changes"}
-        </Button>
+        <div className="md:col-span-2">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Saving..." : "Save Changes"}
+          </Button>
+        </div>
       </div>
     </form>
   );

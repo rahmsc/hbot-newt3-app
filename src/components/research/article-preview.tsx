@@ -1,6 +1,6 @@
 import { ExternalLink } from "lucide-react";
 
-import type { ConditionIdArticlesProps } from "~/utils/supabase/getArticlesByCondition";
+import type { ConditionIdArticlesProps } from "~/utils/supabase/articles/getArticlesByCondition";
 
 import { FeatureArticleActions } from "./feature-article-actions";
 

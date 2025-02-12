@@ -2,8 +2,11 @@
 
 import { BookmarkIcon } from "lucide-react";
 import Image from "next/image";
+import { useAuth } from "~/contexts/auth-context";
+import { useArticleBookmark } from "~/hooks/use-article-bookmark";
+import { Button } from "~/components/ui/button";
 
-import type { RandomArticleItemProps } from "~/utils/supabase/getLatestArticles";
+import type { RandomArticleItemProps } from "~/utils/supabase/articles/getLatestArticles";
 
 import { FeatureArticleActions } from "./feature-article-actions";
 
@@ -37,6 +40,12 @@ export default function FeaturedArticleCard({
   outcome_rating,
   conditionName,
 }: FeaturedArticleCardProps) {
+  const { user } = useAuth();
+  const { isBookmarked, isLoading, toggleBookmark } = useArticleBookmark(
+    id,
+    user?.id,
+  );
+
   const imageUrl =
     "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
 
@@ -50,6 +59,7 @@ export default function FeaturedArticleCard({
         src={`${imageUrl}${id}.png`}
         alt={heading}
         fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className="object-cover transition-transform duration-300 group-hover:scale-105"
         priority
       />
@@ -85,9 +95,19 @@ export default function FeaturedArticleCard({
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="overflow-hidden rounded-full p-2 text-white backdrop-blur-sm">
-              <BookmarkIcon className="h-8 w-8" />
-            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleBookmark}
+              disabled={isLoading}
+              className="overflow-hidden rounded-full p-2 text-white backdrop-blur-sm hover:bg-white/20"
+            >
+              <BookmarkIcon
+                className={`h-8 w-8 ${
+                  isBookmarked ? "fill-white text-white" : "text-white"
+                }`}
+              />
+            </Button>
           </div>
         </div>
 

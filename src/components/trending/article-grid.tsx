@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "~/components/ui/badge";
-import type { TrendingArticle } from "~/utils/supabase/getTrendingArticles";
+import type { TrendingArticle } from "~/utils/supabase/articles/getTrendingArticles";
 
 interface ArticleGridProps {
   articles: TrendingArticle[];

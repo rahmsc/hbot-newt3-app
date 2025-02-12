@@ -2,16 +2,16 @@
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
-await import("./src/env.js");
 
-/** @type {import("next").NextConfig} */
-const config = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
     domains: [
       "d144dqt8e4woe2.cloudfront.net",
       "hbothq-bucket.s3.ap-southeast-2.amazonaws.com",
       "hebbkx1anhila5yf.public.blob.vercel-storage.com",
       "picsum.photos",
+      "drive.google.com",
     ],
   },
   experimental: {
@@ -20,6 +20,7 @@ const config = {
       allowedOrigins: ["*"],
     },
   },
+  reactStrictMode: true,
 };
 
-export default config;
+module.exports = nextConfig;

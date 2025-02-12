@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import type { TrendingArticle } from "~/utils/supabase/getTrendingArticles";
+import type { TrendingArticle } from "~/utils/supabase/articles/getTrendingArticles";
 
 import { ArticleGrid } from "./article-grid";
 import { ArticleList } from "./article-list";

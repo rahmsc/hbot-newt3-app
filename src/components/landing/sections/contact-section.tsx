@@ -17,7 +17,6 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/hooks/use-toast";
-import { api } from "~/trpc/react";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -36,33 +35,8 @@ const ContactSection = () => {
     },
   });
 
-  const emailMutation = api.email.saveEmail.useMutation({
-    onSuccess: () => {
-      toast({
-        title: "Subscribed!",
-        description: "Thank you for subscribing to our newsletter.",
-      });
-      form.reset();
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: error.message || "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-    },
-  });
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    try {
-      await emailMutation.mutateAsync(values);
-    } catch (error) {
-      // Error is handled in the onError callback of the mutation
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
   }
 
   return (

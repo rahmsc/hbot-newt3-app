@@ -2,7 +2,7 @@
 
 import { format } from "date-fns";
 
-import type { ArticlesProps } from "~/utils/supabase/getArticleById";
+import type { ArticlesProps } from "~/utils/supabase/articles/getArticleById";
 
 import AccordionTemplate from "../utils/accordion-template";
 import ParallaxImage from "../utils/parralex-image";

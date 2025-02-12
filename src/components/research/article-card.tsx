@@ -1,8 +1,12 @@
+"use client";
+
 import { BookmarkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-import type { RandomArticleItemProps } from "~/utils/supabase/getLatestArticles";
+import { useAuth } from "~/contexts/auth-context";
+import { useArticleBookmark } from "~/hooks/use-article-bookmark";
+import { Button } from "~/components/ui/button";
+import type { RandomArticleItemProps } from "~/utils/supabase/articles/getLatestArticles";
 
 export function ArticleCard({
   id,
@@ -14,6 +18,12 @@ export function ArticleCard({
   published_date,
   conditionName,
 }: RandomArticleItemProps) {
+  const { user } = useAuth();
+  const { isBookmarked, isLoading, toggleBookmark } = useArticleBookmark(
+    id,
+    user?.id,
+  );
+
   const imageUrl =
     "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
 
@@ -29,6 +39,11 @@ export function ArticleCard({
         .map((author) => author.trim())
         .join(", ") + (authors.split(/[,]/).length > 3 ? " et al." : "")
     : "Unknown Author";
+
+  const handleBookmarkClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation
+    void toggleBookmark();
+  };
 
   return (
     <Link href={`/research/${id}`}>
@@ -52,7 +67,7 @@ export function ArticleCard({
             <div className="inline-flex items-center gap-2 overflow-hidden rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
               <span className="font-mono text-sm uppercase tracking-wider text-white">
                 {published_date
-                  ? published_date.toLocaleDateString("en-GB", {
+                  ? new Date(published_date).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "2-digit",
                       year: "2-digit",
@@ -60,16 +75,20 @@ export function ArticleCard({
                   : "N/A"}
               </span>
             </div>
-            <button
+            <Button
               type="button"
-              className="overflow-hidden rounded-full p-2 text-white backdrop-blur-sm"
-              onClick={(e) => {
-                e.preventDefault();
-                // Add bookmark functionality here
-              }}
+              variant="ghost"
+              size="icon"
+              className="overflow-hidden rounded-full p-2 text-white backdrop-blur-sm hover:bg-white/20"
+              onClick={handleBookmarkClick}
+              disabled={isLoading}
             >
-              <BookmarkIcon className="h-6 w-6" />
-            </button>
+              <BookmarkIcon
+                className={`h-6 w-6 transition-colors ${
+                  isBookmarked ? "fill-white text-white" : "text-white"
+                }`}
+              />
+            </Button>
           </div>
 
           {/* Bottom Section */}

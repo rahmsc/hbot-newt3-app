@@ -3,8 +3,8 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 
-import type { ConditionIdArticlesProps } from "~/utils/supabase/getArticlesByCondition";
-import getArticlesByCondition from "~/utils/supabase/getArticlesByCondition";
+import type { ConditionIdArticlesProps } from "~/utils/supabase/articles/getArticlesByCondition";
+import getArticlesByCondition from "~/utils/supabase/articles/getArticlesByCondition";
 
 import { Button } from "../ui/button";
 import { ArticlePreview } from "./article-preview";

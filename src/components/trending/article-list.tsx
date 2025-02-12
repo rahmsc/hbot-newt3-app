@@ -7,7 +7,7 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import RichText from "~/components/utils/rich-text";
 import type { BlogPost } from "~/types/blog";
-import type { TrendingArticle } from "~/utils/supabase/getTrendingArticles";
+import type { TrendingArticle } from "~/utils/supabase/articles/getTrendingArticles";
 
 interface ArticleListProps {
   articles: (BlogPost | TrendingArticle)[];

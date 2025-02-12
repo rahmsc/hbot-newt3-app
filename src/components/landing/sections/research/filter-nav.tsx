@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import * as React from "react";
 
 import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
-import type { CategoryWithConditions } from "~/utils/supabase/getCategoryWithConditions";
+import type { CategoryWithConditions } from "~/utils/supabase/articles/getCategoryWithConditions";
 
 interface FilterNavProps {
   categoriesWithConditions: CategoryWithConditions[];

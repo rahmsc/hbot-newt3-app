@@ -8,11 +8,11 @@ import FeaturedArticleCard from "~/components/research/feature-article-card";
 import {
   type CategoryWithConditions,
   getCategoryWithConditions,
-} from "~/utils/supabase/getCategoryWithConditions";
-import { getConditionData } from "~/utils/supabase/getConditionData";
+} from "~/utils/supabase/articles/getCategoryWithConditions";
+import { getConditionData } from "~/utils/supabase/articles/getConditionData";
 import getLatestArticles, {
   type RandomArticleItemProps,
-} from "~/utils/supabase/getLatestArticles";
+} from "~/utils/supabase/articles/getLatestArticles";
 
 export default function ResearchDashboard() {
   const [selectedConditions, setSelectedConditions] = useState<number[]>([]);

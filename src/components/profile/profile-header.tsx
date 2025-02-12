@@ -1,9 +1,10 @@
 import { Skeleton } from "~/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import type { Profile } from "~/types/profile";
+import type { User } from "@supabase/supabase-js";
 
 interface ProfileHeaderProps {
-  profile: Profile | null;
+  profile: Profile;
   isLoading: boolean;
 }
 

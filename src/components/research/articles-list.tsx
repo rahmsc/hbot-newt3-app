@@ -3,7 +3,7 @@ import { BookmarkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import type { ConditionIdArticlesProps } from "~/utils/supabase/getArticlesByCondition";
+import type { ConditionIdArticlesProps } from "~/utils/supabase/articles/getArticlesByCondition";
 
 export interface ArticlesListProps {
   articles: ConditionIdArticlesProps[];
