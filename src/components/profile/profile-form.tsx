@@ -7,7 +7,6 @@ import { createClient } from "~/utils/supabase/client";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
 import { useToast } from "~/hooks/use-toast";
 import type { Profile } from "~/types/profile";
 
@@ -46,7 +45,6 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         full_name: formData.full_name,
         username: formData.username,
         avatar_url: formData.avatar_url,
-        occupation: formData.occupation,
         location: formData.location,
         updated_at: new Date().toISOString(),
       };
@@ -93,15 +91,6 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             id="username"
             name="username"
             value={formData.username ?? ""}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Label htmlFor="occupation">Occupation</Label>
-          <Input
-            id="occupation"
-            name="occupation"
-            value={formData.occupation ?? ""}
             onChange={handleChange}
           />
         </div>

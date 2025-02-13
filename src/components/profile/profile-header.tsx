@@ -35,9 +35,6 @@ export function ProfileHeader({ profile, isLoading }: ProfileHeaderProps) {
           {profile?.full_name ?? profile?.username ?? "Anonymous"}
         </h1>
         <p className="text-gray-500">
-          {profile?.occupation ?? "No occupation set"}
-        </p>
-        <p className="text-gray-500">
           {profile?.location ?? "No location set"}
         </p>
       </div>

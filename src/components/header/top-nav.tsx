@@ -49,6 +49,19 @@ import {
 } from "~/components/ui/popover";
 import { useDebounce } from "~/hooks/use-debounce";
 import { HighlightedText } from "~/components/ui/highlighted-text";
+import { useToast } from "~/hooks/use-toast";
+import { subscribeToNewsletter } from "~/actions/subscribe";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { sendGAEvent } from "node_modules/@next/third-parties/dist/google/ga";
+
+const formSchema = z.object({
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+});
+
 
 export function TopNav() {
   const [user, setUser] = useState<User | null>(null);
@@ -59,8 +72,17 @@ export function TopNav() {
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const { studies, isLoading } = useStudySearch(debouncedSearchTerm);
+  const { studies, isLoading: isStudiesLoading } = useStudySearch(debouncedSearchTerm);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+  const [isSupabaseLoading, setIsSupabaseLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -119,6 +141,43 @@ export function TopNav() {
       year: "numeric",
     });
   };
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSupabaseLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("email", values.email);
+
+      const result = await subscribeToNewsletter(null, formData);
+
+      if (result.success) {
+        toast({
+          title: "Success!",
+          description: result.message,
+        });
+        form.reset();
+      } else {
+        toast({
+          title: "Error",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSupabaseLoading(false);
+    }
+
+    // Send GA event after attempt (success or failure)
+    sendGAEvent("event_top", "buttonClicked", {
+      value: "Subscribe(HQ Insider)",
+    });
+  }
 
   return (
     <nav
@@ -197,7 +256,7 @@ export function TopNav() {
                   <Command shouldFilter={false}>
                     <CommandList>
                       <CommandEmpty>
-                        {isLoading ? (
+                        {isStudiesLoading ? (
                           <div className="flex items-center justify-center p-4">
                             <span className="text-sm text-muted-foreground">
                               Searching...
@@ -297,13 +356,39 @@ export function TopNav() {
                     Stay updated with our latest news and offers.
                   </DialogDescription>
                 </DialogHeader>
-                <Input
-                  type="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  required
-                />
-                <SubmitButton />
+                <form 
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.currentTarget);
+                    const result = await subscribeToNewsletter(null, formData);
+                    
+                    if (result.success) {
+                      toast({
+                        title: "Success!",
+                        description: result.message,
+                      });
+                      setIsDialogOpen(false);
+                      (e.target as HTMLFormElement).reset();
+                    } else {
+                      toast({
+                        title: "Error",
+                        description: result.message,
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                  className="space-y-4"
+                >
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                  />
+                  <Button type="submit" className="w-full">
+                    Subscribe
+                  </Button>
+                </form>
               </DialogContent>
             </Dialog>
             <Button
@@ -340,12 +425,6 @@ export function TopNav() {
                   <DropdownMenuItem asChild>
                     <Link href="/auth/profile">Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/saved-articles">Saved Articles</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/my-articles">My Articles</Link>
-                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => signout()}>
                     Sign Out
                   </DropdownMenuItem>
@@ -365,7 +444,9 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit" disabled={pending} onSubmit={() => {
+      console.log("SUBMITTED");
+    }}>
       {pending ? "Subscribing..." : "Subscribe"}
     </Button>
   );

@@ -17,6 +17,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/hooks/use-toast";
+import { subscribeToNewsletter } from "~/actions/subscribe";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -37,6 +38,39 @@ const ContactSection = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("email", values.email);
+
+      const result = await subscribeToNewsletter(null, formData);
+
+      if (result.success) {
+        toast({
+          title: "Success!",
+          description: result.message,
+        });
+        form.reset();
+      } else {
+        toast({
+          title: "Error",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+
+    // Send GA event after attempt (success or failure)
+    sendGAEvent("event", "buttonClicked", {
+      value: "Subscribe(HQ Insider)",
+    });
   }
 
   return (
@@ -81,11 +115,6 @@ const ContactSection = () => {
                 type="submit"
                 className="h-12 w-full rounded-full bg-black px-6 text-lg font-medium text-white transition-all hover:bg-emerald-600"
                 disabled={isLoading}
-                onClick={() =>
-                  sendGAEvent("event", "buttonClicked", {
-                    value: "Subscribe(HQ Insider)",
-                  })
-                }
               >
                 {isLoading ? "Subscribing..." : "Subscribe"}
                 <ArrowRight className="ml-2 h-5 w-5" />

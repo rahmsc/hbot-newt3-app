@@ -9,7 +9,6 @@ const LoginButton = () => {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
   const supabase = createClient();
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const fetchUser = async () => {
       const {
@@ -18,7 +17,7 @@ const LoginButton = () => {
       setUser(user);
     };
     fetchUser();
-  }, []);
+  }, [supabase.auth]);
   if (user) {
     return (
       <Button

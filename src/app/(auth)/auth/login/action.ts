@@ -30,7 +30,7 @@ export async function login(formData: FormData) {
   redirect("/auth/profile");
 }
 
-export async function signup(formData: FormData) {
+export async function signup(formData: FormData): Promise<void> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const fullName = formData.get("full_name") as string;
@@ -60,9 +60,10 @@ export async function signup(formData: FormData) {
     console.error("Signup error:", error);
     throw error;
   }
-  console.log("DATA --------------------------", data);
-  redirect("/auth/profile");
-  return data;
+  if (data.user && data.session) {
+    console.log("DATA --------------------------", data);
+    redirect("/auth/profile");
+  }
 }
 
 export async function signout() {
