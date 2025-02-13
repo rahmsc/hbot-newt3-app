@@ -1,27 +1,27 @@
-"use client";
+"use client"
 
-import { Box, CheckCircle, Gauge, Users, X } from "lucide-react";
-import Image from "next/image";
+import { useState } from "react"
+import { Box, CheckCircle, Gauge, Users, X } from "lucide-react"
+import Image from "next/image"
 
-import { Badge } from "~/components/ui/badge";
-import { Dialog, DialogContent } from "~/components/ui/dialog";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import type { chambersDataProp } from "~/types/chambers";
+import { Badge } from "~/components/ui/badge"
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog"
+import { ScrollArea } from "~/components/ui/scroll-area"
+import type { chambersDataProp } from "~/types/chambers"
 
-import GlowingButton from "../utils/glowing-button";
+import GlowingButton from "../utils/glowing-button"
+import { ExpertInquiryForm } from "./expert-inquiry-form"
 
 interface ChamberQuickViewProps {
-  isOpen: boolean;
-  onClose: () => void;
-  chamber: chambersDataProp | null;
+  isOpen: boolean
+  onClose: () => void
+  chamber: chambersDataProp | null
 }
 
-export function ChamberQuickView({
-  isOpen,
-  onClose,
-  chamber,
-}: ChamberQuickViewProps) {
-  if (!chamber) return null;
+export function ChamberQuickView({ isOpen, onClose, chamber }: ChamberQuickViewProps) {
+  const [showInquiryForm, setShowInquiryForm] = useState(false)
+
+  if (!chamber) return null
 
   const features = [
     "Advanced Pressure Control",
@@ -30,7 +30,7 @@ export function ChamberQuickView({
     "Easy Maintenance",
     "Quiet Operation",
     "Energy Efficient",
-  ];
+  ]
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -61,24 +61,24 @@ export function ChamberQuickView({
               <div className="space-y-8">
                 <div className="flex items-start justify-between">
                   <div className="space-y-4">
-                    <Badge className="bg-emerald-700 text-white hover:bg-emerald-800">
-                      {chamber.type}
-                    </Badge>
+                    <Badge className="bg-emerald-700 text-white hover:bg-emerald-800">{chamber.type}</Badge>
                     <h2 className="font-['Raleway'] text-5xl font-bold uppercase tracking-widest text-white">
                       {chamber.name}
                     </h2>
-                    <p className="text-2xl font-light text-gray-100">
-                      Experience the future of hyperbaric therapy
-                    </p>
+                    <p className="text-2xl font-light text-gray-100">Experience the future of hyperbaric therapy</p>
                   </div>
-                  <GlowingButton
-                    text="Speak To An Expert"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // Add your expert contact logic here
-                    }}
-                    className="mt-2"
-                  />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <GlowingButton
+                        text="Speak To An Expert"
+                        onClick={() => setShowInquiryForm(true)}
+                        className="mt-2"
+                      />
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <ExpertInquiryForm chamber={chamber} onClose={() => setShowInquiryForm(false)} />
+                    </DialogContent>
+                  </Dialog>
                 </div>
 
                 <div className="flex space-x-8">
@@ -87,38 +87,24 @@ export function ChamberQuickView({
                       <h3 className="font-['Raleway'] text-3xl font-semibold uppercase tracking-wider text-emerald-700">
                         About This Chamber
                       </h3>
-                      <p className="text-xl leading-relaxed text-gray-100">
-                        {chamber.description}
-                      </p>
+                      <p className="text-xl leading-relaxed text-gray-100">{chamber.description}</p>
                     </div>
 
                     <div className="grid grid-cols-3 gap-4">
                       <div className="flex flex-col items-center space-y-2 rounded-xl bg-white/10 p-4 backdrop-blur-sm">
                         <Users className="h-8 w-8 text-emerald-700" />
-                        <span className="text-xl font-bold text-white">
-                          {chamber.persons}
-                        </span>
-                        <span className="text-xs uppercase tracking-wide text-gray-400">
-                          Capacity
-                        </span>
+                        <span className="text-xl font-bold text-white">{chamber.persons}</span>
+                        <span className="text-xs uppercase tracking-wide text-gray-400">Capacity</span>
                       </div>
                       <div className="flex flex-col items-center space-y-2 rounded-xl bg-white/10 p-4 backdrop-blur-sm">
                         <Gauge className="h-8 w-8 text-emerald-700" />
-                        <span className="text-xl font-bold text-white">
-                          {chamber.pressure}
-                        </span>
-                        <span className="text-xs uppercase tracking-wide text-gray-400">
-                          Max Pressure
-                        </span>
+                        <span className="text-xl font-bold text-white">{chamber.pressure}</span>
+                        <span className="text-xs uppercase tracking-wide text-gray-400">Max Pressure</span>
                       </div>
                       <div className="flex flex-col items-center space-y-2 rounded-xl bg-white/10 p-4 backdrop-blur-sm">
                         <Box className="h-8 w-8 text-emerald-700" />
-                        <span className="text-xl font-bold text-white">
-                          {chamber.type}
-                        </span>
-                        <span className="text-xs uppercase tracking-wide text-gray-400">
-                          Chamber Type
-                        </span>
+                        <span className="text-xl font-bold text-white">{chamber.type}</span>
+                        <span className="text-xs uppercase tracking-wide text-gray-400">Chamber Type</span>
                       </div>
                     </div>
                   </div>
@@ -129,22 +115,14 @@ export function ChamberQuickView({
                     </h3>
                     <ul className="space-y-3">
                       {features.map((feature) => (
-                        <li
-                          key={feature}
-                          className="flex items-center space-x-3"
-                        >
+                        <li key={feature} className="flex items-center space-x-3">
                           <CheckCircle className="h-5 w-5 text-emerald-700" />
-                          <span className="text-base text-gray-100">
-                            {feature}
-                          </span>
+                          <span className="text-base text-gray-100">{feature}</span>
                         </li>
                       ))}
                     </ul>
                     <p className="mt-4 text-base text-gray-100">
-                      <span className="font-semibold text-gray-400">
-                        Brand:
-                      </span>{" "}
-                      {chamber.brand}
+                      <span className="font-semibold text-gray-400">Brand:</span> {chamber.brand}
                     </p>
                   </div>
                 </div>
@@ -154,5 +132,6 @@ export function ChamberQuickView({
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
+

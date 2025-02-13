@@ -102,6 +102,9 @@ export default function ResearchDashboard() {
         <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700">
           LATEST RESEARCH
         </h2>
+        <h4 className="text-sm text-gray-500">
+          The latest research and studies on hyperbaric therapy
+        </h4>
       </div>
       {/* <div className="h-[2px] w-full bg-gray-600" /> / */}
       <FilterNav
