@@ -3,6 +3,7 @@
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "~/components/ui/button";
@@ -11,7 +12,7 @@ import type { ProviderCardProps } from "~/types/providers";
 import { ProviderQuickView } from "../../providers/provider-quick-view";
 import { ProviderCard } from "~/components/providers/provider-card";
 
-const SAMPLE_PROVIDERS: ProviderCardProps[] = [
+export const SAMPLE_PROVIDERS = [
   {
     name: "Feel Good Nation",
     rating: 5.0,
@@ -22,6 +23,8 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     phone: "0434 567 890",
     hours: "Mon - Sun: 7am - 9pm",
     image: "/images/providers/provider_4.png",
+    pressure: "1.3 ATA",
+    type: "Hard Shell Lay Down",
   },
   {
     name: "Vitality HBOT Center",
@@ -32,7 +35,9 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     nextAvailable: "Today",
     phone: "0456 789 123",
     hours: "Mon - Sat: 8am - 8pm",
-    image: "/images/providers/provider_5.png",
+      image: "/images/providers/provider_5.png",
+    pressure: "1.3 ATA",
+    type: "Hard Shell Lay Down",
   },
   {
     name: "OxygenPlus Therapy",
@@ -44,6 +49,8 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     phone: "0467 234 567",
     hours: "Mon - Sun: 6am - 7pm",
     image: "/images/providers/provider_1.png",
+    pressure: "2.0 ATA",
+    type: "Hard Shell Seated",
   },
   {
     name: "Heal & Thrive",
@@ -55,6 +62,8 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     phone: "0478 901 234",
     hours: "Mon - Fri: 8am - 6pm",
     image: "/images/providers/provider_2.png",
+    pressure: "2.4 ATA",
+    type: "Soft Shell Seated",
   },
   {
     name: "Pure Oxygen Wellness",
@@ -66,6 +75,8 @@ const SAMPLE_PROVIDERS: ProviderCardProps[] = [
     phone: "0489 012 345",
     hours: "Mon - Sun: 9am - 8pm",
     image: "/images/providers/provider_3.png",
+    pressure: "3.0 ATA",
+    type: "Soft Shell Seated",
   },
 ];
 
@@ -90,10 +101,24 @@ export default function ProvidersSection() {
   return (
     <section className="w-full">
       <div className="h-px w-full bg-gray-600" />
-      <div className="py-4 pl-16">
-        <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700">
-          VERIFIED PROVIDERS
-        </h2>
+      <div className="flex items-center justify-between px-16 py-2">
+        <div className="space-y-2">
+
+          <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700">
+            VERIFIED PROVIDERS
+          </h2>
+          <h4 className="text-sm text-gray-500">
+          The best providers in the business. Guaranteed.
+        </h4>
+        </div>
+        <Link href="/providers">
+          <Button
+            variant="default"
+            className="bg-emerald-700 transition-all duration-200 hover:bg-emerald-800"
+          >
+            Search Providers
+          </Button>
+        </Link>
       </div>
 
       <div className="relative pt-12">

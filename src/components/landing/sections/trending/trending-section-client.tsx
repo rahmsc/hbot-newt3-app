@@ -41,9 +41,15 @@ export function TrendingSectionClient({
     <section className="w-full bg-[#FAF7F4]">
       <div className="h-px w-full bg-gray-600" />
       <div className="flex items-center justify-between px-16 py-2">
+        <div className="space-y-2">
+          
         <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700">
           TRENDING
         </h2>
+        <h4 className="text-sm text-gray-500">
+          The latest and most popular articles on hyperbaric therapy
+        </h4>
+        </div>
         <TrendingFilter onFilterChange={setFilter} />
       </div>
       {/* <div className="h-px w-full bg-gray-600" /> */}

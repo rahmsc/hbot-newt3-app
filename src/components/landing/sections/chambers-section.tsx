@@ -50,9 +50,15 @@ export function ChambersSection() {
     <section className="w-full">
       <div className="h-px w-full bg-gray-600" />
       <div className="flex items-center justify-between px-16 py-2">
-        <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700">
-          EXPLORE CHAMBERS
-        </h2>
+        <div className="space-y-2">
+
+          <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700">
+            EXPLORE CHAMBERS
+          </h2>
+        <h4 className="text-sm text-gray-500">
+          The best chambers at the best prices. Guaranteed.
+        </h4>
+        </div>
         <Link href="/chambers">
           <Button
             variant="default"

@@ -1,3 +1,5 @@
+import type { StaticImageData } from "next/image";
+
 export interface ProviderProps {
   id: string;
   name: string;
@@ -7,7 +9,7 @@ export interface ProviderProps {
   hours: string;
   phone: string;
   type: string;
-  image: string;
+  image: StaticImageData;
   pressure: string;
   website: string;
   directions: string;
@@ -30,5 +32,7 @@ export interface ProviderCardProps {
   phone: string;
   hours: string;
   image: string;
+  pressure: string;
+  type: string;
   onQuickView?: () => void;
 }

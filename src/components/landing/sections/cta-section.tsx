@@ -66,7 +66,7 @@ export function CTASubscriptionSection() {
               className="group inline-flex items-center gap-3 rounded-full bg-emerald-700 px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-emerald-500 hover:shadow-lg hover:scale-105"
             >
               <Phone className="h-6 w-6" />
-              Call To Speak To A Specialist Right Now
+              Speak To A Specialist Right Now
               <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
             </a>
           </motion.div>
