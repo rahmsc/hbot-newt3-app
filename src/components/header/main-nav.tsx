@@ -12,7 +12,6 @@ const navItems = [
   "TRENDING",
   "RESEARCH",
   "PROVIDERS",
-  "MARKET",
   "JOIN-HQ",
 ];
 

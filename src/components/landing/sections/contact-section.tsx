@@ -69,7 +69,7 @@ const ContactSection = () => {
   }
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-gray-50 to-white py-24">
+    <section className="relative w-full  py-24">
       <div className="container mx-auto max-w-4xl px-4 text-center">
         <motion.div
           className="space-y-8"
@@ -118,7 +118,7 @@ const ContactSection = () => {
                         <Input
                           placeholder="Enter your email"
                           {...field}
-                          className="h-14 rounded-full border-gray-300 pl-12 pr-6 text-lg shadow-sm transition-all focus:border-emerald-500 focus:ring-emerald-500"
+                          className="h-14 rounded-full bg-white border-gray-300 pl-12 pr-6 text-lg shadow-sm transition-all focus:border-emerald-500 focus:ring-emerald-500"
                         />
                       </div>
                     </FormControl>

@@ -1,18 +1,13 @@
-import { TrendingContent } from "~/components/trending/trending-content";
-import { getBlogPosts } from "~/utils/airtable/blogs/getBlogPosts";
-import { getTrendingArticles } from "~/utils/supabase/articles/getTrendingArticles";
+import { TrendingHeader } from "~/components/trending/trending-header"
+import { FeaturedArticles } from "~/components/trending/featured-articles"
+import { ArticleGrid } from "~/components/trending/article-grid"
+import { getTrendingArticles } from "~/utils/supabase/articles/getTrendingArticles"
+import { type TrendingArticleProps } from "~/components/trending/trending-card"
 
 export default async function TrendingPage() {
-  const allBlogPosts = await getBlogPosts();
-  const approvedBlogPosts = allBlogPosts.filter((post) => post.fields.Approved);
+  const articles = await getTrendingArticles()
 
-  const articles = await getTrendingArticles();
-
-  const [headerPost, ...restPosts] = articles;
-  const featuredPosts = restPosts.slice(0, 6);
-  const listPosts = restPosts.slice(6);
-
-  if (!headerPost || !featuredPosts) {
+  if (!articles.length) {
     return (
       <div className="flex h-[calc(100vh-127px)] items-center justify-center">
         <div className="text-center">
@@ -20,14 +15,26 @@ export default async function TrendingPage() {
           <p className="text-lg text-gray-600">Loading trending content...</p>
         </div>
       </div>
-    );
+    )
   }
 
+  // Filter out undefined values and ensure type safety
+  const validArticles = articles.filter((article): article is TrendingArticleProps => 
+    article !== undefined
+  )
+
+  const [firstArticle, ...restArticles] = validArticles
+  const featuredArticles = firstArticle 
+    ? [firstArticle, ...restArticles.slice(0, 3)]
+    : []
+  const gridArticles = restArticles.slice(3)
+
   return (
-    <TrendingContent
-      headerPost={headerPost}
-      featuredPosts={featuredPosts}
-      listPosts={listPosts}
-    />
-  );
+    <main className="w-full">
+      <TrendingHeader />
+      <FeaturedArticles articles={featuredArticles} />
+      <ArticleGrid articles={gridArticles} />
+    </main>
+  )
 }
+

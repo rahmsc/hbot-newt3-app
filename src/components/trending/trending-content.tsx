@@ -1,73 +1,127 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-
-import type { TrendingArticle } from "~/utils/supabase/articles/getTrendingArticles";
-
-import { ArticleGrid } from "./article-grid";
-import { ArticleList } from "./article-list";
-import { HeaderArticle } from "./header-article";
+import { useState } from "react"
+import { TrendingCard, type TrendingArticleProps } from "~/components/trending/trending-card"
+import { Button } from "~/components/ui/button"
+import { Pagination } from "~/components/ui/pagination"
 
 interface TrendingContentProps {
-  headerPost?: TrendingArticle;
-  featuredPosts: TrendingArticle[];
-  listPosts: TrendingArticle[];
+  featuredPosts: TrendingArticleProps[]
+  listPosts: TrendingArticleProps[]
 }
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 9
 
-export function TrendingContent({
-  headerPost,
-  featuredPosts = [],
-  listPosts = [],
-}: TrendingContentProps) {
-  const [currentPage, setCurrentPage] = useState(1);
+export function TrendingContent({ featuredPosts = [], listPosts = [] }: TrendingContentProps) {
+  const [filter, setFilter] = useState<"all" | "blogs" | "guides" | "latest">("all")
+  const [currentPage, setCurrentPage] = useState(1)
 
-  // Calculate total pages
-  const totalPages = Math.ceil(listPosts.length / ITEMS_PER_PAGE);
+  const filteredListPosts = listPosts.filter((article) => {
+    if (filter === "all") return true
+    if (filter === "blogs") return article.type === "blog"
+    if (filter === "guides") return article.type === "guide"
+    if (filter === "latest") {
+      return listPosts
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 9)
+        .includes(article)
+    }
+    return true
+  })
 
-  // Get current page items
-  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
-  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentItems = listPosts.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredListPosts.length / ITEMS_PER_PAGE)
+  const currentItems = filteredListPosts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  if (!headerPost && featuredPosts.length === 0 && listPosts.length === 0) {
-    return (
-      <div className="flex h-96 items-center justify-center text-gray-500">
-        No articles available.
-      </div>
-    );
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   return (
-    <main className="w-full">
-      {headerPost && <HeaderArticle post={headerPost} />}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <main className="w-full bg-[#FAF7F4]">
+      <div className="relative">
+        <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-start justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
+            <div className="space-y-2">
+              <h2 className="font-['Raleway'] text-4xl font-normal tracking-[0.3em] text-gray-700">TRENDING</h2>
+              <h4 className="text-sm text-gray-500">The latest and most popular articles on hyperbaric therapy</h4>
+            </div>
+            <div className="flex space-x-2">
+              <Button
+                variant={filter === "blogs" ? "default" : "outline"}
+                onClick={() => setFilter("blogs")}
+                className="rounded-full border-emerald-600 text-sm font-medium hover:bg-emerald-600 hover:text-white"
+              >
+                Blogs
+              </Button>
+              <Button
+                variant={filter === "guides" ? "default" : "outline"}
+                onClick={() => setFilter("guides")}
+                className="rounded-full border-emerald-600 text-sm font-medium hover:bg-emerald-600 hover:text-white"
+              >
+                Guides
+              </Button>
+              <Button
+                variant={filter === "latest" ? "default" : "outline"}
+                onClick={() => setFilter("latest")}
+                className="rounded-full bg-emerald-600 text-sm font-medium text-white hover:bg-emerald-700"
+              >
+                Latest
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="mt-4 h-16 w-full bg-cover bg-center"
+          style={{
+            backgroundImage:
+              'url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-02-14%20at%209.32.55%E2%80%AFam-4aZ6R6pbsPorITL7yCautSxd26WQop.png")',
+          }}
+        />
+      </div>
+
+      <div className="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {featuredPosts.length > 0 && (
           <div className="mb-12">
-            <h2 className="mb-6 py-4 font-['Raleway'] text-2xl uppercase tracking-[0.2em]">
-              Featured Articles
-            </h2>
-            <ArticleGrid articles={featuredPosts} />
+            <div className="grid gap-6 md:grid-cols-4 md:grid-rows-2">
+              {featuredPosts[0] && (
+                <div className="md:col-span-2 md:row-span-2">
+                  <TrendingCard article={featuredPosts[0]} size="large" />
+                </div>
+              )}
+              <div className="md:col-span-2 md:grid md:grid-cols-2 md:gap-6">
+                {featuredPosts.slice(1, 4).map((post, index) => (
+                  post && (
+                    <div key={index}>
+                      <TrendingCard article={post} size="small" />
+                    </div>
+                  )
+                ))}
+              </div>
+            </div>
           </div>
         )}
-        {listPosts.length > 0 && (
-          <div className="mb-12">
-            <h2 className="mb-6 text-2xl font-bold">Latest Articles</h2>
-            <ArticleList
-              articles={currentItems}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+
+        {currentItems.length > 0 && (
+          <div className="space-y-8">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {currentItems.map((post, index) => (
+                post && (
+                  <div key={index}>
+                    <TrendingCard article={post} size="medium" />
+                  </div>
+                )
+              ))}
+            </div>
+            {totalPages > 1 && (
+              <div className="flex justify-center">
+                <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+              </div>
+            )}
           </div>
         )}
       </div>
     </main>
-  );
+  )
 }
+

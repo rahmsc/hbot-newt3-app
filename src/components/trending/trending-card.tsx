@@ -1,27 +1,27 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from "next/image"
+import Link from "next/link"
 
-import { Badge } from "~/components/ui/badge";
+import { Badge } from "~/components/ui/badge"
 
 export interface TrendingArticleProps {
   category: {
-    main: string;
-    sub: string;
-  };
-  title: string;
-  description: string;
-  image: string;
-  link: string;
-  date: string;
-  type: "blog" | "guide";
+    main: string
+    sub: string
+  }
+  title: string
+  description: string
+  image: string
+  link: string
+  date: string
+  type: "blog" | "guide"
 }
 
 interface TrendingCardProps {
-  article: TrendingArticleProps;
-  size: "small" | "medium" | "large";
+  article: TrendingArticleProps
+  size?: "small" | "medium" | "large" | "featured-side"
 }
 
-export function TrendingCard({ article, size }: TrendingCardProps) {
+export function TrendingCard({ article, size = "medium" }: TrendingCardProps) {
   return (
     <Link href={article.link} className="group block h-full">
       <article className="relative h-full w-full overflow-hidden rounded-[2rem] bg-white">
@@ -37,9 +37,7 @@ export function TrendingCard({ article, size }: TrendingCardProps) {
         <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
           <Badge
             className={`mb-4 w-fit font-mono text-xs uppercase tracking-wider text-white ${
-              article.type === "blog"
-                ? "bg-emerald-700 hover:bg-emerald-800"
-                : "bg-orange-500 hover:bg-orange-600"
+              article.type === "blog" ? "bg-emerald-700 hover:bg-emerald-800" : "bg-orange-500 hover:bg-orange-600"
             }`}
             variant="secondary"
           >
@@ -47,15 +45,21 @@ export function TrendingCard({ article, size }: TrendingCardProps) {
           </Badge>
 
           <h3
-            className={`mb-2 font-['Raleway'] font-normal leading-tight ${size === "large" ? "text-3xl" : size === "medium" ? "text-2xl" : "text-xl"}`}
+            className={`mb-2 font-['Raleway'] font-normal leading-tight ${
+              size === "large"
+                ? "text-3xl"
+                : size === "medium"
+                  ? "text-2xl"
+                  : size === "featured-side"
+                    ? "text-lg"
+                    : "text-xl"
+            }`}
           >
             {article.title}
           </h3>
 
           {(size === "large" || size === "medium") && (
-            <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-gray-300">
-              {article.description}
-            </p>
+            <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-gray-300">{article.description}</p>
           )}
 
           <div className="font-['Space_Mono'] text-xs uppercase tracking-wider text-gray-400">
@@ -68,5 +72,6 @@ export function TrendingCard({ article, size }: TrendingCardProps) {
         </div>
       </article>
     </Link>
-  );
+  )
 }
+

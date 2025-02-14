@@ -1,68 +1,47 @@
-import Image from "next/image";
-import Link from "next/link";
+"use client"
 
-import { Badge } from "~/components/ui/badge";
-import type { TrendingArticle } from "~/utils/supabase/articles/getTrendingArticles";
+import { TrendingCard, type TrendingArticleProps } from "./trending-card"
+import { GridPagination } from "./grid-pagination"
+import { useState } from "react"
 
 interface ArticleGridProps {
-  articles: TrendingArticle[];
+  articles: TrendingArticleProps[]
 }
+
+const ITEMS_PER_PAGE = 9
 
 export function ArticleGrid({ articles }: ArticleGridProps) {
-  if (!articles || articles.length === 0) {
-    return null;
-  }
+  const [currentPage, setCurrentPage] = useState(1)
+  const totalPages = Math.ceil(articles.length / ITEMS_PER_PAGE)
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+  const currentArticles = articles.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+
+  // Create array of specified length with empty slots for grid layout
+  const displayArticles = Array(ITEMS_PER_PAGE)
+    .fill(null)
+    .map((_, index) => currentArticles[index] ?? null)
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {articles.map((article) => (
-        <Link key={article.link} href={article.link} className="group block">
-          <article className="relative h-[300px] overflow-hidden rounded-2xl bg-white sm:h-[350px] sm:rounded-[2rem] md:h-[400px]">
-            {/* Image */}
-            <Image
-              src={article.image}
-              alt={article.title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-
-            {/* Content */}
-            <div className="absolute bottom-0 left-0 p-6 text-white">
-              <div className="mb-4 flex gap-2">
-                <Badge
-                  variant="secondary"
-                  className={`backdrop-blur-sm ${
-                    article.category.main.toLowerCase() === "blog"
-                      ? "bg-emerald-700"
-                      : article.category.main.toLowerCase() === "guide"
-                        ? "bg-orange-700"
-                        : "bg-white/20"
-                  }`}
-                >
-                  {article.category.main}
-                </Badge>
-                <Badge
-                  variant="secondary"
-                  className="bg-white/50 backdrop-blur-sm"
-                >
-                  {article.category.sub}
-                </Badge>
-              </div>
-
-              <h2 className="mb-2 text-xl font-bold sm:text-2xl">
-                {article.title}
-              </h2>
-
-              <p className="line-clamp-2 text-sm text-gray-200">
-                {article.description}
-              </p>
+    <section className="container mx-auto max-w-7xl px-4 py-12">
+      <div className="mx-auto max-w-5xl">
+        <hr className="mb-8 border-t border-gray-700" />
+        <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700 pb-8">MORE ARTICLES</h2>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {displayArticles.map((article, index) => (
+            <div key={index} className="h-[280px]">
+              {article && <TrendingCard article={article} size="small" />}
+              {!article && <div className="h-full w-full rounded-[2rem] bg-gray-100" />}
             </div>
-          </article>
-        </Link>
-      ))}
-    </div>
-  );
+          ))}
+        </div>
+        {totalPages > 1 && (
+          <div className="mt-8 flex justify-center">
+            <GridPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          </div>
+        )}
+      </div>
+    </section>
+  )
 }
+
