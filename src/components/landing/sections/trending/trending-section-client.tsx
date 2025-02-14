@@ -38,7 +38,7 @@ export function TrendingSectionClient({
     .slice(0, 5);
 
   return (
-    <section className="w-full bg-[#FAF7F4]">
+    <section className="w-full bg-[#FAF7F4] pb-12">
       <div className="h-px w-full bg-gray-600" />
       <div className="flex items-center justify-between px-16 py-2">
         <div className="space-y-2">

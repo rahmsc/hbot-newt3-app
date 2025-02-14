@@ -96,7 +96,7 @@ export default function ResearchDashboard() {
   }, [articles, conditionNames, fetchConditionName]);
 
   return (
-    <section className="w-full">
+    <section className="w-full pb-12">
       {/* <div className="h-px w-full bg-gray-600" />     */}
       <div className="py-4 pl-16">
         <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700">

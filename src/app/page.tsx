@@ -9,7 +9,7 @@ export default async function Home(): Promise<JSX.Element> {
   return (
     <main className="flex w-full flex-row items-center justify-center">
       <div className="w-full">
-        <div className="space-y-24">
+        <div className="">
           <ResearchDashboard />
           <ChambersSection />
           <TrendingSection />
