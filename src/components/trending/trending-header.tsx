@@ -2,7 +2,7 @@ import Image from "next/image"
 
 export function TrendingHeader() {
   return (
-    <div className="relative h-[400px] w-full overflow-hidden">
+    <div className="relative h-[350px] w-full overflow-hidden">
       <Image
         src="/images/banners/trending-banner.png"
         alt="Trending Header"
