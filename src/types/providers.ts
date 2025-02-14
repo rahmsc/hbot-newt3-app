@@ -1,7 +1,7 @@
 import type { StaticImageData } from "next/image";
 
 export interface ProviderProps {
-  id: string;
+  id: string; 
   name: string;
   rating: number;
   location: string;
@@ -9,12 +9,14 @@ export interface ProviderProps {
   hours: string;
   phone: string;
   type: string;
-  image: StaticImageData;
+  image: string;
   pressure: string;
   website: string;
   directions: string;
   latitude: number;
   longitude: number;
+  email: string;  
+  description: string;
   distance?: number;
 }
 

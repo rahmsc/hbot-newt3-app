@@ -69,18 +69,13 @@ export default async function getArticleById(
 
     if (error) {
       // Improve error logging
-      console.error("Supabase error details:", {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code,
-      });
+      console.error("Supabase error details:", error);
       throw new Error(`Database error: ${error.message}`);
     }
 
     if (!data) {
       console.log("No data found for article ID:", id);
-      return null;
+      throw new Error(`No article found with ID: ${id}`);
     }
 
     // Log the raw data for debugging

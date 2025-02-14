@@ -22,7 +22,7 @@ export default async function getArticlesByCondition(
   if (!conditionId) return [];
 
   const supabase = createClient();
-  console.log("Fetching articles for condition ID:", conditionId);
+  // console.log("Fetching articles for condition ID:", conditionId);
 
   // First get the condition name
   const { data: conditionData, error: conditionError } = await supabase

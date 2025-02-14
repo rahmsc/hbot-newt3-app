@@ -6,7 +6,7 @@ export async function getArticleCountsByCondition(): Promise<
   const supabase = createClient();
 
   // Add debug logging
-  console.log("Fetching article counts...");
+  // console.log("Fetching article counts...");
 
   const { data, error } = await supabase
     .from("studies")
