@@ -274,7 +274,7 @@ export function TopNav() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 font-mono">
-                                    {study.pressure_used} ATA
+                                    {study.pressure_used}
                                   </span>
                                   <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-400 font-mono">
                                     {study.number_of_treatments} treatments

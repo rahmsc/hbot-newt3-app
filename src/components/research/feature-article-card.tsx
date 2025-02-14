@@ -100,11 +100,17 @@ export default function FeaturedArticleCard({
               size="icon"
               onClick={toggleBookmark}
               disabled={isLoading}
-              className="overflow-hidden rounded-full p-2 text-white backdrop-blur-sm hover:bg-white/20"
+              className={`overflow-hidden rounded-full p-2 text-white backdrop-blur-sm transition-all ${
+                isBookmarked 
+                  ? "bg-emerald-700/20 ring-2 ring-emerald-700 hover:bg-emerald-700/30" 
+                  : "hover:bg-white/20"
+              }`}
             >
               <BookmarkIcon
-                className={`h-8 w-8 ${
-                  isBookmarked ? "fill-white text-white" : "text-white"
+                className={`h-8 w-8 transition-colors ${
+                  isBookmarked 
+                    ? "fill-white text-emerald-700" 
+                    : "text-white"
                 }`}
               />
             </Button>

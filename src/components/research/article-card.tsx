@@ -79,13 +79,19 @@ export function ArticleCard({
               type="button"
               variant="ghost"
               size="icon"
-              className="overflow-hidden rounded-full p-2 text-white backdrop-blur-sm hover:bg-white/20"
+              className={`overflow-hidden rounded-full p-2 text-white backdrop-blur-sm transition-all ${
+                isBookmarked 
+                  ? "bg-emerald-700/20 ring-2 ring-emerald-700 hover:bg-emerald-700/30" 
+                  : "hover:bg-white/20"
+              }`}
               onClick={handleBookmarkClick}
               disabled={isLoading}
             >
               <BookmarkIcon
                 className={`h-6 w-6 transition-colors ${
-                  isBookmarked ? "fill-white text-white" : "text-white"
+                  isBookmarked 
+                    ? "fill-white text-emerald-700" 
+                    : "text-white"
                 }`}
               />
             </Button>
