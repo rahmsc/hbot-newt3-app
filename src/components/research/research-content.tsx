@@ -25,12 +25,16 @@ interface GroupedCategory {
 
 interface ResearchContentProps {
   categories: GroupedCategory[];
-  initialSelectedCategory?: number;
+  initialSelectedCategory?: number | null;
+  initialSelectedCondition?: number | null;
+  initialSidebarOpen?: boolean;
 }
 
 export function ResearchContent({
   categories,
   initialSelectedCategory,
+  initialSelectedCondition,
+  initialSidebarOpen = false,
 }: ResearchContentProps) {
   const [updatedCategories, setCategories] = useState(categories);
   const [selectedConditionId, setSelectedConditionId] = useState<number | null>(
@@ -41,7 +45,7 @@ export function ResearchContent({
   );
   const [hoveredArticle, setHoveredArticle] =
     useState<ConditionIdArticlesProps | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(initialSidebarOpen);
   const [articles, setArticles] = useState<ConditionIdArticlesProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

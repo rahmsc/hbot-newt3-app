@@ -8,6 +8,7 @@ interface ResearchCategory {
   title: string;
   categoryId: number;
   image: string;
+  defaultConditionId: number;
 }
 
 const categories: ResearchCategory[] = [
@@ -15,29 +16,33 @@ const categories: ResearchCategory[] = [
     title: "Wellness & Energy",
     categoryId: 1,
     image: "/images/research/wellness.png",
+    defaultConditionId: 1,
   },
   {
     title: "Chronic Conditions",
     categoryId: 2,
     image: "/images/research/chronic.png",
+    defaultConditionId: 5,
   },
   {
     title: "Exercise & Recovery",
     categoryId: 3,
     image: "/images/research/exercise.png",
+    defaultConditionId: 9,
   },
   {
     title: "Mental Health",
     categoryId: 4,
     image: "/images/research/mental.png",
+    defaultConditionId: 13,
   },
 ];
 
 export function ResearchCategories() {
   const router = useRouter();
 
-  const handleCategoryClick = (categoryId: number) => {
-    router.push(`/research?selectedCategory=${categoryId}`);
+  const handleCategoryClick = (categoryId: number, defaultConditionId: number) => {
+    router.push(`/research?selectedCategory=${categoryId}&condition=${defaultConditionId}`);
   };
 
   return (
@@ -57,7 +62,7 @@ export function ResearchCategories() {
           {categories.map((category) => (
             <motion.button
               key={category.categoryId}
-              onClick={() => handleCategoryClick(category.categoryId)}
+              onClick={() => handleCategoryClick(category.categoryId, category.defaultConditionId)}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}

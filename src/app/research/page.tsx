@@ -14,7 +14,10 @@ interface GroupedCategory {
 }
 
 interface Props {
-  searchParams: { selectedCategory?: string };
+  searchParams: { 
+    selectedCategory?: string;
+    condition?: string;
+  };
 }
 
 export default async function ResearchPage({ searchParams }: Props) {
@@ -24,6 +27,10 @@ export default async function ResearchPage({ searchParams }: Props) {
 
     const selectedCategoryId = searchParams.selectedCategory
       ? Number.parseInt(searchParams.selectedCategory)
+      : undefined;
+    
+    const selectedConditionId = searchParams.condition
+      ? Number.parseInt(searchParams.condition)
       : undefined;
 
     if (!Array.isArray(categoriesAndConditions)) {
@@ -88,9 +95,12 @@ export default async function ResearchPage({ searchParams }: Props) {
       );
     }
 
-    // Fetch initial articles
-    const initialConditionId =
-      selectedCategoryId ?? groupedCategories[0]?.conditions[0]?.id ?? null;
+    // Update initial articles fetch to use the condition from URL if available
+    const initialConditionId = selectedConditionId ?? 
+      (selectedCategoryId ? groupedCategories.find(cat => cat.categoryId === selectedCategoryId)?.conditions[0]?.id : null) ?? 
+      groupedCategories[0]?.conditions[0]?.id ?? 
+      null;
+
     const initialArticles = initialConditionId
       ? await getArticlesByCondition(initialConditionId)
       : [];
@@ -100,6 +110,8 @@ export default async function ResearchPage({ searchParams }: Props) {
         <ResearchContent
           categories={groupedCategories}
           initialSelectedCategory={selectedCategoryId}
+          initialSelectedCondition={selectedConditionId}
+          initialSidebarOpen={false}
         />
       </div>
     );
