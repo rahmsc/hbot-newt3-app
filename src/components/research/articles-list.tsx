@@ -31,16 +31,14 @@ export function ArticlesList({
   }
 
   return (
-    <div className="h-full overflow-y-auto">
-      <div className="space-y-4 p-4">
-        {articles.map((article) => (
-          <ArticleItem
-            key={article.id}
-            article={article}
-            onArticleHover={onArticleHover}
-          />
-        ))}
-      </div>
+    <div className="space-y-4 p-4">
+      {articles.map((article) => (
+        <ArticleItem
+          key={article.id}
+          article={article}
+          onArticleHover={onArticleHover}
+        />
+      ))}
     </div>
   );
 }

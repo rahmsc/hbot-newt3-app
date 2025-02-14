@@ -19,8 +19,6 @@ interface Props {
 
 export default async function ResearchPage({ searchParams }: Props) {
   try {
-    console.log("Fetching data...");
-
     const categoriesAndConditions = await getCategoryWithConditions();
     const articleCounts = await getArticleCountsByCondition();
 

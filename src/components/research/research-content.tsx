@@ -1,7 +1,8 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
+import { cn } from "~/lib/utils";
 
 import type { ConditionIdArticlesProps } from "~/utils/supabase/articles/getArticlesByCondition";
 import getArticlesByCondition from "~/utils/supabase/articles/getArticlesByCondition";
@@ -10,6 +11,7 @@ import { Button } from "../ui/button";
 import { ArticlePreview } from "./article-preview";
 import { ArticlesList } from "./articles-list";
 import { Sidebar } from "./sidebar";
+import { Badge } from "../ui/badge";
 
 interface GroupedCategory {
   categoryId: number;
@@ -27,10 +29,10 @@ interface ResearchContentProps {
 }
 
 export function ResearchContent({
-  categories: initialCategories,
+  categories,
   initialSelectedCategory,
 }: ResearchContentProps) {
-  const [categories, setCategories] = useState(initialCategories);
+  const [updatedCategories, setCategories] = useState(categories);
   const [selectedConditionId, setSelectedConditionId] = useState<number | null>(
     initialSelectedCategory ?? null,
   );
@@ -115,6 +117,11 @@ export function ResearchContent({
     setHoveredArticle(article);
   };
 
+  // Find the selected condition name
+  const selectedCondition = categories
+    .flatMap(category => category.conditions)
+    .find(condition => condition.id === selectedConditionId);
+
   return (
     <div className="relative flex h-[calc(100vh-127px)] overflow-hidden rounded-lg border border-gray-200 shadow-md">
       <Sidebar
@@ -128,37 +135,64 @@ export function ResearchContent({
       />
 
       <div className="flex-1 overflow-hidden">
-        <Button
-          variant="outline"
-          size="icon"
-          className={`absolute left-0 top-4 z-50 h-8 w-8 rounded-full border-2 border-gray-900 bg-white shadow-md transition-all duration-300 ${
-            isSidebarOpen ? "left-[300px]" : "left-0"
-          }`}
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        >
-          {isSidebarOpen ? (
-            <ChevronLeft className="h-4 w-4" />
-          ) : (
-            <ChevronRight className="h-4 w-4" />
-          )}
-        </Button>
+        {/* Collapsed state header */}
+        <div className={cn(
+          "absolute left-0 top-0 z-50 flex h-[72px] items-center gap-3 px-4 transition-all duration-300",
+          isSidebarOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+        )}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 hover:bg-gray-100"
+            onClick={() => setIsSidebarOpen(true)}
+          >
+            <Menu className="h-5 w-5 text-gray-600" />
+          </Button>
 
-        <div className="grid h-full grid-cols-2 gap-4 overflow-hidden rounded-lg p-4">
-          {/* Articles List */}
-          <div className="h-full overflow-y-auto rounded-lg shadow-sm">
-            {error ? (
-              <div className="p-4 text-red-500">{error}</div>
-            ) : (
-              <ArticlesList
-                articles={articles}
-                isLoading={isLoading}
-                onArticleHover={handleArticleHover}
-              />
-            )}
+          {selectedCondition && (
+            <Badge 
+              variant="outline" 
+              className="gap-1 border-emerald-700 text-emerald-700"
+            >
+              {selectedCondition.name}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-4 w-4 p-0 hover:bg-transparent"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedConditionId(0);
+                }}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </Badge>
+          )}
+        </div>
+
+        <div className="grid h-full grid-cols-2 gap-4 p-4">
+          {/* Articles Column */}
+          <div className="flex h-full flex-col overflow-hidden">
+            {/* Conditional Spacer */}
+            {!isSidebarOpen && <div className="h-[28px] shrink-0" />}
+            
+            {/* Articles List Container */}
+            <div className={cn(
+              "flex-1 overflow-hidden rounded-lg shadow-sm",
+              isSidebarOpen ? "h-full" : "h-[calc(100%-72px)]"
+            )}>
+              <div className="h-full overflow-auto">
+                <ArticlesList
+                  articles={articles}
+                  isLoading={isLoading}
+                  onArticleHover={handleArticleHover}
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Article Preview */}
-          <div className="h-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+          {/* Article Preview - Full Height */}
+          <div className="h-full overflow-auto rounded-lg border border-gray-200 bg-white shadow-sm">
             <ArticlePreview article={hoveredArticle} />
           </div>
         </div>
