@@ -1,0 +1,177 @@
+{
+  "id": "da6852c1-0e99-471a-bca9-2876ffef7c83",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.studies": {
+      "name": "studies",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "condition_id": {
+          "name": "condition_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "heading": {
+          "name": "heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "published_date": {
+          "name": "published_date",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "study_link": {
+          "name": "study_link",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "authors": {
+          "name": "authors",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pressure_used": {
+          "name": "pressure_used",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "number_of_treatments": {
+          "name": "number_of_treatments",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "peer_reviewed": {
+          "name": "peer_reviewed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "public_data": {
+          "name": "public_data",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "funded": {
+          "name": "funded",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "outcome_rating": {
+          "name": "outcome_rating",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "summary": {
+          "name": "summary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "introduction": {
+          "name": "introduction",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "outcomes": {
+          "name": "outcomes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "results": {
+          "name": "results",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conclusion": {
+          "name": "conclusion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conflicts_of_interest": {
+          "name": "conflicts_of_interest",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content_embedding": {
+          "name": "content_embedding",
+          "type": "vector(1536)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "content_embedding_idx": {
+          "name": "content_embedding_idx",
+          "columns": [
+            {
+              "expression": "content_embedding",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "vector_cosine_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "hnsw",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
