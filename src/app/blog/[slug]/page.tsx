@@ -1,188 +1,108 @@
-import Airtable from "airtable";
-import type { Metadata } from "next";
-import Image from "next/image";
-import { notFound } from "next/navigation";
-import Script from "next/script";
+"use client"
 
-import RichText from "~/components/utils/rich-text";
+import { useState, useEffect } from "react"
+import Image from "next/image"
+import { notFound } from "next/navigation"
 
-export interface BlogPagePost {
-  id: string;
-  fields: {
-    "URL Slug": string;
-    "ID Blog": number;
-    "Content Idea": string;
-    Title: string;
-    Introduction: string;
-    Body: string;
-    Conclusion: string;
-  };
-}
-
-async function getBlogPostBySlug(slug: string): Promise<BlogPagePost | null> {
-  const base = new Airtable({
-    apiKey: process.env.AIRTABLE_API_KEY,
-  }).base(process.env.AIRTABLE_BASE_ID ?? "");
-
-  return new Promise((resolve, reject) => {
-    base("Blogs")
-      .select({
-        filterByFormula: `{URL Slug} = '${slug}'`,
-        maxRecords: 1,
-      })
-      .firstPage((err, records) => {
-        if (err) {
-          console.error("Error fetching blog post:", err);
-          reject(new Error(String(err)));
-          return;
-        }
-        if (!records || records.length === 0) {
-          resolve(null);
-          return;
-        }
-        const record = records[0];
-        if (record) {
-          resolve({
-            id: record.id,
-            fields: record.fields as BlogPagePost["fields"],
-          });
-        } else {
-          resolve(null);
-        }
-      });
-  });
-}
+import RichText from "~/components/utils/rich-text"
+import ParallaxHeader from "~/components/blog/ParallaxHeader"
+import { getBlogPostBySlug } from "~/utils/airtable/blogs/getBlogPosts"
+import type { BlogPost } from "~/types/blog"
 
 type PageProps = {
-  params: Promise<{ slug: string }>;
-};
-
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getBlogPostBySlug(slug);
-
-  if (!post) {
-    return {
-      title: "Blog Post Not Found",
-      description: "The requested blog post could not be found.",
-    };
+  params: {
+    slug: string
   }
-
-  return {
-    title: `${post.fields.Title} | HBOT-HQ Blog`,
-    description: post.fields.Introduction.slice(0, 160),
-    openGraph: {
-      title: post.fields.Title,
-      description: post.fields.Introduction.slice(0, 160),
-      type: "article",
-      url: `https://www.hyperbarichq.com/blog/${post.fields["URL Slug"]}`,
-      images: [
-        {
-          url: `https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`,
-          width: 1000,
-          height: 500,
-          alt: post.fields.Title,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.fields.Title,
-      description: post.fields.Introduction.slice(0, 160),
-      images: [
-        `https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`,
-      ],
-    },
-  };
 }
 
-export default async function BlogPostPage({ params }: PageProps) {
-  const { slug } = await params;
-  const post = await getBlogPostBySlug(slug);
+
+
+export default function BlogPostPage({ params }: PageProps) {
+  const [post, setPost] = useState<BlogPost | null>(null)
+  const [scrollY, setScrollY] = useState(0)
+  const [windowHeight, setWindowHeight] = useState(0)
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      const fetchedPost = await getBlogPostBySlug(params.slug)
+      if (fetchedPost) {
+        setPost(fetchedPost)
+      } else {
+        notFound()
+      }
+    }
+    fetchPost()
+  }, [params.slug])
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight)
+    }
+    const handleScroll = () => setScrollY(window.scrollY)
+
+    handleResize()
+    handleScroll()
+
+    window.addEventListener("resize", handleResize)
+    window.addEventListener("scroll", handleScroll)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
 
   if (!post) {
-    notFound();
+    return <div>Loading...</div> // or any loading indicator you prefer
   }
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.fields.Title,
-    image: `https://d144dqt8e4woe2.cloudfront.net/blogs/header/${post.fields["ID Blog"]}.png`,
-    articleBody: `${post.fields.Introduction} ${post.fields.Body} ${post.fields.Conclusion}`,
-    url: `https://www.hyperbarichq.com/blog/${post.fields["URL Slug"]}`,
-    publisher: {
-      "@type": "Organization",
-      name: "HBOT-HQ",
-      logo: {
-        "@type": "ImageObject",
-        url: "https://hbot-hq.com/logo.png",
-      },
-    },
-  };
+  const progress = Math.min(scrollY / (windowHeight * 1.5), 1)
 
   return (
-    <>
-      <Script id="structured-data" type="application/ld+json">
-        {JSON.stringify(structuredData)}
-      </Script>
-      <article className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <header className="mb-10 text-center">
-          <h1 className="mb-4 text-4xl font-bold leading-tight text-gray-900 sm:text-5xl">
-            {post.fields.Title}
-          </h1>
-        </header>
+    <div className="relative min-h-screen">
+      <ParallaxHeader
+        title={post.fields["Content Idea"]}
+        imageUrl={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/header/${post.fields["ID Blog"]}.png`}
+      />
+      <div
+        className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8"
+        style={{
+          transform: `translateY(${(1 - progress) * 150}vh)`,
+        }}
+      >
+        <article className="bg-white rounded-t-3xl shadow-xl">
+          <div className="px-6 py-16">
+            <div className="mb-10 text-lg">
+              <RichText content={post.fields.Introduction} className="leading-relaxed" />
+            </div>
 
-        <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
-          <Image
-            src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/header/${post.fields["ID Blog"]}.png`}
-            alt={post.fields.Title}
-            width={1000}
-            height={500}
-            className="w-full object-cover"
-          />
-        </div>
+            <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
+              <Image
+                src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/bodyimage1/${post.fields["ID Blog"]}.png`}
+                alt={post.fields["Content Idea"]}
+                width={1000}
+                height={500}
+                className="w-full object-cover"
+              />
+            </div>
 
-        <div className="mb-10 text-lg">
-          <RichText
-            content={post.fields.Introduction}
-            className="leading-relaxed"
-          />
-        </div>
+            <div className="mb-10 text-lg">
+              <RichText content={post.fields["Enriched Blog"]} className="leading-relaxed" />
+            </div>
 
-        <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
-          <Image
-            src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/bodyimage1/${post.fields["ID Blog"]}.png`}
-            alt={post.fields.Title}
-            width={1000}
-            height={500}
-            className="w-full object-cover"
-          />
-        </div>
-
-        <div className="mb-10 text-lg">
-          <RichText content={post.fields.Body} className="leading-relaxed" />
-        </div>
-
-        <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
-          <Image
-            src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/bodyimage2/${post.fields["ID Blog"]}.png`}
-            alt={post.fields.Title}
-            width={1000}
-            height={500}
-            className="w-full object-cover"
-          />
-        </div>
-
-        <div className="mb-10 text-lg">
-          <RichText
-            content={post.fields.Conclusion}
-            className="leading-relaxed"
-          />
-        </div>
-      </article>
-    </>
-  );
+            <div className="mb-10 overflow-hidden rounded-lg shadow-lg">
+              <Image
+                src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/bodyimage2/${post.fields["ID Blog"]}.png`}
+                alt={post.fields["Content Idea"]}
+                width={1000}
+                height={500}
+                className="w-full object-cover"
+              />
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  )
 }
+

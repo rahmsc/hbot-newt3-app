@@ -54,4 +54,35 @@ const AccordionContent = React.forwardRef<
 ))
 AccordionContent.displayName = AccordionPrimitive.Content.displayName
 
-export { Accordion, AccordionContent,AccordionItem, AccordionTrigger }
+type AccordionProp = {
+  trigger: React.ReactNode
+  content: React.ReactNode
+  defaultOpen?: boolean
+}
+
+const AccordionTemplate = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Root>,
+  AccordionProp
+>(({ trigger, content, defaultOpen = false }, ref) => (
+  <Accordion 
+    type="single" 
+    defaultValue={defaultOpen ? "item-1" : undefined} 
+    collapsible
+    ref={ref}
+  >
+    <AccordionItem value="item-1">
+      <AccordionTrigger>{trigger}</AccordionTrigger>
+      <AccordionContent>{content}</AccordionContent>
+    </AccordionItem>
+  </Accordion>
+))
+
+AccordionTemplate.displayName = "AccordionTemplate"
+
+export { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger,
+  AccordionTemplate 
+}
