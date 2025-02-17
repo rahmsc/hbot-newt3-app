@@ -2,12 +2,12 @@
 
 import { ArrowRight, Phone, MessageSquare } from 'lucide-react'
 import Image from "next/image"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
-// import ChatWindow from "~/components/chat/chat-window" // Make sure this import path is correct
+import ChatWindow from "~/components/chat/chat-window"
 
 export function CTASubscriptionSection() {
-  // const [isChatOpen, setIsChatOpen] = useState(false)
+  const [isChatOpen, setIsChatOpen] = useState(false)
 
   return (
     <section className="relative w-full py-24 overflow-hidden">
@@ -73,20 +73,22 @@ export function CTASubscriptionSection() {
               Speak To A Specialist Right Now
               <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
             </a>
-            {/* <button
+            <button
               type="button"
               onClick={() => setIsChatOpen(true)}
-              className="group inline-flex w-auto items-center gap-3 rounded-full border-2 border-emerald-700 bg-white px-8 py-4 text-lg font-semibold text-emerald-700 transition-all hover:scale-105 hover:bg-gray-100  hover:shadow-lg"
+              className="group inline-flex w-auto items-center gap-3 rounded-full border-2 border-emerald-700 bg-white px-8 py-4 text-lg font-semibold text-emerald-700 transition-all hover:scale-105 hover:bg-gray-100 hover:shadow-lg"
             >
               <MessageSquare className="h-6 w-6" />
               Chat with AI Assistant
               <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
-            </button> */}
+            </button>
           </motion.div>
         </motion.div>
       </div>
 
-      {/* {isChatOpen && <ChatWindow onClose={() => setIsChatOpen(false)} />} */}
+      <AnimatePresence>
+        {isChatOpen && <ChatWindow onClose={() => setIsChatOpen(false)} />}
+      </AnimatePresence>
     </section>
   )
 }

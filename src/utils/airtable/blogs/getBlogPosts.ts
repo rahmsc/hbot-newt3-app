@@ -33,5 +33,5 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   const posts = await getBlogPosts()
-  return posts.find((post) => post.fields["URL Slug"] === slug) || null
+  return posts.find((post) => post.fields["URL Slug"] === slug) ?? null
 }

@@ -44,10 +44,10 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
       <div
         className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8"
         style={{
-          transform: `translateY(${(1 - progress) * 150}vh)`, // Increased initial offset
+          transform: `translateY(${(1 - progress) * 150}vh)`, // Changed from 150vh to 50vh
         }}
       >
-        <div className="bg-white rounded-t-3xl shadow-xl">
+        <div className="bg-white rounded-3xl shadow-xl pb-12">
           <div className="px-6 py-12 sm:px-12">
             <div className="flex flex-col justify-between space-y-4 text-left md:flex-row md:space-x-8 md:space-y-0">
               <div className="flex-1 space-y-2">

@@ -61,10 +61,10 @@
     --chart-5: 340 75% 55%;
   }
 
-  /* FONTS */
-
+  /* Base styles for elements */
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
 
   body {
@@ -96,10 +96,6 @@
     width: 100%;
     position: relative;
     scroll-behavior: smooth;
-  }
-
-  * {
-    box-sizing: border-box;
   }
 
   .container {
@@ -142,64 +138,69 @@
   }
 }
 
-.prose a {
-  color: #2563eb; /* blue-600 */
-  text-decoration: underline;
+/* Move utility classes outside of @layer base */
+@layer utilities {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+  }
+
+  .text-shadow-outline {
+    text-shadow:
+      -0.5px -0.5px 0 #000,
+      0.5px -0.5px 0 #000,
+      -0.5px 0.5px 0 #000,
+      0.5px 0.5px 0 #000;
+  }
+
+  .text-shadow-black {
+    text-shadow:
+      -1px -1px 0 #000,
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000;
+  }
+
+  .text-shadow-white {
+    text-shadow:
+      -1px -1px 0 #fff,
+      1px -1px 0 #fff,
+      -1px 1px 0 #fff,
+      1px 1px 0 #fff;
+  }
 }
 
-.prose a:hover {
-  color: #3b82f6; /* blue-500 */
+/* Move component styles to components layer */
+@layer components {
+  .prose a {
+    color: #2563eb; /* blue-600 */
+    text-decoration: underline;
+  }
+
+  .prose a:hover {
+    color: #3b82f6; /* blue-500 */
+  }
+
+  .prose p {
+    margin-bottom: 1rem;
+  }
 }
 
-.prose p {
-  margin-bottom: 1rem;
-}
+/* Remove redundant utility classes that Tailwind already provides */
+/* .overflow-x-hidden and .w-full are already provided by Tailwind */
 
-.overflow-x-hidden {
-  overflow-x: hidden;
-}
-
-.w-full {
-  width: 100%;
-}
-
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
-  border-radius: 3px;
-}
-
-.text-shadow-outline {
-  text-shadow:
-    -0.5px -0.5px 0 #000,
-    0.5px -0.5px 0 #000,
-    -0.5px 0.5px 0 #000,
-    0.5px 0.5px 0 #000;
-}
-.text-shadow-black {
-  text-shadow:
-    -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
-}
-
-.text-shadow-white {
-  text-shadow:
-    -1px -1px 0 #fff,
-    1px -1px 0 #fff,
-    -1px 1px 0 #fff,
-    1px 1px 0 #fff;
-}
+/* Remove custom container styles and use Tailwind's container instead */
+/* Configure container in tailwind.config.js if you need custom padding/max-width */
