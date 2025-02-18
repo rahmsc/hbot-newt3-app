@@ -7,6 +7,8 @@ import { useAuth } from "~/contexts/auth-context";
 import { useArticleBookmark } from "~/hooks/use-article-bookmark";
 import { Button } from "~/components/ui/button";
 import type { RandomArticleItemProps } from "~/utils/supabase/articles/getLatestArticles";
+import GlowingButton from "~/components/utils/glowing-button";
+import { useRouter } from "next/navigation";
 
 export function ArticleCard({
   id,
@@ -18,6 +20,7 @@ export function ArticleCard({
   published_date,
   conditionName,
 }: RandomArticleItemProps) {
+  const router = useRouter();
   const { user } = useAuth();
   const { isBookmarked, isLoading, toggleBookmark } = useArticleBookmark(
     id,
@@ -102,14 +105,9 @@ export function ArticleCard({
             <h3 className="font-['Raleway'] text-2xl font-normal leading-tight text-white drop-shadow-md">
               {heading}
             </h3>
-
-            {showCondition && (
-              <div className="flex flex-col items-center justify-between overflow-hidden rounded-full bg-white/10 p-2 backdrop-blur-sm">
-                <div className="font-['Roboto'] text-sm tracking-widest text-white">
-                  {conditionName}
-                </div>
-              </div>
-            )}
+            <div className="flex justify-center">
+              <GlowingButton text="Read More" onClick={() => router.push(`/research/${id}`)} />
+            </div>
           </div>
         </div>
       </div>
