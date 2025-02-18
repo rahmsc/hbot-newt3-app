@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 "use client"
 
 import { useState, useEffect } from "react"
@@ -8,10 +9,19 @@ import type { ArticlesProps } from "~/utils/supabase/articles/getArticleById"
 import AccordionTemplate from "../utils/accordion-template"
 import ParallaxHeader from "../blog/ParallaxHeader"
 import RichText from "../utils/rich-text"
+import { Button } from "../ui/button"
+import { BookmarkIcon } from "lucide-react"
+import { useArticleBookmark } from "~/hooks/use-article-bookmark"
+import { useAuth } from "~/contexts/auth-context";
 
 function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
   const [scrollY, setScrollY] = useState(0)
   const [windowHeight, setWindowHeight] = useState(0)
+  const { user } = useAuth();
+  const { isBookmarked, isLoading, toggleBookmark } = useArticleBookmark(
+    foundArticle.id,
+    user?.id,
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -69,6 +79,27 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
                     ? format(new Date(foundArticle.publishedDate), "MM/dd/yyyy")
                     : "Date not available"}
                 </p>
+              </div>
+              <div className="flex items-center justify-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleBookmark}
+                  disabled={isLoading}
+                  className={`h-10 w-10 overflow-hidden rounded-full p-2 transition-all ${
+                    isBookmarked 
+                      ? "bg-emerald-700/20 ring-2 ring-emerald-700 hover:bg-emerald-700/30" 
+                      : "bg-gray-100 hover:bg-gray-200"
+                  }`}
+                >
+                  <BookmarkIcon
+                    className={`h-5 w-5 transition-colors ${
+                      isBookmarked 
+                        ? "fill-emerald-700 text-emerald-700" 
+                        : "text-gray-600"
+                    }`}
+                  />
+                </Button>
               </div>
             </div>
 

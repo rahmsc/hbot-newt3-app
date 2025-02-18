@@ -19,21 +19,42 @@ export default async function ProfilePage() {
     redirect("/login");
   }
 
-  const { data: profileData, error: profileError } = await supabase
+  // Try to fetch the profile
+  // eslint-disable-next-line prefer-const
+  let { data: profileData, error: profileError } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
 
-  if (profileError) {
-    console.error("Error fetching profile:", profileError);
+  // If profile doesn't exist or there's an error, upsert it
+  if (profileError?.code === 'PGRST116' || profileError) {
+    const { data: upsertedProfile, error: upsertError } = await supabase
+      .from("profiles")
+      .upsert(
+        {
+          id: user.id,
+          full_name: user.user_metadata.full_name,
+          avatar_url: user.user_metadata.avatar_url,
+          updated_at: new Date().toISOString(),
+        },
+        {
+          onConflict: 'id',
+          returning: 'minimal'
+        }
+      )
+      .select()
+      .single();
+
+    if (upsertError) {
+      console.error("Error upserting profile:", upsertError);
+      return <div>Error creating profile</div>;
+    }
+
+    profileData = upsertedProfile;
   }
 
-  // Type assertion with proper type checking
-  const profile = profileData as Profile | null;
-  if (!profile) {
-    return <div>No profile data found</div>;
-  }
+  const profile = profileData as Profile;
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">

@@ -1,12 +1,10 @@
 import React from "react";
-import  LoginForm  from "~/components/auth/login/LoginForm";
+import LoginForm from "~/components/auth/login/LoginForm";
 
-const LoginPage = () => {
+export default function LoginPage() {
   return (
-    <div className="flex h-svh items-center">
+    <div className="flex min-h-screen items-center justify-center">
       <LoginForm />
     </div>
   );
-};
-
-export default LoginPage;
+}
