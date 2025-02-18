@@ -15,6 +15,7 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import type { HyperbaricCenter } from "~/types/map";
 import type { ProviderProps } from "~/types/providers";
+import Link from "next/link";
 
 const defaultCenter = { lat: -27.4705, lng: 153.026 }; // Brisbane coordinates
 
@@ -65,6 +66,13 @@ export default function HyperbaricLocator() {
           <div className="h-full w-96 overflow-y-auto border-r bg-white p-6">
             {/* Search Section */}
             <div className="space-y-4">
+            <Link href="/providers/submit" className="block">
+                    <Button 
+                      className="w-full bg-[#2B5741] text-white hover:bg-emerald-800 h-auto py-3 text-base font-semibold"
+                    >
+                      Submit Your Business
+                    </Button>
+                  </Link>
               <h2 className="font-['Raleway'] text-xl font-medium tracking-wide text-gray-900">
                 Find HBOT Providers
               </h2>

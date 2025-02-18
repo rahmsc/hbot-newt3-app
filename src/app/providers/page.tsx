@@ -1,6 +1,8 @@
 "use client"
 import dynamic from "next/dynamic"
 import { useState } from "react"
+import Link from "next/link"
+import { Button } from "~/components/ui/button"
 
 import { ProviderHeader } from "~/components/providers/provider-header"
 import { type FilterValues, ProviderFilters } from "~/components/providers/provider-filters"
@@ -39,12 +41,11 @@ export default function ProvidersPage() {
       <main>
         <div className="bg-[#FAF7F4]">
           <div className="container mx-auto space-y-12 py-8">
-            {/* Map section */}
+     
             <section>
               <HyperbaricLocator />
             </section>
 
-            {/* Providers filtering and listing section */}
             <section className="space-y-8">
               <div className="flex items-center justify-between">
                 <h2 className="font-['Raleway'] text-3xl font-medium tracking-[0.2em] text-gray-900">ALL PROVIDERS</h2>
