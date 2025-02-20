@@ -34,16 +34,17 @@ export function ResearchContent({
   categories,
   initialSelectedCategory,
   initialSelectedCondition,
-  initialSidebarOpen = false,
+  initialSidebarOpen = true,
 }: ResearchContentProps) {
   const [updatedCategories, setCategories] = useState(categories)
-  const [selectedConditionId, setSelectedConditionId] = useState<number | null>(initialSelectedCategory ?? null)
-  const [openCategory, setOpenCategory] = useState<string | undefined>(categories[0]?.categoryId.toString())
+  const [selectedConditionId, setSelectedConditionId] = useState<number | null>(null)
+  const [openCategory, setOpenCategory] = useState<string | undefined>(undefined)
   const [hoveredArticle, setHoveredArticle] = useState<ConditionIdArticlesProps | null>(null)
-  const [isSidebarOpen, setIsSidebarOpen] = useState(initialSidebarOpen)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [articles, setArticles] = useState<ConditionIdArticlesProps[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [sidebarSearchQuery, setSidebarSearchQuery] = useState("")
 
   const fetchArticles = useCallback(
     async (conditionId: number) => {
@@ -92,20 +93,11 @@ export function ResearchContent({
   )
 
   useEffect(() => {
-    console.log("Categories:", categories)
-    console.log("Initial selected category:", initialSelectedCategory)
-
-    if (selectedConditionId === null && categories.length > 0) {
-      const firstCondition = categories[0]?.conditions[0]
-      if (firstCondition) {
-        console.log("Setting initial condition ID:", firstCondition.id)
-        setSelectedConditionId(firstCondition.id)
-      }
-    } else if (selectedConditionId !== null) {
+    if (selectedConditionId !== null) {
       console.log("Fetching articles for selected condition:", selectedConditionId)
       void fetchArticles(selectedConditionId)
     }
-  }, [selectedConditionId, categories, fetchArticles, initialSelectedCategory])
+  }, [selectedConditionId, fetchArticles])
 
   const handleArticleHover = (article: ConditionIdArticlesProps | null) => {
     setHoveredArticle(article)
@@ -116,6 +108,39 @@ export function ResearchContent({
     .flatMap((category) => category.conditions)
     .find((condition) => condition.id === selectedConditionId)
 
+  // Enhanced handler for search suggestions
+  const handleSearchSuggestion = (term: string) => {
+    setIsSidebarOpen(true);
+    setSidebarSearchQuery(term);
+
+    // Find the condition that matches the search term
+    const matchingCondition = categories
+      .flatMap(category => category.conditions)
+      .find(condition => condition.name.toLowerCase() === term.toLowerCase());
+
+    // If we found a matching condition, select it and open its category
+    if (matchingCondition) {
+      setSelectedConditionId(matchingCondition.id);
+      
+      // Find and open the parent category
+      const parentCategory = categories.find(category =>
+        category.conditions.some(condition => condition.id === matchingCondition.id)
+      );
+      if (parentCategory) {
+        setOpenCategory(parentCategory.categoryId.toString());
+      }
+    }
+  };
+
+  // Update the selectedConditionId state handler to control sidebar
+  const handleConditionSelect = (id: number | null) => {
+    setSelectedConditionId(id);
+    // If clearing the selection (id is null), open the sidebar
+    if (id === null) {
+      setIsSidebarOpen(true);
+    }
+  };
+
   return (
     <div className="relative flex h-[calc(100vh-127px)] overflow-hidden rounded-lg border border-gray-200 shadow-md">
       <Sidebar
@@ -124,8 +149,10 @@ export function ResearchContent({
         selectedConditionId={selectedConditionId}
         openCategory={openCategory}
         onCategoryChange={setOpenCategory}
-        onConditionSelect={setSelectedConditionId}
+        onConditionSelect={handleConditionSelect}
         onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+        searchQuery={sidebarSearchQuery}
+        onSearchChange={setSidebarSearchQuery}
       />
 
       <div className="flex-1 overflow-hidden">
@@ -154,7 +181,10 @@ export function ResearchContent({
                 className="h-4 w-4 p-0 hover:bg-transparent"
                 onClick={(e) => {
                   e.stopPropagation()
-                  setSelectedConditionId(0)
+                  handleConditionSelect(null)
+                  setSidebarSearchQuery("")
+                  setArticles([])
+                  setHoveredArticle(null)
                 }}
               >
                 <X className="h-3 w-3" />
@@ -177,7 +207,12 @@ export function ResearchContent({
               )}
             >
               <div className="h-full overflow-auto">
-                <ArticlesList articles={articles} isLoading={isLoading} onArticleHover={handleArticleHover} />
+                <ArticlesList
+                  articles={articles}
+                  isLoading={isLoading}
+                  onArticleHover={handleArticleHover}
+                  onSearchSuggestionClick={handleSearchSuggestion}
+                />
               </div>
             </div>
           </div>

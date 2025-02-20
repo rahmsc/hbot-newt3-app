@@ -24,6 +24,8 @@ export interface SidebarProps {
   onCategoryChange: (value: string | undefined) => void;
   onConditionSelect: (id: number) => void;
   onSidebarToggle: () => void;
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
 }
 
 export function Sidebar({
@@ -34,8 +36,9 @@ export function Sidebar({
   onCategoryChange,
   onConditionSelect,
   onSidebarToggle,
+  searchQuery,
+  onSearchChange,
 }: SidebarProps) {
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCondition, setSelectedCondition] = useState<{name: string} | null>(null);
 
   // Find and set the selected condition whenever selectedConditionId changes
@@ -84,7 +87,7 @@ export function Sidebar({
             <Input
               placeholder="Search conditions..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => onSearchChange(e.target.value)}
               className="h-9 w-full rounded-md border border-gray-200 bg-white pl-9 pr-4 text-sm focus-visible:ring-1 focus-visible:ring-gray-200"
             />
           </div>
