@@ -3,132 +3,124 @@
 import { useState } from "react"
 import { Box, CheckCircle, Gauge, Users, X } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 import { Badge } from "~/components/ui/badge"
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog"
 import { ScrollArea } from "~/components/ui/scroll-area"
-import type { chambersDataProp } from "~/types/chambers"
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
 import GlowingButton from "../utils/glowing-button"
-import { ExpertInquiryForm } from "./expert-inquiry-form"
+import { ExpertInquiryForm } from "~/components/chambers/expert-inquiry-form"
+
+// Update the type to match your database schema
+interface ChamberProduct {
+  id: number
+  name: string | null
+  type: string | null
+  info: string | null
+  capacity: string | null
+  ata: string | null
+  features: string | null
+  size_guide: string | null
+  warranty: string | null
+  certification: string | null
+  benefits: string | null
+  tech_dco: string | null
+  inclusion: string | null
+  who_for: string | null
+}
 
 interface ChamberQuickViewProps {
   isOpen: boolean
   onClose: () => void
-  chamber: chambersDataProp | null
+  chamber: ChamberProduct | null
 }
 
 export function ChamberQuickView({ isOpen, onClose, chamber }: ChamberQuickViewProps) {
   const [showInquiryForm, setShowInquiryForm] = useState(false)
 
+  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/chambers/products/";
+
   if (!chamber) return null
 
-  const features = [
-    "Advanced Pressure Control",
-    "Comfortable Interior",
-    "Safety Certified",
-    "Easy Maintenance",
-    "Quiet Operation",
-    "Energy Efficient",
-  ]
+  const featuresList = chamber.features
+    ? chamber.features.split(',').map(f => f.trim()).slice(0, 4) // Only show first 4 features
+    : []
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl overflow-hidden rounded-xl bg-transparent p-0">
+      <DialogContent className="max-w-4xl overflow-hidden rounded-xl bg-transparent p-0">
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-full bg-white/80 p-2 backdrop-blur-sm transition-colors hover:bg-white/60"
-          aria-label="Close dialog"
+          className="absolute right-4 top-4 z-50 rounded-full bg-white/80 p-2 backdrop-blur-sm transition-colors hover:bg-white/60"
         >
-          <X className="h-6 w-6 text-white" />
+          <X className="h-6 w-6 text-black" />
         </button>
-        <div className="relative h-[85vh] w-full overflow-hidden rounded-3xl">
-          {/* Background Image */}
+        <div className="relative h-[80vh] w-full overflow-hidden rounded-3xl">
           <Image
-            src={chamber.image || "/placeholder.svg"}
-            alt={chamber.name || "Chamber"}
+            src={`${imageUrl}${chamber.id}.png`}
+            alt={chamber.name ?? "Chamber"}
             fill
             className="object-cover"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
 
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent" />
+          <div className="absolute inset-0 flex flex-col justify-between p-8">
+            <div className="space-y-6">
+              <div>
+                <h2 className="font-['Raleway'] text-4xl font-bold text-white">{chamber.name}</h2>
+                <p className="mt-2 text-xl text-gray-300">{chamber.type}</p>
+              </div>
 
-          {/* Content Section */}
-          <ScrollArea className="absolute inset-0 h-full w-full">
-            <div className="flex h-full flex-col justify-between p-10 text-white">
-              <div className="space-y-8">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-4">
-                    <Badge className="bg-emerald-700 text-white hover:bg-emerald-800">{chamber.type}</Badge>
-                    <h2 className="font-['Raleway'] text-5xl font-bold uppercase tracking-widest text-white">
-                      {chamber.name}
-                    </h2>
-                    <p className="text-2xl font-light text-gray-100">Experience the future of hyperbaric therapy</p>
-                  </div>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <GlowingButton
-                        text="Speak To An Expert"
-                        onClick={() => setShowInquiryForm(true)}
-                        className="mt-2"
-                      />
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <ExpertInquiryForm chamber={chamber} onClose={() => setShowInquiryForm(false)} />
-                    </DialogContent>
-                  </Dialog>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="rounded-lg bg-white/10 p-4 backdrop-blur-sm">
+                  <Users className="h-6 w-6 text-emerald-500" />
+                  <p className="mt-2 text-sm text-gray-300">Capacity</p>
+                  <p className="text-lg font-semibold text-white">{chamber.capacity}</p>
                 </div>
-
-                <div className="flex space-x-8">
-                  <div className="w-2/3 space-y-6">
-                    <div className="space-y-4 rounded-xl bg-black/30 p-6 backdrop-blur-sm">
-                      <h3 className="font-['Raleway'] text-3xl font-semibold uppercase tracking-wider text-emerald-700">
-                        About This Chamber
-                      </h3>
-                      <p className="text-xl leading-relaxed text-gray-100">{chamber.description}</p>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="flex flex-col items-center space-y-2 rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-                        <Users className="h-8 w-8 text-emerald-700" />
-                        <span className="text-xl font-bold text-white">{chamber.persons}</span>
-                        <span className="text-xs uppercase tracking-wide text-gray-400">Capacity</span>
-                      </div>
-                      <div className="flex flex-col items-center space-y-2 rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-                        <Gauge className="h-8 w-8 text-emerald-700" />
-                        <span className="text-xl font-bold text-white">{chamber.pressure}</span>
-                        <span className="text-xs uppercase tracking-wide text-gray-400">Max Pressure</span>
-                      </div>
-                      <div className="flex flex-col items-center space-y-2 rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-                        <Box className="h-8 w-8 text-emerald-700" />
-                        <span className="text-xl font-bold text-white">{chamber.type}</span>
-                        <span className="text-xs uppercase tracking-wide text-gray-400">Chamber Type</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="w-1/3 space-y-4 rounded-xl bg-black/30 p-6 backdrop-blur-sm">
-                    <h3 className="font-['Raleway'] text-2xl font-semibold uppercase tracking-wider text-emerald-700">
-                      Key Features
-                    </h3>
-                    <ul className="space-y-3">
-                      {features.map((feature) => (
-                        <li key={feature} className="flex items-center space-x-3">
-                          <CheckCircle className="h-5 w-5 text-emerald-700" />
-                          <span className="text-base text-gray-100">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <p className="mt-4 text-base text-gray-100">
-                      <span className="font-semibold text-gray-400">Brand:</span> {chamber.brand}
-                    </p>
-                  </div>
+                <div className="rounded-lg bg-white/10 p-4 backdrop-blur-sm">
+                  <Gauge className="h-6 w-6 text-emerald-500" />
+                  <p className="mt-2 text-sm text-gray-300">Pressure</p>
+                  <p className="text-lg font-semibold text-white">{chamber.ata}</p>
+                </div>
+                <div className="rounded-lg bg-white/10 p-4 backdrop-blur-sm">
+                  <Box className="h-6 w-6 text-emerald-500" />
+                  <p className="mt-2 text-sm text-gray-300">Type</p>
+                  <p className="text-lg font-semibold text-white">{chamber.type}</p>
                 </div>
               </div>
+
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-white">Key Features</h3>
+                <ul className="grid grid-cols-2 gap-3">
+                  {featuresList.map((feature) => (
+                    <li 
+                      key={feature} 
+                      className="flex items-center gap-3 rounded-lg bg-white/10 p-3 backdrop-blur-sm transition-colors hover:bg-white/20"
+                    >
+                      <div className="rounded-full bg-emerald-500/20 p-1.5">
+                        <CheckCircle className="h-4 w-4 text-emerald-500" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-200">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </ScrollArea>
+
+            <div className="flex gap-4">
+              <Link 
+                href={`/chambers/${chamber.name?.toLowerCase().replace(/\s+/g, '-')}`}
+                className="w-full"
+              >
+                <GlowingButton
+                  text="View Full Details"
+                  className="w-full"
+                />
+              </Link>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

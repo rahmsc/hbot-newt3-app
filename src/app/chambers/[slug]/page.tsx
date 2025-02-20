@@ -1,8 +1,9 @@
-"use client";
-
-import { Bookmark } from "lucide-react";
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { createClient } from "@supabase/supabase-js";
+import { Bookmark, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import {
   Accordion,
@@ -11,7 +12,7 @@ import {
   AccordionTrigger,
 } from "~/components/ui/accordion";
 import { Button } from "~/components/ui/button";
-import { combinedChamberData } from "~/data/combinedChambersData";
+import { getChamberData } from "~/utils/supabase/chambers/getChamberData";
 
 interface PageProps {
   params: {
@@ -19,14 +20,16 @@ interface PageProps {
   };
 }
 
-export default function ChamberProductPage({ params }: PageProps) {
-  const chamber = combinedChamberData.find(
-    (c) => c.name.toLowerCase().replace(/\s+/g, "-") === params.slug,
-  );
+export default async function ChamberProductPage({ params }: PageProps) {
+  const chamber = await getChamberData(params.slug)
+
+  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/chambers/products/";
 
   if (!chamber) {
-    return <div>Chamber not found</div>;
+    notFound()
   }
+
+  const features = chamber.features ? chamber.features.split(",").map((f: string) => f.trim()) : []
 
   return (
     <main className="min-h-screen bg-white">
@@ -36,30 +39,12 @@ export default function ChamberProductPage({ params }: PageProps) {
           <div className="space-y-4">
             <div className="relative aspect-square overflow-hidden rounded-3xl bg-gray-100">
               <Image
-                src={chamber.image}
-                alt={chamber.name}
+                src={`${imageUrl}${chamber.id}.png`}
+                alt={chamber.name || ""}
                 fill
                 className="object-cover"
                 priority
               />
-            </div>
-            <div className="flex gap-2">
-              <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200">
-                <Image
-                  src={chamber.image}
-                  alt={`${chamber.name} thumbnail 1`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200">
-                <Image
-                  src={chamber.image}
-                  alt={`${chamber.name} thumbnail 2`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
             </div>
           </div>
 
@@ -68,7 +53,7 @@ export default function ChamberProductPage({ params }: PageProps) {
             {/* Header Info */}
             <div>
               <p className="text-lg text-gray-600">
-                {chamber.type} | {chamber.pressure}
+                {chamber.type} | {chamber.ata} ATA
               </p>
               <h1 className="mt-2 text-6xl font-bold">{chamber.name}</h1>
             </div>
@@ -76,10 +61,10 @@ export default function ChamberProductPage({ params }: PageProps) {
             {/* Badges */}
             <div className="flex gap-3">
               <span className="rounded-full bg-teal-800 px-4 py-2 text-sm text-white">
-                {chamber.persons} Seater
+                {chamber.capacity}
               </span>
               <span className="rounded-full bg-black px-4 py-2 text-sm text-white">
-                {chamber.pressure}
+                {chamber.ata} ATA
               </span>
             </div>
 
@@ -104,7 +89,7 @@ export default function ChamberProductPage({ params }: PageProps) {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold">About This Chamber</h2>
               <p className="text-lg leading-relaxed text-gray-600">
-                {chamber.description}
+                {chamber.info}
               </p>
             </div>
 
@@ -115,85 +100,100 @@ export default function ChamberProductPage({ params }: PageProps) {
                   <AccordionTrigger className="text-xl font-bold">
                     Key Features
                   </AccordionTrigger>
-                  <AccordionContent>Features content...</AccordionContent>
+                  <AccordionContent>
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                      {features.map((feature, index) => (
+                        <div
+                          key={index}
+                          className="flex items-start gap-4 rounded-lg bg-gray-50 p-4 transition-all hover:bg-gray-100"
+                        >
+                          <div className="rounded-full bg-emerald-100 p-2">
+                            <CheckCircle className="h-5 w-5 text-emerald-600" />
+                          </div>
+                          <div>
+                            <p className="text-base font-medium text-gray-900">{feature}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="size" className="border-t">
                   <AccordionTrigger className="text-xl font-bold">
                     Size Guide
                   </AccordionTrigger>
-                  <AccordionContent>Size guide content...</AccordionContent>
+                  <AccordionContent>
+                    <p className="text-gray-600">{chamber.size_guide}</p>
+                  </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="warranty" className="border-t">
                   <AccordionTrigger className="text-xl font-bold">
                     Warranty
                   </AccordionTrigger>
-                  <AccordionContent>Warranty content...</AccordionContent>
+                  <AccordionContent>
+                    <p className="text-gray-600">{chamber.warranty}</p>
+                  </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="certifications" className="border-t">
                   <AccordionTrigger className="text-xl font-bold">
                     Certifications
                   </AccordionTrigger>
-                  <AccordionContent>Certifications content...</AccordionContent>
+                  <AccordionContent>
+                    <p className="text-gray-600">{chamber.certification}</p>
+                  </AccordionContent>
                 </AccordionItem>
               </Accordion>
             </div>
           </div>
         </div>
 
-        {/* About Section */}
+        {/* Benefits Section */}
         <section className="mx-auto max-w-5xl py-16">
           <h2 className="mb-8 text-center text-3xl font-bold">
             About The {chamber.name}
           </h2>
 
           <div className="space-y-4">
-            <div className="border-b border-gray-200">
-              <button
-                type="button"
-                className="flex w-full items-center justify-between py-6 text-left text-xl font-bold hover:opacity-70"
-              >
-                Benefits
-                <span className="text-2xl">+</span>
-              </button>
-            </div>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="benefits">
+                <AccordionTrigger className="text-xl font-bold py-6">
+                  Benefits
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-gray-600">{chamber.benefits}</p>
+                </AccordionContent>
+              </AccordionItem>
 
-            <div className="border-b border-gray-200">
-              <button
-                type="button"
-                className="flex w-full items-center justify-between py-6 text-left text-xl font-bold hover:opacity-70"
-              >
-                Supporting Research
-                <span className="text-2xl">+</span>
-              </button>
-            </div>
+              <AccordionItem value="tech">
+                <AccordionTrigger className="text-xl font-bold py-6">
+                  Technical Specifications
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-gray-600">{chamber.tech_dco}</p>
+                </AccordionContent>
+              </AccordionItem>
 
-            <div className="border-b border-gray-200">
-              <button
-                type="button"
-                className="flex w-full items-center justify-between py-6 text-left text-xl font-bold hover:opacity-70"
-              >
-                Inclusions
-                <span className="text-2xl">+</span>
-              </button>
-            </div>
+              <AccordionItem value="inclusions">
+                <AccordionTrigger className="text-xl font-bold py-6">
+                  Inclusions
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-gray-600">{chamber.inclusion}</p>
+                </AccordionContent>
+              </AccordionItem>
 
-            <div className="border-b border-gray-200">
-              <button
-                type="button"
-                className="flex w-full items-center justify-between py-6 text-left text-xl font-bold hover:opacity-70"
-              >
-                Who Is The {chamber.name} For?
-                <span className="text-2xl">+</span>
-              </button>
-            </div>
-
-            <p className="pt-4 text-center text-sm text-gray-500">
-              For Hyperbaric HQ members, text your private concierge at any time
-              with any question.
-            </p>
+              <AccordionItem value="who-for">
+                <AccordionTrigger className="text-xl font-bold py-6">
+                  Who Is The {chamber.name} For?
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-gray-600">{chamber.who_for}</p>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </section>
 
@@ -219,63 +219,6 @@ export default function ChamberProductPage({ params }: PageProps) {
             </Link>
           </div>
         </section>
-
-        {/* Members Also Viewed Section */}
-        <section className="mx-auto max-w-7xl py-24">
-          <h2 className="mb-16 text-center text-5xl font-bold">
-            Members Also Viewed
-          </h2>
-
-          <div className="grid gap-8 md:grid-cols-3">
-            {combinedChamberData
-              .filter((c) => c.id !== chamber.id)
-              .slice(0, 3)
-              .map((relatedChamber) => (
-                <Link
-                  key={relatedChamber.id}
-                  href={`/chambers/${relatedChamber.name.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="group block overflow-hidden rounded-2xl bg-white transition-all hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <div className="space-y-4">
-                    <div className="relative">
-                      <div className="relative aspect-[4/3] w-full overflow-hidden">
-                        <Image
-                          src={relatedChamber.image}
-                          alt={relatedChamber.name}
-                          fill
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                      </div>
-                      <div className="absolute right-4 top-4">
-                        <span className="rounded-full bg-[#E07B5C] px-4 py-2 text-sm font-medium text-white">
-                          {relatedChamber.pressure}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2 p-4">
-                      <p className="text-lg font-medium text-gray-600">
-                        {relatedChamber.type}
-                      </p>
-                      <h3 className="text-3xl font-bold">
-                        {relatedChamber.name}
-                      </h3>
-                      <p className="text-lg">
-                        Max Pressure: {relatedChamber.pressure}
-                      </p>
-                      <div className="pt-2">
-                        <span className="block w-full rounded-full bg-black py-4 text-center text-lg font-medium text-white transition-colors group-hover:bg-gray-800">
-                          Quick View
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-          </div>
-        </section>
-
-        {/* Rest of your existing sections */}
       </div>
     </main>
   );

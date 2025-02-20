@@ -18,21 +18,6 @@ const partners = [
     logo: "/images/chambers/member-benefits/onebase.png",
     alt: "OneBase logo",
   },
-  {
-    name: "OXYREVO",
-    logo: "/images/chambers/member-benefits/oxyrevo.png",
-    alt: "OXYREVO Hyperbaric Chamber",
-  },
-  {
-    name: "MACY-PAN",
-    logo: "/images/chambers/member-benefits/macy-pain.png",
-    alt: "MACY-PAIN hyperbaric O2 chamber",
-  },
-  {
-    name: "Feel Good",
-    logo: "/images/chambers/member-benefits/feelgood.png",
-    alt: "Feel Good",
-  },
 ];
 
 export function TrustedPartners() {
