@@ -16,14 +16,13 @@ import { Input } from "~/components/ui/input";
 import type { HyperbaricCenter } from "~/types/map";
 import type { ProviderProps } from "~/types/providers";
 import Link from "next/link";
-
-const defaultCenter = { lat: -27.4705, lng: 153.026 }; // Brisbane coordinates
+import { SAMPLE_PROVIDERS } from "~/components/landing/sections/providers-section";
+import { defaultMapCenter } from "~/data/providers";
 
 export default function HyperbaricLocator() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentLocation, setCurrentLocation] = useState(defaultCenter);
-  const [searchResults, setSearchResults] =
-    useState<ProviderProps[]>(providers);
+  const [currentLocation, setCurrentLocation] = useState(defaultMapCenter);
+  const [searchResults, setSearchResults] = useState(SAMPLE_PROVIDERS);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<
     HyperbaricCenter | ProviderProps | null
@@ -49,12 +48,21 @@ export default function HyperbaricLocator() {
 
   const handleSearch = useCallback(() => {
     setIsLoading(true);
-    // Add your search logic here using the searchQuery state
-    // For now, we'll just filter the providers based on the search query
-    const filteredProviders = providers.filter((provider) =>
-      provider.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    const filteredProviders = SAMPLE_PROVIDERS.filter((provider) =>
+      provider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      provider.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      provider.location.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setSearchResults(filteredProviders);
+    
+    // If there are results, center the map on the first result
+    if (filteredProviders.length > 0) {
+      setCurrentLocation({
+        lat: filteredProviders[0].latitude,
+        lng: filteredProviders[0].longitude,
+      });
+    }
+    
     setIsLoading(false);
   }, [searchQuery]);
 
@@ -131,6 +139,7 @@ export default function HyperbaricLocator() {
                       setCurrentLocation({
                         lat: provider.latitude,
                         lng: provider.longitude,
+                        zoom: 12, // Assuming a default zoom level of 12
                       });
                       setSelectedProvider(provider);
                     }}
@@ -270,7 +279,7 @@ export default function HyperbaricLocator() {
               <GoogleMap
                 mapContainerStyle={{ width: "100%", height: "100%" }}
                 center={currentLocation}
-                zoom={13}
+                zoom={defaultMapCenter.zoom}
               >
                 {searchResults.map((provider) => (
                   <Marker
