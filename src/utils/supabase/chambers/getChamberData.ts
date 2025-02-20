@@ -12,15 +12,30 @@ export async function getChamberData(slug: string): Promise<ChamberProps | null>
     console.log('Searching for name:', searchName);
 
     const { data, error } = await supabase
-      .from("chamber_products")
-      .select("*")
+      .from("chambers")
+      .select(`
+        id,
+        name,
+        type,
+        info,
+        capacity,
+        ata,
+        features,
+        size_guide,
+        warranty,
+        certification,
+        benefits,
+        tech_dco,
+        inclusion,
+        who_for
+      `)
       .ilike("name", searchName)
       .single();
 
     if (error) {
       console.error("Error fetching chamber data:", error);
       console.log("Query details:", {
-        table: "chamber_products",
+        table: "chambers",
         searchName,
         error
       });

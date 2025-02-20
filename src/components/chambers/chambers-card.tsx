@@ -3,15 +3,15 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-import type { chambersDataProp } from "~/types/chambers";
+import type { ChamberProps } from "~/types/chambers";
 
 import GlowingButton from "../utils/glowing-button";
 
 interface ChamberCardProps {
-  chamber: chambersDataProp;
+  chamber: ChamberProps;
   isSelected?: boolean;
   onClick?: () => void;
-  onQuickView: (chamber: chambersDataProp) => void;
+  onQuickView: (chamber: ChamberProps) => void;
 }
 
 export function ChamberCard({
@@ -24,15 +24,18 @@ export function ChamberCard({
 
   const {
     name = "",
-    persons = 0,
-    pressure = "",
-    image = "/placeholder.svg",
-    uniqueId = Math.random().toString(36).substr(2, 9),
-  } = chamber;
+    type = "",
+    info = "",
+    features = "",
+    id = 0,
+
+  } = chamber;  
+
+  const imageUrl = "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/"
 
   return (
     <motion.div
-      layoutId={`chamber-${chamber.uniqueId ?? uniqueId}`}
+        layoutId={`chamber-${chamber.id}`}
       onClick={onClick}
       className={`cursor-pointer ${isSelected ? "invisible" : ""}`}
       whileHover={{ scale: 1.03 }}
@@ -40,8 +43,8 @@ export function ChamberCard({
     >
       <div className="group relative h-[450px] w-[450px] overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 to-blue-600 shadow-lg transition-all duration-500 ease-in-out hover:shadow-2xl hover:shadow-emerald-500/20">
         <Image
-          src={image || "/placeholder.svg"}
-          alt={name}
+          src={`${imageUrl}${id}.png`}
+          alt={name ?? ""}
           fill
           className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -73,10 +76,10 @@ export function ChamberCard({
                   />
                 </svg>
                 <span className="font-mono text-sm">
-                  Capacity: {persons} {persons === 1 ? "Person" : "People"}
+                  Type: {type}
                 </span>
               </div>
-              {pressure && (
+              {info && (
                 <div className="flex items-center space-x-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +97,7 @@ export function ChamberCard({
                     />
                   </svg>
                   <span className="font-mono text-sm">
-                    Max Pressure: {pressure}
+                    Info: {info}
                   </span>
                 </div>
               )}

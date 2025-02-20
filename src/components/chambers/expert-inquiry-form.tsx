@@ -12,7 +12,7 @@ import { Input } from "~/components/ui/input"
 import { Textarea } from "~/components/ui/textarea"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form"
 import { toast } from "~/hooks/use-toast"
-import type { chambersDataProp } from "~/types/chambers"
+import type { ChamberProps } from "~/types/chambers"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -27,7 +27,7 @@ const formSchema = z.object({
 })
 
 interface InquiryFormProps {
-  chamber: chambersDataProp
+  chamber: ChamberProps
   onClose: () => void
 }
 

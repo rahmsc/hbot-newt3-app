@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 "use server"
 
-import { hash } from "bcryptjs"
 import { createClient } from "@supabase/supabase-js"
+import { hash } from "node:crypto"
 import { z } from "zod"
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL?? "", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "")
@@ -15,6 +15,7 @@ const SignupSchema = z.object({
   referralSource: z.string(),
 })
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export async function signup(prevState: any, formData: FormData) {
   try {
     const data = {
@@ -29,7 +30,7 @@ export async function signup(prevState: any, formData: FormData) {
     const validated = SignupSchema.parse(data)
 
     // Hash the password
-    const hashedPassword = await hash(validated.password, 12)
+    const hashedPassword = hash("sha256", validated.password)
 
     // Insert into database
     const { error } = await supabase.from("profiles").insert({

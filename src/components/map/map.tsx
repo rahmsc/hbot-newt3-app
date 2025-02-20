@@ -12,24 +12,13 @@ import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import type { ProviderCardProps } from "~/types/providers";
-import { SAMPLE_PROVIDERS } from "~/components/landing/sections/providers-section";
+import type { HyperbaricCenter } from "~/types/map";
 
 interface MapProps {
   center: [number, number];
   zoom?: number;
-  centers: ProviderCardProps[];
+  centers: HyperbaricCenter[];
 }
-
-// Convert SAMPLE_PROVIDERS to the format needed for markers
-const mapCenters = SAMPLE_PROVIDERS.map(provider => ({
-  id: provider.id,
-  name: provider.name,
-  position: [provider.latitude, provider.longitude] as [number, number],
-  address: provider.address,
-  phone: provider.phone,
-  website: provider.website,
-}));
 
 // Component to handle map updates
 function MapUpdater({
@@ -52,7 +41,7 @@ const Map = ({ center: defaultCenter, zoom = 13, centers }: MapProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentCenter, setCurrentCenter] = useState(defaultCenter);
   const [nearestCenters, setNearestCenters] =
-    useState<ProviderCardProps[]>(centers);
+    useState<HyperbaricCenter[]>(centers);
   const [isLoading, setIsLoading] = useState(false);
 
   // Function to calculate distance between two points

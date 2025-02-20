@@ -9,7 +9,6 @@ import {
 import { Bookmark, MapPin, Search, Star } from "lucide-react";
 import { useCallback, useState } from "react";
 
-import { providers } from "~/components/providers/provider-list";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
@@ -58,8 +57,9 @@ export default function HyperbaricLocator() {
     // If there are results, center the map on the first result
     if (filteredProviders.length > 0) {
       setCurrentLocation({
-        lat: filteredProviders[0].latitude,
-        lng: filteredProviders[0].longitude,
+        lat: filteredProviders[0]?.latitude ?? 0,
+        lng: filteredProviders[0]?.longitude ?? 0,
+        zoom: 12,
       });
     }
     
@@ -107,6 +107,7 @@ export default function HyperbaricLocator() {
                         const newLocation = {
                           lat: position.coords.latitude,
                           lng: position.coords.longitude,
+                          zoom: 12,
                         };
                         setCurrentLocation(newLocation);
                       });

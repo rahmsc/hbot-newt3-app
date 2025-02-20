@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import { Clock, MapPin, Phone, Star, X } from "lucide-react";
-import type { ProviderCardProps } from "~/types/providers";
+import type { Provider } from "~/types/providers";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
 import GlowingButton from "../utils/glowing-button";
 
 interface ProviderQuickViewProps {
   isOpen: boolean;
   onClose: () => void;
-  provider: ProviderCardProps;
+  provider: Provider;
 }
 
 export function ProviderQuickView({
@@ -73,44 +73,53 @@ export function ProviderQuickView({
                 <MapPin className="h-5 w-5 text-gray-400" />
                 <span className="text-gray-600">{provider.location}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-gray-400" />
-                <span className="text-gray-600">
-                  Next Available: {provider.nextAvailable}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-5 w-5 text-gray-400" />
-                <span className="text-gray-600">{provider.phone}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-gray-400" />
-                <span className="text-gray-600">{provider.hours}</span>
-              </div>
+              {provider.nextAvailable && (
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-gray-400" />
+                  <span className="text-gray-600">
+                    Next Available: {provider.nextAvailable}
+                  </span>
+                </div>
+              )}
+              {provider.phone && (
+                <div className="flex items-center gap-2">
+                  <Phone className="h-5 w-5 text-gray-400" />
+                  <span className="text-gray-600">{provider.phone}</span>
+                </div>
+              )}
+              {provider.hours && (
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-gray-400" />
+                  <span className="text-gray-600">{provider.hours}</span>
+                </div>
+              )}
             </div>
 
             {/* Specialties */}
-            <div>
-              <h3 className="mb-3 font-medium text-gray-900">Specialties</h3>
-              <div className="flex flex-wrap gap-2">
-                {provider.categories.map((category) => (
-                  <span
-                    key={category}
-                    className="rounded-full border border-emerald-700 bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
-                  >
-                    {category}
-                  </span>
-                ))}
+            {provider.categories && (
+              <div>
+                <h3 className="mb-3 font-medium text-gray-900">Specialties</h3>
+                <div className="flex flex-wrap gap-2">
+                  {provider.categories.map((category) => (
+                    <span
+                      key={category}
+                      className="rounded-full border border-emerald-700 bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
+                    >
+                      {category}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Action */}
             <div className="mt-auto">
               <GlowingButton
                 text="Visit Website"
                 onClick={() => {
-                  // Add logic to visit the provider's website
-                  console.log("Visiting website for", provider.name);
+                  if (provider.website) {
+                    window.open(provider.website, '_blank');
+                  }
                 }}
                 className="w-full"
               />

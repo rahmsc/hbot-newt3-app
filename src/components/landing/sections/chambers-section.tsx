@@ -9,14 +9,14 @@ import { useEffect, useState } from "react";
 import { ChamberCard } from "~/components/chambers/chambers-card";
 import { ChamberQuickView } from "~/components/chambers/chambers-quick-view";
 import { Button } from "~/components/ui/button";
-import { combinedChamberData } from "~/data/combinedChambersData";
-import type { chambersDataProp } from "~/types/chambers";
-import { cn } from "~/lib/utils";
+import type { ChamberProps } from "~/types/chambers";
+import { createClient } from "~/utils/supabase/client";
 
 export function ChambersSection() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
-  const [selectedChamber, setSelectedChamber] =
-    useState<chambersDataProp | null>(null);
+  const [selectedChamber, setSelectedChamber] = useState<ChamberProps | null>(null);
+  const [chambers, setChambers] = useState<ChamberProps[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
@@ -39,25 +39,37 @@ export function ChambersSection() {
   );
 
   useEffect(() => {
-    const ids = combinedChamberData.map((chamber) => chamber.uniqueId);
-    const uniqueIds = new Set(ids);
-    if (ids.length !== uniqueIds.size) {
-      console.warn("Duplicate uniqueIds found in chambers data");
+    async function fetchChambers() {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("chambers")
+        .select("*")
+        .order("id");
+
+      if (!error && data) {
+        setChambers(data);
+      }
+      setIsLoading(false);
     }
+
+    void fetchChambers();
   }, []);
+
+  if (isLoading) {
+    return <div>Loading chambers...</div>;
+  }
 
   return (
     <section className="w-full pb-12">
       <div className="h-px w-full bg-gray-600" />
       <div className="flex items-center justify-between px-16 py-2">
         <div className="space-y-2">
-
           <h2 className="font-['Raleway'] text-2xl font-normal tracking-[0.3em] text-gray-700">
             EXPLORE CHAMBERS
           </h2>
-        <h4 className="text-sm text-gray-500">
-          The best chambers at the best prices. Guaranteed.
-        </h4>
+          <h4 className="text-sm text-gray-500">
+            The best chambers at the best prices. Guaranteed.
+          </h4>
         </div>
         <Link href="/chambers">
           <Button
@@ -68,15 +80,14 @@ export function ChambersSection() {
           </Button>
         </Link>
       </div>
-      {/* <div className="h-px w-full bg-gray-600" /> */}
 
       <div className="relative px-8 pt-12">
         {/* Carousel Container */}
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex">
-            {combinedChamberData.map((chamber) => (
+            {chambers.map((chamber) => (
               <div
-                key={chamber.uniqueId}
+                key={chamber.id}
                 className="min-w-0 flex-[0_0_100%] px-1 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
               >
                 <ChamberCard

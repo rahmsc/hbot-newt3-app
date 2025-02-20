@@ -5,12 +5,12 @@ import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Button } from "~/components/ui/button";
-import type { ProviderCardProps } from "~/types/providers";
 import { ProviderQuickView } from "../../providers/provider-quick-view";
 import { ProviderCard } from "~/components/providers/provider-card";
+import type { Provider } from "~/types/providers";
 
 export const SAMPLE_PROVIDERS = [
   
@@ -145,8 +145,8 @@ export const SAMPLE_PROVIDERS = [
 
 export default function ProvidersSection() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
-  const [selectedProvider, setSelectedProvider] =
-    useState<ProviderCardProps | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
+  const [providers, setProviders] = useState<Provider[]>([]);
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
@@ -158,7 +158,14 @@ export default function ProvidersSection() {
         "(min-width: 1024px)": { slidesToScroll: 3 },
       },
     },
-    [Autoplay()]
+    [
+      Autoplay({
+        delay: 3000,
+        stopOnInteraction: false,
+        stopOnMouseEnter: true,
+        rootNode: (emblaRoot) => emblaRoot.parentElement,
+      }),
+    ],
   );
 
   return (
@@ -187,13 +194,21 @@ export default function ProvidersSection() {
         {/* Carousel Container */}
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex">
-            {SAMPLE_PROVIDERS.map((provider, index) => (
+            {providers.map((provider, index) => (
               <div
                 key={index}
                 className="min-w-0 flex-[0_0_100%] px-4 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
               >
                 <ProviderCard
-                  {...provider}
+                  name={provider.name ?? ""}
+                  rating={provider.rating ?? 0}
+                  reviewCount={provider.reviewCount ?? 0}
+                  location={provider.location ?? ""}
+                  image={provider.image ?? ""}
+                  distance={provider.distance ?? 0}
+                  latitude={provider.latitude ?? 0}
+                  longitude={provider.longitude ?? 0}
+                  id={provider.id ?? ""}
                   onQuickView={() => {
                     setSelectedProvider(provider);
                     setIsQuickViewOpen(true);

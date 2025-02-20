@@ -40,7 +40,7 @@ export default async function ChamberProductPage({ params }: PageProps) {
             <div className="relative aspect-square overflow-hidden rounded-3xl bg-gray-100">
               <Image
                 src={`${imageUrl}${chamber.id}.png`}
-                alt={chamber.name || ""}
+                alt={chamber.name ?? ""}
                 fill
                 className="object-cover"
                 priority

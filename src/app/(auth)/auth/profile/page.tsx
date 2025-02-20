@@ -31,18 +31,14 @@ export default async function ProfilePage() {
   if (profileError?.code === 'PGRST116' || profileError) {
     const { data: upsertedProfile, error: upsertError } = await supabase
       .from("profiles")
-      .upsert(
-        {
-          id: user.id,
-          full_name: user.user_metadata.full_name,
-          avatar_url: user.user_metadata.avatar_url,
-          updated_at: new Date().toISOString(),
-        },
-        {
-          onConflict: 'id',
-          returning: 'minimal'
-        }
-      )
+      .upsert({
+        id: user.id,
+        full_name: user.user_metadata.full_name,
+        avatar_url: user.user_metadata.avatar_url,
+        updated_at: new Date().toISOString(),
+      }, {
+        onConflict: 'id'
+      })
       .select()
       .single();
 

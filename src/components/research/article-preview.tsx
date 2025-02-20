@@ -26,7 +26,7 @@ export function ArticlePreview({ article }: ArticlePreviewProps) {
     <div className="flex h-full flex-col bg-white p-8">
       {/* Article Image */}
       <div className="mb-6 relative h-48 w-full overflow-hidden rounded-xl">
-        <Image src={article.image_url || "/placeholder.svg"} alt={article.heading} fill className="object-cover" />
+        <Image src={"/images/products/1.png"} alt={article.heading ?? ""} fill className="object-cover" />
       </div>
 
       {/* Author and Date */}
