@@ -1,7 +1,11 @@
 "use server";
 
+import { Resend } from 'resend';
+import { WelcomeEmail } from '~/components/emails/templates/welcome-email';
 import { createClient } from "~/utils/supabase/server";
 import { cookies } from "next/headers";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const isValidEmail = (email: string) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,12 +35,20 @@ export async function subscribeToNewsletter(
       return { success: false, message: "Please enter a valid email address." };
     }
 
-    // Check if email already exists in subscribe table
-    const { data: existingSubscription } = await supabase
+    // Check if email already exists
+    const { data: existingSubscription, error: checkError } = await supabase
       .from("subscribe")
-      .select("*")
+      .select("id")
       .eq("email", email)
       .single();
+
+    if (checkError && checkError.code !== 'PGRST116') { // PGRST116 is "not found" error
+      console.error("Check error:", checkError);
+      return { 
+        success: false, 
+        message: "Error checking subscription status." 
+      };
+    }
 
     if (existingSubscription) {
       return { 
@@ -45,21 +57,17 @@ export async function subscribeToNewsletter(
       };
     }
 
-    // Get user ID if the email exists in auth.users
-    const { data: userData } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("email", email)
-      .single();
-
-    // Insert into subscribe table
+    // Get user_id if user is authenticated
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    // Insert new subscription
     const { error: subscribeError } = await supabase
       .from("subscribe")
       .insert([
         {
-          email: email,
-          user_id: userData?.id || null, // Will be null if user doesn't exist
-        },
+          email,
+          user_id: user?.id ?? null,
+        }
       ]);
 
     if (subscribeError) {
@@ -70,9 +78,34 @@ export async function subscribeToNewsletter(
       };
     }
 
+    // Send welcome email after successful subscription
+    try {
+      console.log('Attempting to send email to:', email);
+      
+      const emailResponse = await resend.emails.send({
+        from: 'breathebetter@hyperbarichq.com', // Replace with your verified domain
+        to: email,
+        subject: 'Welcome to HQ Insider!',
+        react: WelcomeEmail({ email }),
+      });
+      
+      console.log('Resend API Response:', emailResponse);
+      
+    } catch (emailError) {
+      // Detailed error logging
+      console.error('Resend Error Details:', {
+        error: emailError
+      });
+      
+      return { 
+        success: true, 
+        message: "Successfully subscribed! (Welcome email delivery delayed)" 
+      };
+    }
+
     return { 
       success: true, 
-      message: "Successfully subscribed to our newsletter!" 
+      message: "Successfully subscribed! Please check your email for confirmation." 
     };
 
   } catch (error) {
