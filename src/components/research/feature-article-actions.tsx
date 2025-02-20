@@ -15,7 +15,7 @@ export function FeatureArticleActions({
         <GlowingButton
           text="Read More"
           onClick={onReadMore}
-          className="flex items-center gap-2 text-xs font-medium text-emerald-700 hover:text-emerald-500"
+          className="flex items-center gap-2 text-lg font-medium text-emerald-700 hover:text-emerald-500"
         />
       </div>
     </div>
