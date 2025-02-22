@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "~/components/ui/badge"
+import { useState } from "react"
 
 export interface TrendingArticleProps {
   category: {
@@ -21,15 +22,18 @@ interface TrendingCardProps {
 }
 
 export function TrendingCard({ article, size = "medium" }: TrendingCardProps) {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <Link href={article.link} className="group block h-full">
       <article className="relative h-full w-full overflow-hidden rounded-[2rem] bg-white">
         <Image
-          src={article.image || "/placeholder.svg"}
+          src={imgError ? "/placeholder.png" : article.image}
           alt={article.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           sizes="(max-width: 768px) 85vw, (max-width: 1200px) 50vw, 33vw"
+          onError={() => setImgError(true)}
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />

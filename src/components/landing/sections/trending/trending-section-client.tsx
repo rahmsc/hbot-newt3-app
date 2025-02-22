@@ -3,6 +3,7 @@
 import { useState } from "react"
 import useEmblaCarousel from "embla-carousel-react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import Image from "next/image"
 
 import { type TrendingArticleProps, TrendingCard } from "~/components/trending/trending-card"
 import { TrendingFilter } from "~/components/trending/trending-filter"
@@ -36,7 +37,11 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
     })
     .slice(0, 5)
 
-  if (filteredArticles.length === 0) {
+  console.log('Filtered articles:', filteredArticles); // Debug log
+
+  console.log('TrendingSectionClient received articles:', initialArticles); // Debug log
+
+  if (!initialArticles || initialArticles.length === 0) {
     return (
       <section className="w-full bg-[#FAF7F4] pb-12">
         <div className="p-4 text-center">No articles available</div>
