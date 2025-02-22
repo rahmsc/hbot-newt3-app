@@ -81,7 +81,7 @@ export async function signInWithGoogle() {
   const supabase = await createClient();
   
   // Get the site URL from environment, falling back to the default if needed
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 
     (process.env.NEXT_PUBLIC_VERCEL_URL ? 
       `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : 
       'http://localhost:3000');

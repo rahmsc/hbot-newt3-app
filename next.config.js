@@ -13,6 +13,21 @@ const nextConfig = {
       "picsum.photos",
       "drive.google.com",
     ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'hbothq-bucket.s3.ap-southeast-2.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
+      // Add any other domains you need to support
+      {
+        protocol: 'https',
+        hostname: 'd144dqt8e4woe2.cloudfront.net',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
   experimental: {
     serverActions: {

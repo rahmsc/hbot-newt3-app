@@ -53,13 +53,13 @@ export default function FeaturedArticleCard({
   return (
     <div className={cn("group relative w-full overflow-hidden rounded-[2rem]", isMobile ? "h-[600px]" : "h-[650px]")}>
       {/* Background Image */}
-      <img
+      <Image
         src={imageUrl}
         alt={heading}
-        // fill
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        width={800}
+        height={400}
         className="object-cover transition-transform duration-300 group-hover:scale-105"
-        // priority
+        priority={true}
       />
 
       {/* Gradient Overlay */}
