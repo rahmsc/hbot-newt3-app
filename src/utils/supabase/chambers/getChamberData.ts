@@ -12,7 +12,7 @@ export async function getChamberData(slug: string): Promise<ChamberProps | null>
     console.log('Searching for name:', searchName);
 
     const { data, error } = await supabase
-      .from("chambers")
+      .from("chamber_products")
       .select(`
         id,
         name,
