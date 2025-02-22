@@ -21,3 +21,5 @@ export default async function Home(): Promise<JSX.Element> {
     </main>
   );
 }
+
+export const dynamic = 'force-dynamic'

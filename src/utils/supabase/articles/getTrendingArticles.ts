@@ -31,14 +31,19 @@ export async function getTrendingArticles(): Promise<TrendingArticle[]> {
     
     // Fetch both blogs and guides
     const [blogPosts, guides] = await Promise.all([
-      getBlogPosts(),
-      getAllGuides(),
+      getBlogPosts().catch(() => []),
+      getAllGuides().catch(() => []),
     ]);
 
     console.log('Fetched data:', { 
-      blogPostsCount: blogPosts.length, 
-      guidesCount: guides.length 
+      blogPostsCount: blogPosts?.length ?? 0, 
+      guidesCount: guides?.length ?? 0 
     });
+
+    // If both fetches fail, return empty array instead of throwing
+    if (!blogPosts?.length && !guides?.length) {
+      return [];
+    }
 
     // Map blog posts to TrendingArticle format
     const blogArticles = blogPosts
@@ -93,6 +98,6 @@ export async function getTrendingArticles(): Promise<TrendingArticle[]> {
     return allArticles;
   } catch (error) {
     console.error("Error fetching trending articles:", error);
-    throw error; // Let's throw the error to see what's happening
+    return []; // Return empty array instead of throwing
   }
 }

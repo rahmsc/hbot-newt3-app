@@ -38,3 +38,5 @@ export default async function TrendingPage() {
   )
 }
 
+export const dynamic = 'force-dynamic'
+
