@@ -27,11 +27,18 @@ export interface TrendingArticle {
 
 export async function getTrendingArticles(): Promise<TrendingArticle[]> {
   try {
+    console.log('Starting getTrendingArticles fetch');
+    
     // Fetch both blogs and guides
     const [blogPosts, guides] = await Promise.all([
       getBlogPosts(),
       getAllGuides(),
     ]);
+
+    console.log('Fetched data:', { 
+      blogPostsCount: blogPosts.length, 
+      guidesCount: guides.length 
+    });
 
     // Map blog posts to TrendingArticle format
     const blogArticles = blogPosts
@@ -45,13 +52,15 @@ export async function getTrendingArticles(): Promise<TrendingArticle[]> {
         description: post.fields.Introduction,
         image: post.fields["ID Blog"]
           ? `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/${post.fields["ID Blog"]}.png`
-          : "/placeholder.svg",
+          : "/placeholder.png",
         link: `/blog/${post.fields["URL Slug"]}`,
         date: post.fields.Date
           ? new Date(post.fields.Date).toISOString()
           : new Date().toISOString(),
         type: "blog" as const,
       }));
+
+    console.log('Processed blog articles:', blogArticles.length);
 
     // Map guides to TrendingArticle format
     const guideArticles = guides
@@ -66,9 +75,7 @@ export async function getTrendingArticles(): Promise<TrendingArticle[]> {
         },
         title: guide.fields["Guide Title"],
         description: guide.fields["Guide Introduction"],
-        image: guide.fields["ID Blog"]
-          ? `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/guides/${guide.fields["ID Blog"]}.png`
-          : "/placeholder.svg",
+        image: "/placeholder.png",
         link: `/guide/${guide.fields["ID Blog"]}`,
         date: guide.fields.Date
           ? new Date(guide.fields.Date).toISOString()
@@ -82,9 +89,10 @@ export async function getTrendingArticles(): Promise<TrendingArticle[]> {
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, 6); // Get only the 6 most recent articles
 
+    console.log('Final articles count:', allArticles.length);
     return allArticles;
   } catch (error) {
     console.error("Error fetching trending articles:", error);
-    return [];
+    throw error; // Let's throw the error to see what's happening
   }
 }
