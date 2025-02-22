@@ -2,32 +2,23 @@ import { NextResponse } from "next/server";
 import { createClient } from "~/utils/supabase/server";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-  // if "next" is in param, use it as the redirect URL
-  const next = searchParams.get("next") ?? "/auth/profile";
-
+  // Get the code from either the query params or the root URL
+  const url = new URL(request.url);
+  const code = url.searchParams.get("code") ?? url.pathname.split("/").pop();
+  const next = url.searchParams.get("next") ?? "/auth/profile";
+  
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      const forwardedHost = request.headers.get("x-forwarded-host");
-      const isLocalEnv = process.env.NODE_ENV === "development";
-
-      // Handle different environments and forwarded hosts
-      if (isLocalEnv) {
-        // In development, we can trust the origin
-        return NextResponse.redirect(`${origin}${next}`);
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+      if (!baseUrl) {
+        console.error("NEXT_PUBLIC_SITE_URL is not defined");
+        return NextResponse.redirect("/auth/error");
       }
-      if (forwardedHost) {
-        // In production with a load balancer
-        return NextResponse.redirect(`https://${forwardedHost}${next}`);
-      }
-      // Default fallback
-      return NextResponse.redirect(`${origin}${next}`);
+      return NextResponse.redirect(`${baseUrl}${next}`);
     }
   }
 
-  // Return the user to an error page if something went wrong
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/auth/error`);
 }

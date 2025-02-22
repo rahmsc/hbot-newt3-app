@@ -5,11 +5,18 @@ import { ChromeIcon as GoogleIcon } from "lucide-react"
 import { signInWithGoogle } from "~/app/(auth)/auth/login/action"
 
 export default function SignInWithGoogleButton() {
+  const handleClick = async () => {
+    // Debug log to see environment variables
+    console.log('Site URL:', process.env.NEXT_PUBLIC_SITE_URL);
+    console.log('Vercel URL:', process.env.NEXT_PUBLIC_VERCEL_URL);
+    await signInWithGoogle();
+  };
+
   return (
     <Button
       type="button"
       variant="outline"
-      onClick={() => signInWithGoogle()}
+      onClick={handleClick}
       className="h-9 w-full border-gray-200 bg-white text-black hover:bg-gray-100"
     >
       <GoogleIcon className="mr-2 h-4 w-4" />

@@ -47,6 +47,7 @@ export default function ProvidersSection() {
           <div className="flex -ml-4">
             {providers.map((provider, index) => (
               <div
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 key={index}
                 className="pl-4 flex-none min-w-0 w-[85%] sm:w-1/2 lg:w-1/3"
               >
