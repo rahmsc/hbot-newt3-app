@@ -57,6 +57,8 @@ export function TopNav() {
     },
   })
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640 // sm breakpoint
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY
@@ -159,10 +161,79 @@ export function TopNav() {
     }, 100)
   }
 
+  const SearchResults = () => (
+    <Command shouldFilter={false}>
+      <CommandList>
+        <CommandEmpty>
+          {isStudiesLoading ? (
+            <div className="flex items-center justify-center p-4">
+              <span className="text-sm text-muted-foreground">Searching...</span>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center p-6 text-sm text-muted-foreground">
+              <SearchIcon className="mb-2 h-10 w-10 text-muted-foreground/50" />
+              <p>No studies found</p>
+            </div>
+          )}
+        </CommandEmpty>
+        <CommandGroup heading="Search Results">
+          {studies.map((study, index) => (
+            <CommandItem
+              key={study.id}
+              onSelect={() => {
+                router.push(`/research/${study.id}`)
+                setOpen(false)
+                setSearchTerm("")
+                setIsSearchExpanded(false)
+              }}
+              className={cn("px-4 py-3", index % 2 === 0 ? "bg-white" : "bg-gray-100")}
+            >
+              <div className="flex flex-col gap-1">
+                <h4 className="font-body">
+                  <HighlightedText text={study.heading} highlight={searchTerm} />
+                </h4>
+                <p className="line-clamp-2 text-sm text-muted-foreground">
+                  <HighlightedText text={study.summary} highlight={searchTerm} />
+                </p>
+                <div className="mt-1 flex flex-wrap items-center gap-3 text-xs">
+                  <div className="flex items-center gap-1 text-muted-foreground">
+                    <UsersIcon className="h-3 w-3" />
+                    <HighlightedText
+                      text={study.authors}
+                      highlight={searchTerm}
+                      className="max-w-[200px] truncate"
+                    />
+                  </div>
+                  <div className="flex items-center gap-1 text-muted-foreground">
+                    <CalendarIcon className="h-3 w-3" />
+                    <span>{formatDate(study.published_date)}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 font-mono">
+                      {study.pressure_used}
+                    </span>
+                    <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-400 font-mono">
+                      {study.number_of_treatments} treatments
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </CommandItem>
+          ))}
+        </CommandGroup>
+        {studies.length > 0 && (
+          <div className="border-t p-2 text-center text-xs text-muted-foreground">
+            Press Enter to view full study details
+          </div>
+        )}
+      </CommandList>
+    </Command>
+  )
+
   return (
     <nav
       className={cn(
-        "fixed left-0 right-0 top-0 z-50 bg-white/80 backdrop-blur-md transition-all duration-200",
+        "fixed left-0 right-0 top-0 z-[100] bg-white/80 backdrop-blur-md transition-all duration-200",
         isScrolled ? "h-12 shadow-md" : "h-16",
       )}
     >
@@ -186,159 +257,104 @@ export function TopNav() {
             </Link>
           </div>
 
-          <div className="hidden max-w-sm items-center gap-2 sm:flex">
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <div className="relative w-full">
+          {/* Desktop Search - Only render when not in mobile view */}
+          {!isSearchExpanded && (
+            <div className="hidden max-w-sm items-center gap-2 sm:flex">
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <div className="relative w-full">
+                    <Input
+                      ref={inputRef}
+                      type="search"
+                      value={searchTerm}
+                      onChange={handleSearch}
+                      onFocus={() => {
+                        if (searchTerm.length > 0) {
+                          setOpen(true)
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                          e.preventDefault()
+                        }
+                      }}
+                      placeholder="Search studies..."
+                      className={cn(
+                        "w-[300px] pr-8 transition-all duration-200",
+                        isScrolled ? "h-7 text-xs" : "h-8 text-sm",
+                      )}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size={isScrolled ? "sm" : "default"}
+                      className="absolute right-0 top-1/2 -translate-y-1/2 transition-all duration-200"
+                      onClick={() => inputRef.current?.focus()}
+                    >
+                      <Search className={cn("transition-all duration-200", isScrolled ? "h-3 w-3" : "h-4 w-4")} />
+                      <span className="sr-only">Search</span>
+                    </Button>
+                  </div>
+                </PopoverTrigger>
+                {open && !isSearchExpanded && (
+                  <PopoverContent
+                    className="w-[450px] p-0 z-[101]"
+                    align="start"
+                    side="bottom"
+                    sideOffset={5}
+                    onOpenAutoFocus={(e) => e.preventDefault()}
+                    onCloseAutoFocus={(e) => e.preventDefault()}
+                  >
+                    <SearchResults />
+                  </PopoverContent>
+                )}
+              </Popover>
+            </div>
+          )}
+
+          {/* Mobile Search - Only render when expanded */}
+          {isSearchExpanded && (
+            <div className="fixed inset-x-0 top-0 z-[100] bg-white/80 backdrop-blur-md transition-all duration-200 sm:hidden">
+              <div className="container mx-auto p-4">
+                <div className="relative">
                   <Input
                     ref={inputRef}
                     type="search"
                     value={searchTerm}
                     onChange={handleSearch}
-                    onFocus={() => {
-                      if (searchTerm.length > 0) {
-                        setOpen(true)
-                      }
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-                        e.preventDefault()
+                    onBlur={() => {
+                      if (!searchTerm && !open) {
+                        setIsSearchExpanded(false)
                       }
                     }}
                     placeholder="Search studies..."
-                    className={cn(
-                      "w-[300px] pr-8 transition-all duration-200",
-                      isScrolled ? "h-7 text-xs" : "h-8 text-sm",
-                    )}
+                    className="w-full pr-12"
                   />
                   <Button
                     type="button"
                     variant="ghost"
-                    size={isScrolled ? "sm" : "default"}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 transition-all duration-200"
-                    onClick={() => inputRef.current?.focus()}
+                    size="sm"
+                    className="absolute right-0 top-1/2 -translate-y-1/2"
+                    onClick={() => {
+                      setSearchTerm("")
+                      setIsSearchExpanded(false)
+                      setOpen(false)
+                    }}
                   >
-                    <Search className={cn("transition-all duration-200", isScrolled ? "h-3 w-3" : "h-4 w-4")} />
-                    <span className="sr-only">Search</span>
+                    <X className="h-4 w-4" />
+                    <span className="sr-only">Clear search</span>
                   </Button>
                 </div>
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-[calc(100vw-2rem)] sm:w-[450px] p-0"
-                align="start"
-                side="bottom"
-                sideOffset={5}
-                onOpenAutoFocus={(e) => {
-                  e.preventDefault()
-                }}
-                onCloseAutoFocus={(e) => {
-                  e.preventDefault()
-                }}
-              >
-                <Command shouldFilter={false}>
-                  <CommandList>
-                    <CommandEmpty>
-                      {isStudiesLoading ? (
-                        <div className="flex items-center justify-center p-4">
-                          <span className="text-sm text-muted-foreground">Searching...</span>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center justify-center p-4 text-sm text-muted-foreground">
-                          <SearchIcon className="mb-2 h-10 w-10 text-muted-foreground/50" />
-                          <p>No studies found</p>
-                        </div>
-                      )}
-                    </CommandEmpty>
-                    <CommandGroup heading="Search Results">
-                      {studies.map((study, index) => (
-                        <CommandItem
-                          key={study.id}
-                          onSelect={() => {
-                            router.push(`/research/${study.id}`)
-                            setOpen(false)
-                            setSearchTerm("")
-                          }}
-                          className={cn("px-4 py-3", index % 2 === 0 ? "bg-white" : "bg-gray-100")}
-                        >
-                          <div className="flex flex-col gap-1">
-                            <h4 className="font-body">
-                              <HighlightedText text={study.heading} highlight={searchTerm} />
-                            </h4>
-                            <p className="line-clamp-2 text-sm text-muted-foreground">
-                              <HighlightedText text={study.summary} highlight={searchTerm} />
-                            </p>
-                            <div className="mt-1 flex flex-wrap items-center gap-3 text-xs">
-                              <div className="flex items-center gap-1 text-muted-foreground">
-                                <UsersIcon className="h-3 w-3" />
-                                <HighlightedText
-                                  text={study.authors}
-                                  highlight={searchTerm}
-                                  className="max-w-[200px] truncate"
-                                />
-                              </div>
-                              <div className="flex items-center gap-1 text-muted-foreground">
-                                <CalendarIcon className="h-3 w-3" />
-                                <span>{formatDate(study.published_date)}</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 font-mono">
-                                  {study.pressure_used}
-                                </span>
-                                <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-400 font-mono">
-                                  {study.number_of_treatments} treatments
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                    {studies.length > 0 && (
-                      <div className="border-t p-2 text-center text-xs text-muted-foreground">
-                        Press Enter to view full study details
-                      </div>
-                    )}
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-          </div>
 
-          <div
-            className={cn(
-              "sm:hidden absolute left-0 right-0 px-4 transition-all duration-200",
-              isSearchExpanded ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
-            )}
-          >
-            <div className="relative w-full">
-              <Input
-                ref={inputRef}
-                type="search"
-                value={searchTerm}
-                onChange={handleSearch}
-                onBlur={() => {
-                  if (!searchTerm) {
-                    setIsSearchExpanded(false)
-                  }
-                }}
-                placeholder="Search studies..."
-                className="w-full pr-8"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-1/2 -translate-y-1/2"
-                onClick={() => {
-                  setSearchTerm("")
-                  setIsSearchExpanded(false)
-                }}
-              >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Clear search</span>
-              </Button>
+                {/* Mobile Search Results */}
+                {open && isSearchExpanded && (
+                  <div className="fixed inset-x-0 top-[72px] z-[101] max-h-[calc(100vh-72px)] overflow-y-auto bg-white shadow-lg">
+                    <SearchResults />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           <div
             className={cn(
