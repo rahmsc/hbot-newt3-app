@@ -44,8 +44,8 @@ export default function FeaturedArticleCard({
   const { isBookmarked, isLoading, toggleBookmark } = useArticleBookmark(id, user?.id)
 
   // Use CloudFront URL instead of direct S3 bucket URL
-  const fallbackImage = "/images/research/default-article.jpg"
-  const imageUrl = `https://d144dqt8e4woe2.cloudfront.net/research-articles/${id}.png`
+
+  const imageUrl = `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/${id}.png`
 
   const truncatedSummary =
     summary?.length > (isMobile ? 80 : 120) ? `${summary.slice(0, isMobile ? 80 : 120)}...` : summary
@@ -53,17 +53,13 @@ export default function FeaturedArticleCard({
   return (
     <div className={cn("group relative w-full overflow-hidden rounded-[2rem]", isMobile ? "h-[600px]" : "h-[650px]")}>
       {/* Background Image */}
-      <Image
+      <img
         src={imageUrl}
         alt={heading}
-        fill
+        // fill
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className="object-cover transition-transform duration-300 group-hover:scale-105"
-        priority
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.src = fallbackImage;
-        }}
+        // priority
       />
 
       {/* Gradient Overlay */}

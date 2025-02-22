@@ -39,7 +39,7 @@ interface ChamberQuickViewProps {
 export function ChamberQuickView({ isOpen, onClose, chamber }: ChamberQuickViewProps) {
   const [showInquiryForm, setShowInquiryForm] = useState(false)
 
-  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/chambers/products/";
+  const imageUrl = "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/products/";
 
   if (!chamber) return null
 

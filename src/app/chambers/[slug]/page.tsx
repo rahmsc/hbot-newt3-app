@@ -16,7 +16,7 @@ interface PageProps {
 export default async function ChamberProductPage({ params }: PageProps) {
   const chamber = await getChamberData(params.slug)
 
-  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/chambers/products/"
+  const imageUrl = "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/products/"
 
   if (!chamber) {
     notFound()

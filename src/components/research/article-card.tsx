@@ -52,10 +52,10 @@ export function ArticleCard({
     <Link href={`/research/${id}`}>
       <div className="group relative h-[325px] w-full overflow-hidden rounded-[2rem]">
         {/* Background Image */}
-        <Image
+        <img
           src={`${imageUrl}${id}.png`}
           alt={heading}
-          fill
+          // fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />

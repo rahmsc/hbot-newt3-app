@@ -22,7 +22,7 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
   // Log the number of chambers received by the component
   console.log(`Grid received ${chambers?.length} chambers`);
 
-  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/chambers/products/";
+  const imageUrl = "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/products/";
 
   const filteredChambers = chambers.filter((chamber) => {
     if (filter === "all") return true;

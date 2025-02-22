@@ -59,7 +59,7 @@ export function ArticleList({
                   <Image
                     src={
                       isBlogPost(article)
-                        ? `https://d144dqt8e4woe2.cloudfront.net/blogs/header/${article.fields["ID Blog"]}.png`
+                        ? `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/header/${article.fields["ID Blog"]}.png`
                         : `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/${article.article_id}.png`
                     }
                     alt={

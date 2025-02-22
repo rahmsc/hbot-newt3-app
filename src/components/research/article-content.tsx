@@ -41,7 +41,7 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
     }
   }, [])
 
-  const imageUrl = "https://d144dqt8e4woe2.cloudfront.net/research-articles/"
+  const imageUrl = "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/"
   const progress = Math.min(scrollY / (windowHeight * 1.5), 1) // Increased scroll range
 
   return (
