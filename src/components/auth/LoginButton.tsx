@@ -5,10 +5,15 @@ import { useRouter } from "next/navigation";
 import { createClient } from "~/utils/supabase/client";
 import { signout } from "~/app/(auth)/auth/login/action";
 
-const LoginButton = () => {
+interface LoginButtonProps {
+  className?: string;
+}
+
+const LoginButton = ({ className }: LoginButtonProps) => {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
   const supabase = createClient();
+
   useEffect(() => {
     const fetchUser = async () => {
       const {
@@ -18,9 +23,11 @@ const LoginButton = () => {
     };
     fetchUser();
   }, [supabase.auth]);
+
   if (user) {
     return (
       <Button
+        className={className}
         onClick={() => {
           signout();
           setUser(null);
@@ -30,9 +37,11 @@ const LoginButton = () => {
       </Button>
     );
   }
+
   return (
     <Button
       variant="outline"
+      className={className}
       onClick={() => {
         router.push("/auth/login");
       }}
