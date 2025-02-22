@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import useEmblaCarousel from "embla-carousel-react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
@@ -14,13 +14,45 @@ interface TrendingSectionClientProps {
 }
 
 export function TrendingSectionClient({ initialArticles }: TrendingSectionClientProps) {
+  const [isClient, setIsClient] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [filter, setFilter] = useState<"all" | "blogs" | "guides" | "latest">("all")
-  const [articles] = useState<TrendingArticleProps[]>(initialArticles)
+  const [articles, setArticles] = useState<TrendingArticleProps[]>([])
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "center",
     containScroll: "trimSnaps",
   })
+
+  useEffect(() => {
+    setIsClient(true)
+    setArticles(initialArticles)
+    setIsLoading(false)
+  }, [initialArticles])
+
+  if (!isClient) {
+    return (
+      <section className="w-full bg-[#FAF7F4] pb-12">
+        <div className="p-4 text-center">Loading trending content...</div>
+      </section>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <section className="w-full bg-[#FAF7F4] pb-12">
+        <div className="p-4 text-center">Loading trending content...</div>
+      </section>
+    )
+  }
+
+  if (!articles || articles.length === 0) {
+    return (
+      <section className="w-full bg-[#FAF7F4] pb-12">
+        <div className="p-4 text-center">No articles available</div>
+      </section>
+    )
+  }
 
   const filteredArticles = articles
     .filter((article) => {
@@ -41,14 +73,6 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
 
   console.log('TrendingSectionClient received articles:', initialArticles); // Debug log
 
-  if (!initialArticles || initialArticles.length === 0) {
-    return (
-      <section className="w-full bg-[#FAF7F4] pb-12">
-        <div className="p-4 text-center">No articles available</div>
-      </section>
-    )
-  }
-
   return (
     <section className="w-full bg-[#FAF7F4] pb-12">
       <div className="h-px w-full bg-gray-600" />
@@ -64,47 +88,51 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
 
       {/* Mobile View */}
       <div className="block sm:hidden">
-        <div className="relative px-4">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex -ml-4">
-              {filteredArticles.map((article) => (
-                <div
-                  key={article.link}
-                  className="pl-4"
-                  style={{
-                    flex: "0 0 85%",
-                    minWidth: 0,
-                  }}
-                >
-                  <div className="h-[280px]">
-                    {" "}
-                    {/* Match desktop small card height */}
-                    <TrendingCard
-                      article={article}
-                      size="small" // Use small size consistently
-                    />
+        {filteredArticles.length > 0 ? (
+          <div className="relative px-4">
+            <div className="overflow-hidden" ref={emblaRef}>
+              <div className="flex -ml-4">
+                {filteredArticles.map((article) => (
+                  <div
+                    key={article.link}
+                    className="pl-4"
+                    style={{
+                      flex: "0 0 85%",
+                      minWidth: 0,
+                    }}
+                  >
+                    <div className="h-[280px]">
+                      {" "}
+                      {/* Match desktop small card height */}
+                      <TrendingCard
+                        article={article}
+                        size="small" // Use small size consistently
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute -left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+              onClick={() => emblaApi?.scrollPrev()}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute -right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+              onClick={() => emblaApi?.scrollNext()}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute -left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
-            onClick={() => emblaApi?.scrollPrev()}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute -right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
-            onClick={() => emblaApi?.scrollNext()}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
+        ) : (
+          <div className="p-4 text-center">No articles available</div>
+        )}
       </div>
 
       {/* Desktop View */}
