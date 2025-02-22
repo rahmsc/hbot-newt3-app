@@ -1,8 +1,9 @@
 "use client"
 
-import { Menu, X } from "lucide-react"
+import { Menu, X, Search } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
-import { cn } from "~/lib/utils"
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet"
+import { Input } from "~/components/ui/input"
 
 import type { ConditionIdArticlesProps } from "~/utils/supabase/articles/getArticlesByCondition"
 import getArticlesByCondition from "~/utils/supabase/articles/getArticlesByCondition"
@@ -41,25 +42,24 @@ export function ResearchContent({
   const [openCategory, setOpenCategory] = useState<string | undefined>(undefined)
   const [hoveredArticle, setHoveredArticle] = useState<ConditionIdArticlesProps | null>(null)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [articles, setArticles] = useState<ConditionIdArticlesProps[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState("")
+  const [mobileSearchQuery, setMobileSearchQuery] = useState("")
 
   const fetchArticles = useCallback(
     async (conditionId: number) => {
       setIsLoading(true)
       setError(null)
       try {
-        console.log("Fetching articles for condition:", conditionId)
         const fetchedArticles = await getArticlesByCondition(conditionId)
-        console.log("Fetched articles:", fetchedArticles)
 
         if (fetchedArticles && fetchedArticles.length > 0) {
           setArticles(fetchedArticles)
           setHoveredArticle(fetchedArticles[0] ?? null)
         } else {
-          console.log("No articles found for condition:", conditionId)
           setCategories((prevCategories) =>
             prevCategories
               .map((category) => ({
@@ -94,7 +94,6 @@ export function ResearchContent({
 
   useEffect(() => {
     if (selectedConditionId !== null) {
-      console.log("Fetching articles for selected condition:", selectedConditionId)
       void fetchArticles(selectedConditionId)
     }
   }, [selectedConditionId, fetchArticles])
@@ -103,109 +102,134 @@ export function ResearchContent({
     setHoveredArticle(article)
   }
 
-  // Find the selected condition name
   const selectedCondition = categories
     .flatMap((category) => category.conditions)
     .find((condition) => condition.id === selectedConditionId)
 
-  // Enhanced handler for search suggestions
   const handleSearchSuggestion = (term: string) => {
-    setIsSidebarOpen(true);
-    setSidebarSearchQuery(term);
+    setIsSidebarOpen(true)
+    setSidebarSearchQuery(term)
+    setMobileSearchQuery(term)
 
-    // Find the condition that matches the search term
     const matchingCondition = categories
-      .flatMap(category => category.conditions)
-      .find(condition => condition.name.toLowerCase() === term.toLowerCase());
+      .flatMap((category) => category.conditions)
+      .find((condition) => condition.name.toLowerCase() === term.toLowerCase())
 
-    // If we found a matching condition, select it and open its category
     if (matchingCondition) {
-      setSelectedConditionId(matchingCondition.id);
-      
-      // Find and open the parent category
-      const parentCategory = categories.find(category =>
-        category.conditions.some(condition => condition.id === matchingCondition.id)
-      );
+      setSelectedConditionId(matchingCondition.id)
+
+      const parentCategory = categories.find((category) =>
+        category.conditions.some((condition) => condition.id === matchingCondition.id),
+      )
       if (parentCategory) {
-        setOpenCategory(parentCategory.categoryId.toString());
+        setOpenCategory(parentCategory.categoryId.toString())
       }
     }
-  };
+  }
 
-  // Update the selectedConditionId state handler to control sidebar
   const handleConditionSelect = (id: number | null) => {
-    setSelectedConditionId(id);
-    // If clearing the selection (id is null), open the sidebar
+    setSelectedConditionId(id)
     if (id === null) {
-      setIsSidebarOpen(true);
+      setIsSidebarOpen(true)
     }
-  };
+    setIsMobileMenuOpen(false)
+  }
+
+  const handleMobileSearch = (value: string) => {
+    setMobileSearchQuery(value)
+    setSidebarSearchQuery(value)
+
+    // Find matching condition as user types
+    const matchingCondition = categories
+      .flatMap((category) => category.conditions)
+      .find((condition) => condition.name.toLowerCase().includes(value.toLowerCase()))
+
+    if (matchingCondition) {
+      setSelectedConditionId(matchingCondition.id)
+      const parentCategory = categories.find((category) =>
+        category.conditions.some((condition) => condition.id === matchingCondition.id),
+      )
+      if (parentCategory) {
+        setOpenCategory(parentCategory.categoryId.toString())
+      }
+    }
+  }
 
   return (
     <div className="relative flex h-[calc(100vh-127px)] overflow-hidden rounded-lg border border-gray-200 shadow-md">
-      <Sidebar
-        categories={categories}
-        isSidebarOpen={isSidebarOpen}
-        selectedConditionId={selectedConditionId}
-        openCategory={openCategory}
-        onCategoryChange={setOpenCategory}
-        onConditionSelect={handleConditionSelect}
-        onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-        searchQuery={sidebarSearchQuery}
-        onSearchChange={setSidebarSearchQuery}
-      />
+      {/* Mobile Menu */}
+      <div className="md:hidden">
+        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="absolute left-4 top-2 z-50 md:hidden">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-[280px] p-0">
+            <Sidebar
+              categories={categories}
+              isSidebarOpen={true}
+              selectedConditionId={selectedConditionId}
+              openCategory={openCategory}
+              onCategoryChange={setOpenCategory}
+              onConditionSelect={handleConditionSelect}
+              onSidebarToggle={() => setIsMobileMenuOpen(false)}
+              searchQuery={sidebarSearchQuery}
+              onSearchChange={setSidebarSearchQuery}
+            />
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* Desktop Sidebar */}
+      <div className="hidden md:block">
+        <Sidebar
+          categories={categories}
+          isSidebarOpen={isSidebarOpen}
+          selectedConditionId={selectedConditionId}
+          openCategory={openCategory}
+          onCategoryChange={setOpenCategory}
+          onConditionSelect={handleConditionSelect}
+          onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+          searchQuery={sidebarSearchQuery}
+          onSearchChange={setSidebarSearchQuery}
+        />
+      </div>
 
       <div className="flex-1 overflow-hidden">
-        {/* Collapsed state header */}
-        <div
-          className={cn(
-            "absolute left-0 top-0 z-50 flex h-[72px] items-center gap-3 px-4 transition-all duration-300",
-            isSidebarOpen ? "opacity-0 pointer-events-none" : "opacity-100",
-          )}
-        >
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9 hover:bg-gray-100"
-            onClick={() => setIsSidebarOpen(true)}
-          >
-            <Menu className="h-5 w-5 text-gray-600" />
-          </Button>
-
-          {selectedCondition && (
-            <Badge variant="outline" className="gap-1 border-emerald-700 text-emerald-700">
-              {selectedCondition.name}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-4 w-4 p-0 hover:bg-transparent"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleConditionSelect(null)
-                  setSidebarSearchQuery("")
-                  setArticles([])
-                  setHoveredArticle(null)
-                }}
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            </Badge>
-          )}
+        {/* Mobile Search and Selected Condition - Updated spacing */}
+        <div className="md:hidden px-4 pt-2 pb-1 pl-16">
+          <div className="space-y-1">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+              <Input
+                type="search"
+                placeholder="Search conditions..."
+                value={mobileSearchQuery}
+                onChange={(e) => handleMobileSearch(e.target.value)}
+                className="w-full pl-9 pr-4"
+              />
+            </div>
+            {selectedCondition && (
+              <Badge variant="outline" className="gap-1 border-emerald-700 text-emerald-700">
+                {selectedCondition.name}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-4 w-4 p-0 hover:bg-transparent"
+                  onClick={() => handleConditionSelect(null)}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </Badge>
+            )}
+          </div>
         </div>
 
-        <div className="grid h-full grid-cols-2 gap-4 p-4">
+        <div className="grid h-full md:grid-cols-2 gap-4 p-4 pt-2 md:pt-4">
           {/* Articles Column */}
           <div className="flex h-full flex-col overflow-hidden">
-            {/* Conditional Spacer */}
-            {!isSidebarOpen && <div className="h-[28px] shrink-0" />}
-
-            {/* Articles List Container */}
-            <div
-              className={cn(
-                "flex-1 overflow-hidden rounded-lg shadow-sm",
-                isSidebarOpen ? "h-full" : "h-[calc(100%-72px)]",
-              )}
-            >
+            <div className="flex-1 overflow-hidden rounded-lg shadow-sm">
               <div className="h-full overflow-auto">
                 <ArticlesList
                   articles={articles}
@@ -217,8 +241,8 @@ export function ResearchContent({
             </div>
           </div>
 
-          {/* Article Preview - Full Height */}
-          <div className="h-full overflow-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+          {/* Article Preview - Hidden on mobile */}
+          <div className="hidden md:block h-full overflow-auto rounded-lg border border-gray-200 bg-white shadow-sm">
             <ArticlePreview article={hoveredArticle} />
           </div>
         </div>

@@ -1,28 +1,19 @@
-"use client";
+"use client"
 
-import type { ConditionIdArticlesProps } from "~/utils/supabase/articles/getArticlesByCondition";
-import { ArticleItem } from "./article-item";
-import { Button } from "../ui/button";
+import type { ConditionIdArticlesProps } from "~/utils/supabase/articles/getArticlesByCondition"
+import { ArticleItem } from "./article-item"
+import { Button } from "../ui/button"
 
 export interface ArticlesListProps {
-  articles: ConditionIdArticlesProps[];
-  isLoading: boolean;
-  onArticleHover: (article: ConditionIdArticlesProps | null) => void;
-  onSearchSuggestionClick?: (term: string) => void;
+  articles: ConditionIdArticlesProps[]
+  isLoading: boolean
+  onArticleHover: (article: ConditionIdArticlesProps | null) => void
+  onSearchSuggestionClick?: (term: string) => void
 }
 
-export function ArticlesList({
-  articles,
-  isLoading,
-  onArticleHover,
-  onSearchSuggestionClick,
-}: ArticlesListProps) {
+export function ArticlesList({ articles, isLoading, onArticleHover, onSearchSuggestionClick }: ArticlesListProps) {
   if (isLoading) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        Loading articles...
-      </div>
-    );
+    return <div className="flex h-full items-center justify-center">Loading articles...</div>
   }
 
   if (articles.length === 0) {
@@ -33,17 +24,16 @@ export function ArticlesList({
           <div className="mx-auto w-fit rounded-full bg-black px-6 py-2 text-sm text-white">
             Evidence based research, <em>instantly</em>
           </div>
-          
+
           {/* Main heading */}
           <h1 className="text-4xl font-bold leading-tight md:text-5xl">
-            The world&apos;s best resource on{" "}
-            <span className="block italic">Hyperbaric Oxygen Therapy</span>
+            The world&apos;s best resource on <span className="block italic">Hyperbaric Oxygen Therapy</span>
           </h1>
-          
+
           {/* Description */}
           <p className="mx-auto max-w-[480px] text-gray-600">
-            Discover evidence-based HBOT treatments through our comprehensive research framework.
-            Browse by condition type to find the scientific papers and protocols you need.
+            Discover evidence-based HBOT treatments through our comprehensive research framework. Browse by condition
+            type to find the scientific papers and protocols you need.
           </p>
 
           {/* Example tags as buttons */}
@@ -62,18 +52,15 @@ export function ArticlesList({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-6 sm:space-y-4 p-4">
       {articles.map((article) => (
-        <ArticleItem
-          key={article.id}
-          article={article}
-          onArticleHover={onArticleHover}
-        />
+        <ArticleItem key={article.id} article={article} onArticleHover={onArticleHover} />
       ))}
     </div>
-  );
+  )
 }
+
