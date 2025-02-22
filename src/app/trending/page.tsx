@@ -2,7 +2,7 @@ import { TrendingHeader } from "~/components/trending/trending-header"
 import { FeaturedArticles } from "~/components/trending/featured-articles"
 import { ArticleGrid } from "~/components/trending/article-grid"
 import { getTrendingArticles } from "~/utils/supabase/articles/getTrendingArticles"
-import { type TrendingArticleProps } from "~/components/trending/trending-card"
+import type { TrendingArticleProps } from "~/components/trending/trending-card"
 
 export default async function TrendingPage() {
   const articles = await getTrendingArticles()
