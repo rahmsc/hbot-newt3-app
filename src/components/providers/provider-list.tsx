@@ -9,7 +9,7 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import type { ProviderCardProps } from "~/types/providers";
 
-import { SAMPLE_PROVIDERS } from "~/components/landing/sections/providers-section";
+import { SAMPLE_PROVIDERS } from "~/data/providers";
 
 // Export the providers array for use in other components
 export const providers = SAMPLE_PROVIDERS;

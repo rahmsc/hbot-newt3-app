@@ -15,8 +15,7 @@ import { Input } from "~/components/ui/input";
 import type { HyperbaricCenter } from "~/types/map";
 import type { ProviderProps } from "~/types/providers";
 import Link from "next/link";
-import { SAMPLE_PROVIDERS } from "~/components/landing/sections/providers-section";
-import { defaultMapCenter } from "~/data/providers";
+import { SAMPLE_PROVIDERS, defaultMapCenter } from "~/data/providers";
 
 export default function HyperbaricLocator() {
   const [searchQuery, setSearchQuery] = useState("");
