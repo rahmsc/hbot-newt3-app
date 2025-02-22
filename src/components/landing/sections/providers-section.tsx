@@ -48,17 +48,7 @@ export default function ProvidersSection() {
             {providers.map((provider, index) => (
               <div
                 key={index}
-                className="pl-4"
-                style={{
-                  flex: "0 0 85%",
-                  minWidth: 0,
-                  "@media (min-width: 640px)": {
-                    flex: "0 0 50%",
-                  },
-                  "@media (min-width: 1024px)": {
-                    flex: "0 0 33.333333%",
-                  },
-                }}
+                className="pl-4 flex-none min-w-0 w-[85%] sm:w-1/2 lg:w-1/3"
               >
                 <ProviderCard
                   name={provider.name ?? ""}

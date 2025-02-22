@@ -5,7 +5,7 @@ import Image from "next/image"
 import type { ProviderCardProps } from "~/types/providers"
 import GlowingButton from "../utils/glowing-button"
 
-export function SoProviderCard({ name, rating, reviewCount, location, image, onQuickView }: ProviderCardProps) {
+export function ProviderCard({ name, rating, reviewCount, location, image, onQuickView }: ProviderCardProps) {
   // Split name into two parts for the header
   const [firstPart, ...rest] = name.split(" ")
   const remainingPart = rest.join(" ")
