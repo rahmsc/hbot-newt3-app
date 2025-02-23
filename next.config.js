@@ -10,6 +10,7 @@ const nextConfig = {
       'hbothq-bucket.s3.ap-southeast-2.amazonaws.com',
       'lh3.googleusercontent.com',
       'fastly.picsum.photos',
+      'picsum.photos',
     ],
     remotePatterns: [
       {
