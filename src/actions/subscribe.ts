@@ -80,7 +80,7 @@ export async function subscribeToNewsletter(
 
     // Send welcome email after successful subscription
     try {
-      console.log('Attempting to send email to:', email);
+
       
       const emailResponse = await resend.emails.send({
         from: 'breathebetter@hyperbarichq.com', // Replace with your verified domain
@@ -89,7 +89,7 @@ export async function subscribeToNewsletter(
         react: WelcomeEmail({ email }),
       });
       
-      console.log('Resend API Response:', emailResponse);
+
       
     } catch (emailError) {
       // Detailed error logging

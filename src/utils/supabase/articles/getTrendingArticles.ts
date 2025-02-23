@@ -27,18 +27,13 @@ export interface TrendingArticle {
 
 export async function getTrendingArticles(): Promise<TrendingArticle[]> {
   try {
-    console.log('Starting getTrendingArticles fetch');
+
     
     // Fetch both blogs and guides
     const [blogPosts, guides] = await Promise.all([
       getBlogPosts().catch(() => []),
       getAllGuides().catch(() => []),
     ]);
-
-    console.log('Fetched data:', { 
-      blogPostsCount: blogPosts?.length ?? 0, 
-      guidesCount: guides?.length ?? 0 
-    });
 
     // If both fetches fail, return empty array instead of throwing
     if (!blogPosts?.length && !guides?.length) {
@@ -65,7 +60,7 @@ export async function getTrendingArticles(): Promise<TrendingArticle[]> {
         type: "blog" as const,
       }));
 
-    console.log('Processed blog articles:', blogArticles.length);
+   
 
     // Map guides to TrendingArticle format
     const guideArticles = guides
@@ -94,9 +89,9 @@ export async function getTrendingArticles(): Promise<TrendingArticle[]> {
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, 6); // Get only the 6 most recent articles
 
-    console.log('Final articles count:', allArticles.length);
+
     const result = allArticles;
-    console.log('getTrendingArticles result:', result);
+  
     return result;
   } catch (error) {
     console.error('getTrendingArticles error:', error);

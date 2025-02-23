@@ -1,23 +1,32 @@
 .embla {
   --slide-spacing: 1rem;
-  --slide-size: 100%;
+  --slide-size: 85%; /* Changed from 100% to 85% for better mobile view */
   --slide-height: 19rem;
+  position: relative; /* Added to help with button positioning */
+  padding: 0 1rem; /* Added to give space for navigation buttons */
 }
 
+/* Tablet breakpoint */
 @media (min-width: 640px) {
   .embla {
-    --slide-size: 50%;
+    --slide-size: 45%; /* Adjusted from 50% to 45% for better spacing */
+    --slide-spacing: 1.5rem; /* Increased spacing between slides */
+    padding: 0 1.5rem;
   }
 }
 
+/* Desktop breakpoint */
 @media (min-width: 1024px) {
   .embla {
     --slide-size: 33.333%;
+    --slide-spacing: 2rem; /* Increased spacing for desktop */
+    padding: 0 2rem;
   }
 }
 
 .embla__viewport {
   overflow: hidden;
+  width: 100%; /* Added to ensure full width */
 }
 
 .embla__container {
@@ -25,6 +34,7 @@
   display: flex;
   touch-action: pan-y;
   margin-left: calc(var(--slide-spacing) * -1);
+  width: 100%; /* Added to ensure full width */
 }
 
 .embla__slide {
@@ -32,4 +42,44 @@
   min-width: 0;
   padding-left: var(--slide-spacing);
   position: relative;
+}
+
+/* Added styles for better mobile navigation */
+.embla__button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.embla__button--prev {
+  left: 0.5rem;
+}
+
+.embla__button--next {
+  right: 0.5rem;
+}
+
+/* Optional: Add smooth transitions */
+.embla__slide {
+  transition: opacity 0.2s ease;
+}
+
+/* Optional: Add active slide emphasis */
+.embla__slide.is-selected {
+  opacity: 1;
+}
+
+.embla__slide:not(.is-selected) {
+  opacity: 0.8;
 }

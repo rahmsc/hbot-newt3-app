@@ -85,10 +85,6 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
     })
     .slice(0, 5)
 
-  console.log('Filtered articles:', filteredArticles); // Debug log
-
-  console.log('TrendingSectionClient received articles:', initialArticles); // Debug log
-
   return (
     <section className="w-full bg-[#FAF7F4] pb-12">
       <div className="h-px w-full bg-gray-600" />

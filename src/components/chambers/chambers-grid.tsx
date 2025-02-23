@@ -26,9 +26,11 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    align: "center",
+    align: "start",
     containScroll: "trimSnaps",
-    dragFree: false,
+    dragFree: true,
+    slidesToScroll: 1,
+    inViewThreshold: 0.7,
   })
 
   useEffect(() => {
@@ -101,21 +103,21 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
 
         {/* Mobile Carousel View */}
         <div className="block sm:hidden">
-          <div className="relative px-4 pt-4">
-            <div className="overflow-hidden" ref={emblaRef}>
-              <div className="flex">
+          <div className="relative pt-4">
+            <div className="overflow-visible" ref={emblaRef}>
+              <div className="flex -ml-4">
                 <AnimatePresence>
                   {filteredChambers.map((chamber) => (
                     <div
                       key={chamber.id}
-                      className="min-w-[90vw] flex-none px-2"
+                      className="min-w-[85vw] flex-none pl-4"
                     >
                       <motion.div
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -50 }}
                         transition={{ duration: 0.5 }}
-                        className="relative h-[450px] overflow-hidden rounded-2xl shadow-lg"
+                        className="relative h-[500px] overflow-hidden rounded-2xl shadow-lg"
                       >
                         <Image
                           src={`${imageUrl}${chamber.id}.png`}
@@ -142,30 +144,13 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
               </div>
             </div>
 
-            {/* Add Carousel Indicator */}
+            {/* Remove the navigation buttons since we're using the peek effect */}
             <div className="md:hidden">
               <CarouselIndicator 
                 total={filteredChambers.length} 
                 current={currentSlide} 
               />
             </div>
-
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute -left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
-              onClick={() => emblaApi?.scrollPrev()}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute -right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
-              onClick={() => emblaApi?.scrollNext()}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
           </div>
         </div>
 

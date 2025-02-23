@@ -7,9 +7,9 @@ export async function getChamberData(slug: string): Promise<ChamberProps | null>
   const supabase = await createClient();
 
   try {
-    console.log('Incoming slug:', slug);
+ 
     const searchName = slug.split("-").join(" ").toLowerCase();
-    console.log('Searching for name:', searchName);
+
 
     const { data, error } = await supabase
       .from("chamber_products")
@@ -34,11 +34,6 @@ export async function getChamberData(slug: string): Promise<ChamberProps | null>
 
     if (error) {
       console.error("Error fetching chamber data:", error);
-      console.log("Query details:", {
-        table: "chambers",
-        searchName,
-        error
-      });
       return null;
     }
 

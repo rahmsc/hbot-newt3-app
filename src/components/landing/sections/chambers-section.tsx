@@ -38,8 +38,6 @@ export function ChambersSection() {
       const supabase = createClient()
       const { data, error } = await supabase.from("chamber_products").select("*").order("id")
 
-      console.log('Chambers data:', data)
-      console.log('Error if any:', error)
 
       if (!error && data) {
         setChambers(data)

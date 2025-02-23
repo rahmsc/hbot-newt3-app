@@ -18,8 +18,6 @@ export function useArticleBookmark(articleId: number, userId?: string) {
       }
 
       try {
-        console.log("Checking bookmark status for:", { userId, articleId });
-
         const { data, error } = await supabase
           .from("profiles")
           .select("saved_articles")
@@ -31,7 +29,7 @@ export function useArticleBookmark(articleId: number, userId?: string) {
           throw error;
         }
 
-        console.log("Profile data:", data);
+    
         setIsBookmarked(
           Array.isArray(data?.saved_articles) &&
             data.saved_articles.includes(articleId),
@@ -58,7 +56,7 @@ export function useArticleBookmark(articleId: number, userId?: string) {
 
     try {
       setIsLoading(true);
-      console.log("Toggling bookmark for:", { userId, articleId });
+ 
 
       // Get current saved articles
       const { data: profileData, error: fetchError } = await supabase
@@ -72,7 +70,7 @@ export function useArticleBookmark(articleId: number, userId?: string) {
         throw fetchError;
       }
 
-      console.log("Current profile data:", profileData);
+    
 
       // Ensure saved_articles is an array
       const currentSavedArticles: number[] = Array.isArray(
@@ -80,15 +78,11 @@ export function useArticleBookmark(articleId: number, userId?: string) {
       )
         ? profileData.saved_articles
         : [];
-
-      console.log("Current saved articles:", currentSavedArticles);
-
       // Update saved articles - ensure we're working with numbers
       const newSavedArticles = isBookmarked
         ? currentSavedArticles.filter((id) => id !== articleId)
         : [...currentSavedArticles, articleId];
 
-      console.log("New saved articles:", newSavedArticles);
 
       // Update the profile with the array of integers
       const { data: updateData, error: updateError } = await supabase

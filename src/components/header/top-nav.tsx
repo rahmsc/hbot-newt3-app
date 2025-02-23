@@ -72,23 +72,16 @@ export function TopNav() {
 
   useEffect(() => {
     const checkUser = async () => {
-      console.log("Checking user...")
+    
       const {
         data: { user },
         error,
       } = await supabase.auth.getUser()
       
-      console.log("getUser response:", { user, error })
+
       
       if (!error && user) {
         setUser(user)
-        console.log("User data after login:", {
-          user: user,
-          id: user.id,
-          email: user.email,
-          metadata: user.user_metadata,
-          created_at: user.created_at
-        })
       } else {
         console.log("No user found or error:", error)
       }
@@ -99,19 +92,9 @@ export function TopNav() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("Auth state changed - Event:", _event)
+     
       const currentUser = session?.user ?? null
       setUser(currentUser)
-      if (currentUser) {
-        console.log("Auth state changed - User data:", {
-          id: currentUser.id,
-          email: currentUser.email,
-          metadata: currentUser.user_metadata,
-          created_at: currentUser.created_at
-        })
-      } else {
-        console.log("Auth state changed - No user")
-      }
     })
 
     return () => {
@@ -119,16 +102,6 @@ export function TopNav() {
       subscription.unsubscribe()
     }
   }, [supabase])
-
-  // Add this separate useEffect to log user state changes
-  useEffect(() => {
-    console.log("USER|||||||__________|||||||||||||||||", {
-      id: user?.id,
-      email: user?.email,
-      metadata: user?.user_metadata,
-      created_at: user?.created_at
-    })
-  }, [user])
 
   useEffect(() => {
     if (debouncedSearchTerm) {
@@ -180,8 +153,6 @@ export function TopNav() {
       year: "numeric",
     })
   }
-
-  console.log("USER|||||||__________|||||||||||||||||", user)
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSupabaseLoading(true)

@@ -3,7 +3,6 @@ import { TrendingSectionClient } from "./trending-section-client";
 
 export default async function TrendingSection() {
   const articles = await getTrendingArticles();
-  console.log('TrendingSection fetched articles:', articles); // Debug log
   
   if (!articles || articles.length === 0) {
     return (
