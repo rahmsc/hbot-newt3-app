@@ -1,23 +1,22 @@
 "use client";
-import GlowingButton from "../utils/glowing-button";
+import GlowingButton from "~/components/utils/glowing-button";
+import { cn } from "~/lib/utils";
 
 interface FeatureArticleActionsProps {
-  outcome_rating?: string;
-  onReadMore?: () => void;
+  outcome_rating: string;
+  className?: string;
 }
 
-export function FeatureArticleActions({
-  onReadMore,
-}: FeatureArticleActionsProps) {
+export function FeatureArticleActions({ outcome_rating, className }: FeatureArticleActionsProps) {
   return (
-    <div className="mt-2 flex items-center justify-between space-x-4">
-      <div className="flex items-center p-4">
-        <GlowingButton
-          text="Read More"
-          onClick={onReadMore}
-          className="flex items-center gap-2 text-lg font-medium text-emerald-700 hover:text-emerald-500"
-        />
-      </div>
+    <div className="flex h-[64px] items-center justify-center">
+      <GlowingButton 
+        text="Read More"
+        className={cn(
+          "h-full w-full flex items-center justify-center",
+          className
+        )}
+      />
     </div>
   );
 }

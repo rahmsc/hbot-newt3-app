@@ -124,7 +124,7 @@ export function FilterNav({
         <div className="mx-auto w-full px-6 sm:px-12 lg:px-16">
           <ScrollArea className="w-full py-1">
             <div className="flex items-center space-x-3">
-              <div className="flex h-8 w-8 items-center justify-center">
+              <div className="hidden sm:flex h-8 w-8 items-center justify-center">
                 <Search className="h-4 w-4 text-gray-400" />
               </div>
               {selectedCategoryConditions.map((condition) => (

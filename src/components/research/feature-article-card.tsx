@@ -53,13 +53,13 @@ export default function FeaturedArticleCard({
   return (
     <div className={cn("group relative w-full overflow-hidden rounded-[2rem]", isMobile ? "h-[600px]" : "h-[650px]")}>
       {/* Background Image */}
-      <Image
+      <img
         src={imageUrl}
         alt={heading}
-        width={800}
-        height={400}
+        // fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className="object-cover transition-transform duration-300 group-hover:scale-105"
-        priority={true}
+        
       />
 
       {/* Gradient Overlay */}
@@ -119,17 +119,22 @@ export default function FeaturedArticleCard({
             <p className={cn("mb-6 leading-relaxed text-gray-200 drop-shadow", isMobile ? "text-sm" : "text-md")}>
               {truncatedSummary}
             </p>
-
-            <FeatureArticleActions outcome_rating={outcome_rating} />
           </div>
 
-          {/* Metadata */}
-          <div className={cn("flex flex-col space-y-2 uppercase", isMobile && "mt-4")}>
-            <div className={cn("grid gap-2", isMobile ? "grid-cols-2" : "grid-cols-1")}>
+          {/* Metadata and Action Button for Mobile */}
+          <div className={cn("flex flex-col", isMobile && "mt-4")}>
+            {/* 2x2 Grid for Mobile */}
+            <div className={cn("grid gap-2", isMobile ? "grid-cols-2 auto-rows-fr" : "grid-cols-1")}>
               <MetadataItem label="CONDITION" value={conditionName} />
               <MetadataItem label="ATA" value={pressure_used} />
-              {number_of_treatments && <MetadataItem label="# OF SESSIONS" value={number_of_treatments.toString()} />}
-              {!isMobile && (
+              <MetadataItem label="# OF SESSIONS" value={number_of_treatments.toString()} />
+              
+              {/* Read More Button in the fourth grid position for Mobile */}
+              {isMobile ? (
+                <div className="flex items-center justify-center">
+                  <FeatureArticleActions outcome_rating={outcome_rating} />
+                </div>
+              ) : (
                 <>
                   <MetadataItem label="PEER REVIEWED" value={peer_reviewed ? "Yes" : "No"} />
                   <MetadataItem label="PUBLIC DATA" value={public_data ? "Yes" : "No"} />

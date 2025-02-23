@@ -446,7 +446,7 @@ export function TopNav() {
                 >
                   {profileData.avatar_url || user?.user_metadata?.avatar_url ? (
                     <Image
-                      src={profileData.avatar_url || user?.user_metadata?.avatar_url}
+                      src={user?.user_metadata?.avatar_url}
                       alt="User avatar"
                       width={32}
                       height={32}

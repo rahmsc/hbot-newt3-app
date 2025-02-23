@@ -11,6 +11,25 @@ import {
 } from "~/utils/supabase/articles/getCategoryWithConditions"
 import { getConditionData } from "~/utils/supabase/articles/getConditionData"
 import getLatestArticles, { type RandomArticleItemProps } from "~/utils/supabase/articles/getLatestArticles"
+import { cn } from "~/lib/utils"
+
+function CarouselIndicator({ total, current }: { total: number; current: number }) {
+  return (
+    <div className="flex justify-center gap-2 mt-4 pb-4">
+      {Array.from({ length: total }).map((_, index) => (
+        <div
+          key={index}
+          className={cn(
+            "h-2 bg-gray-300 transition-all duration-300",
+            index === current 
+              ? "w-8 rounded-full bg-emerald-700" 
+              : "w-2 rounded-full"
+          )}
+        />
+      ))}
+    </div>
+  )
+}
 
 export default function ResearchDashboard() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -24,6 +43,7 @@ export default function ResearchDashboard() {
   const [conditionNames, setConditionNames] = useState<Record<number, string>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [currentSlide, setCurrentSlide] = useState(0)
 
   const handleConditionsSelect = useCallback((conditions: number[]) => {
     setSelectedConditions(conditions)
@@ -85,13 +105,25 @@ export default function ResearchDashboard() {
     void fetchArticles()
   }, [isLatestView, selectedConditions])
 
+  useEffect(() => {
+    if (!emblaApi) return
+
+    emblaApi.on('select', () => {
+      setCurrentSlide(emblaApi.selectedScrollSnap())
+    })
+
+    return () => {
+      emblaApi.off('select')
+    }
+  }, [emblaApi])
+
   return (
     <section className="w-full">
-      <div className="py-4 px-4 sm:px-16">
-        <h2 className="font-['Raleway'] text-xl sm:text-2xl font-normal tracking-[0.3em] text-gray-700">
+      <div className="pt-4 px-4 sm:px-16 pb-1">
+        <h2 className="font-['Raleway'] text-xl sm:text-2xl font-normal tracking-[0.5em] md:tracking-[0.3em] text-gray-700 text-center sm:text-left">
           {isLatestView ? "LATEST RESEARCH" : "FILTERED RESEARCH"}
         </h2>
-        <h4 className="text-sm text-gray-500">
+        <h4 className="text-sm text-gray-500 text-center sm:text-left">
           {isLatestView
             ? "The latest research and studies on hyperbaric therapy"
             : "Filtered research based on selected conditions"}
@@ -167,7 +199,7 @@ export default function ResearchDashboard() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div>xx
             </div>
 
             {/* Mobile Layout with Embla Carousel */}
@@ -197,6 +229,12 @@ export default function ResearchDashboard() {
                       </div>
                     ))}
                   </div>
+                  {articles.length > 0 && (
+                    <CarouselIndicator 
+                      total={articles.length} 
+                      current={currentSlide} 
+                    />
+                  )}
                 </div>
               </div>
             </div>
