@@ -10,12 +10,14 @@ import { ProviderCard } from "~/components/providers/provider-card"
 import { CarouselIndicator } from "~/components/utils/carousel-indicator"
 import type { Provider } from "~/types/providers"
 import { SAMPLE_PROVIDERS } from "~/data/providers"
+import LoadingSpinner from "~/components/utils/spinner"
 
 export default function ProvidersSection() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false)
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null)
   const [providers] = useState<Provider[]>(SAMPLE_PROVIDERS)
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -36,6 +38,16 @@ export default function ProvidersSection() {
       emblaApi.off('select', onSelect)
     }
   }, [emblaApi])
+
+  if (isLoading) {
+    return (
+      <section className="w-full">
+        <div className="flex h-screen items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="w-full pb-12 sm:pb-24">

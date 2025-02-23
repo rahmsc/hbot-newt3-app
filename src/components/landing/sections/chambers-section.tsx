@@ -13,6 +13,7 @@ import type { ChamberProps } from "~/types/chambers"
 import { createClient } from "~/utils/supabase/client"
 import GlowingButton from "~/components/utils/glowing-button"
 import { CarouselIndicator } from "~/components/utils/carousel-indicator"
+import LoadingSpinner from "~/components/utils/spinner"
 
 export function ChambersSection() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false)
@@ -64,9 +65,11 @@ export function ChambersSection() {
 
   if (isLoading) {
     return (
-      <div className="flex h-96 items-center justify-center">
-        <p className="text-lg font-medium text-gray-900">Loading chambers...</p>
-      </div>
+      <section className="w-full">
+        <div className="flex h-screen items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      </section>
     )
   }
 
@@ -74,7 +77,7 @@ export function ChambersSection() {
     <section className="w-full pb-12">
       <div className="h-px w-full bg-gray-600" />
       <div className="flex flex-col items-start justify-between gap-4 px-4 pt-2 sm:flex-row sm:items-center sm:px-16">
-        <div className="w-full space-y-2 sm:w-auto">
+        <div className="w-full space-y-2 pt-2 sm:w-auto">
           <h2 className="font-['Raleway'] text-xl sm:text-2xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
             EXPLORE CHAMBERS
           </h2>

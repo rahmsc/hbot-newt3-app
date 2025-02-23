@@ -9,6 +9,7 @@ import { type TrendingArticleProps, TrendingCard } from "~/components/trending/t
 import { TrendingFilter } from "~/components/trending/trending-filter"
 import { Button } from "~/components/ui/button"
 import { CarouselIndicator } from "~/components/utils/carousel-indicator"
+import LoadingSpinner from "~/components/utils/spinner"
 
 interface TrendingSectionClientProps {
   initialArticles: TrendingArticleProps[]
@@ -46,18 +47,12 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
     }
   }, [emblaApi])
 
-  if (!isClient) {
+  if (!isClient || isLoading) {
     return (
-      <section className="w-full bg-[#FAF7F4] pb-12">
-        <div className="p-4 text-center">Loading trending content...</div>
-      </section>
-    )
-  }
-
-  if (isLoading) {
-    return (
-      <section className="w-full bg-[#FAF7F4] pb-12">
-        <div className="p-4 text-center">Loading trending content...</div>
+      <section className="w-full bg-[#FAF7F4]">
+        <div className="flex h-screen items-center justify-center">
+          <LoadingSpinner />
+        </div>
       </section>
     )
   }
