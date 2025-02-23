@@ -30,10 +30,45 @@ export default async function TrendingPage() {
   const gridArticles = restArticles.slice(3)
 
   return (
-    <main className="w-full">
-      <TrendingHeader />
-      <FeaturedArticles articles={featuredArticles} />
-      <ArticleGrid articles={gridArticles} />
+    <main className="w-full bg-[#FAF7F4]">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="w-full space-y-2 sm:w-auto">
+            <h1 className="font-['Raleway'] text-lg sm:text-4xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
+              TRENDING ARTICLES
+            </h1>
+            <p className="text-sm sm:text-xl text-gray-500 text-center sm:text-left">
+              Explore the latest and most popular research in hyperbaric therapy.
+            </p>
+          </div>
+        </div>
+
+        {/* Featured Articles Section */}
+        <section className="mt-2">
+          {/* Mobile View */}
+          <div className="block sm:hidden">
+            <FeaturedArticles articles={featuredArticles} isMobile={true} />
+          </div>
+
+          {/* Desktop View */}
+          <div className="hidden sm:block">
+            <FeaturedArticles articles={featuredArticles} />
+          </div>
+        </section>
+
+        {/* Grid Articles Section */}
+        <section className="mt-12">
+          {/* Mobile View */}
+          <div className="block sm:hidden">
+            <ArticleGrid articles={gridArticles} isMobile={true} />
+          </div>
+
+          {/* Desktop View */}
+          <div className="hidden sm:block">
+            <ArticleGrid articles={gridArticles} />
+          </div>
+        </section>
+      </div>
     </main>
   )
 }

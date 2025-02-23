@@ -3,19 +3,38 @@
 import type { TrendingArticleProps } from "./trending-card"
 import { TrendingCard } from "./trending-card"
 import useEmblaCarousel from "embla-carousel-react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "~/components/ui/button"
+import { useState, useEffect } from "react"
+import { CarouselIndicator } from "~/components/utils/carousel-indicator"
 
 interface FeaturedArticlesProps {
   articles: TrendingArticleProps[]
+  isMobile?: boolean
 }
 
-export function FeaturedArticles({ articles }: FeaturedArticlesProps) {
+export function FeaturedArticles({ articles, isMobile }: FeaturedArticlesProps) {
+  const [currentSlide, setCurrentSlide] = useState(0)
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    align: "center",
+    align: "start",
     containScroll: "trimSnaps",
+    dragFree: true,
+    slidesToScroll: 1,
+    inViewThreshold: 0.7,
   })
+
+  useEffect(() => {
+    if (!emblaApi) return
+
+    const onSelect = () => {
+      setCurrentSlide(emblaApi.selectedScrollSnap())
+    }
+
+    emblaApi.on('select', onSelect)
+
+    return () => {
+      emblaApi.off('select', onSelect)
+    }
+  }, [emblaApi])
 
   if (!articles.length) return null
 
@@ -29,75 +48,55 @@ export function FeaturedArticles({ articles }: FeaturedArticlesProps) {
   )
 
   return (
-    <section className="container mx-auto max-w-7xl px-2 py-4">
-      <hr className="mb-4 sm:mb-8 border-t border-gray-700" />
-      <h2 className="font-['Raleway'] text-xl sm:text-2xl font-normal tracking-[0.2em] sm:tracking-[0.3em] text-gray-700 pb-4 sm:pb-8">
-        FEATURED ARTICLES
-      </h2>
+    <section className="w-full">
+      <div className="space-y-2">
+        <div className="px-4">
+          <hr className="mb-4 sm:mb-2 border-t border-gray-700" />
+          <h2 className="font-['Raleway'] text-xl sm:text-2xl font-normal tracking-[0.2em] sm:tracking-[0.3em] text-gray-700 pb-4 sm:pb-8 text-center sm:text-left">
+            FEATURED
+          </h2>
+        </div>
 
-      {/* Mobile Carousel View */}
-      <div className="block md:hidden">
-        <div className="relative px-4">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex -ml-4">
-              {[mainArticle, ...validSideArticles].map((article, index) => (
-                <div
-                  key={article.link || index}
-                  className="pl-4"
-                  style={{
-                    flex: "0 0 85%",
-                    minWidth: 0,
-                  }}
-                >
-                  <div className="h-[400px] sm:h-[450px]">
-                    {" "}
-                    {/* Increased height */}
-                    <TrendingCard article={article} size="large" />
+        {/* Mobile Carousel View */}
+        <div className="block md:hidden">
+          <div className="relative">
+            <div className="overflow-visible" ref={emblaRef}>
+              <div className="flex -ml-4">
+                {[mainArticle, ...validSideArticles].map((article, index) => (
+                  <div
+                    key={article.link || index}
+                    className="min-w-[85vw] flex-none pl-4"
+                  >
+                    <div className="relative h-[500px] overflow-hidden rounded-2xl shadow-lg transition duration-200 hover:shadow-md">
+                      <TrendingCard article={article} size="large" />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            <div className="md:hidden">
+              <CarouselIndicator 
+                total={articles.length} 
+                current={currentSlide} 
+              />
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute -left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
-            onClick={() => emblaApi?.scrollPrev()}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute -right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
-            onClick={() => emblaApi?.scrollNext()}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
         </div>
-      </div>
 
-      {/* Desktop Grid View */}
-      <div className="hidden md:grid gap-4 md:grid-cols-3">
-        {" "}
-        {/* Increased gap */}
-        <div className="md:col-span-2">
-          <div className="h-[600px]">
-            {" "}
-            {/* Fixed height instead of aspect ratio */}
-            <TrendingCard article={mainArticle} size="large" />
-          </div>
-        </div>
-        <div className="grid grid-rows-3 gap-4">
-          {" "}
-          {/* Increased gap */}
-          {validSideArticles.slice(0, 3).map((article, index) => (
-            <div key={article.link || index} className="h-[190px]">
-              {" "}
-              {/* Fixed height for side articles */}
-              <TrendingCard article={article} size="featured-side" />
+        {/* Desktop Grid View */}
+        <div className="hidden md:grid gap-4 md:grid-cols-3">
+          <div className="md:col-span-2">
+            <div className="h-[600px]">
+              <TrendingCard article={mainArticle} size="large" />
             </div>
-          ))}
+          </div>
+          <div className="grid grid-rows-3 gap-4">
+            {validSideArticles.slice(0, 3).map((article, index) => (
+              <div key={article.link || index} className="h-[190px]">
+                <TrendingCard article={article} size="featured-side" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
