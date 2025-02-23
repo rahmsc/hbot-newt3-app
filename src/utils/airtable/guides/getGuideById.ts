@@ -5,8 +5,8 @@ import type { GuidePageProp } from "~/types/guide";
 export async function getGuideById(id: string): Promise<GuidePageProp | null> {
   try {
     const base = new Airtable({
-      apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY,
-    }).base(process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID ?? "");
+      apiKey: process.env.AIRTABLE_API_KEY,
+    }).base(process.env.AIRTABLE_BASE_ID ?? "");
 
     const records = await base("Guides")
       .select({

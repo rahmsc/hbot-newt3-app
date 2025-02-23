@@ -4,8 +4,8 @@ import type { GuidePageProp } from "~/types/guide";
 
 export async function getAllGuides(): Promise<GuidePageProp[]> {
   const base = new Airtable({
-    apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY,
-  }).base(process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID ?? "");
+    apiKey: process.env.AIRTABLE_API_KEY,
+  }).base(process.env.AIRTABLE_BASE_ID ?? "");
 
   return new Promise((resolve, reject) => {
     base("Guides")
