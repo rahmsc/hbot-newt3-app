@@ -4,6 +4,7 @@ import Image from "next/image"
 import type { EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link"
 
 import { MobileChamberCard } from "~/components/chambers/mobile-chamber-card"
 import { ChamberQuickView } from "~/components/chambers/chambers-quick-view"
@@ -11,12 +12,14 @@ import { Button } from "~/components/ui/button"
 import type { ChamberProps } from "~/types/chambers"
 import { createClient } from "~/utils/supabase/client"
 import GlowingButton from "~/components/utils/glowing-button"
+import { CarouselIndicator } from "~/components/utils/carousel-indicator"
 
 export function ChambersSection() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false)
   const [selectedChamber, setSelectedChamber] = useState<ChamberProps | null>(null)
   const [chambers, setChambers] = useState<ChamberProps[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [currentSlide, setCurrentSlide] = useState(0)
 
   const options: EmblaOptionsType = {
     loop: true,
@@ -47,6 +50,18 @@ export function ChambersSection() {
     void fetchChambers()
   }, [])
 
+  useEffect(() => {
+    if (!emblaApi) return
+
+    emblaApi.on('select', () => {
+      setCurrentSlide(emblaApi.selectedScrollSnap())
+    })
+
+    return () => {
+      emblaApi.off('select')
+    }
+  }, [emblaApi])
+
   if (isLoading) {
     return (
       <div className="flex h-96 items-center justify-center">
@@ -58,12 +73,22 @@ export function ChambersSection() {
   return (
     <section className="w-full pb-12">
       <div className="h-px w-full bg-gray-600" />
-      <div className="flex flex-col items-start justify-between gap-4 px-4 py-2 sm:flex-row sm:items-center sm:px-16">
-        <div className="space-y-2">
-          <h2 className="font-['Raleway'] text-xl font-normal tracking-[0.3em] text-gray-700 sm:text-2xl">
+      <div className="flex flex-col items-start justify-between gap-4 px-4 pt-2 sm:flex-row sm:items-center sm:px-16">
+        <div className="w-full space-y-2 sm:w-auto">
+          <h2 className="font-['Raleway'] text-xl sm:text-2xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
             EXPLORE CHAMBERS
           </h2>
-          <h4 className="text-sm text-gray-500">The best chambers at the best prices. Guaranteed.</h4>
+          <h4 className="text-sm text-gray-500 text-center sm:text-left">
+            The best chambers at the best prices. Guaranteed.
+          </h4>
+          <Link href="/chambers" className="mt-4 block w-full sm:hidden">
+            <Button
+              variant="default"
+              className="w-full bg-emerald-700 transition-all duration-200 hover:bg-emerald-800 sm:w-auto"
+            >
+              View Chambers
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -86,6 +111,14 @@ export function ChambersSection() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Add Carousel Indicator for Mobile */}
+        <div className="md:hidden">
+          <CarouselIndicator 
+            total={chambers.length} 
+            current={currentSlide} 
+          />
         </div>
 
         {/* Navigation Buttons - Hidden on mobile */}

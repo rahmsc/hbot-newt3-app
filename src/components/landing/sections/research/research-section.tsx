@@ -12,24 +12,7 @@ import {
 import { getConditionData } from "~/utils/supabase/articles/getConditionData"
 import getLatestArticles, { type RandomArticleItemProps } from "~/utils/supabase/articles/getLatestArticles"
 import { cn } from "~/lib/utils"
-
-function CarouselIndicator({ total, current }: { total: number; current: number }) {
-  return (
-    <div className="flex justify-center gap-2 mt-4 pb-4">
-      {Array.from({ length: total }).map((_, index) => (
-        <div
-          key={index}
-          className={cn(
-            "h-2 bg-gray-300 transition-all duration-300",
-            index === current 
-              ? "w-8 rounded-full bg-emerald-700" 
-              : "w-2 rounded-full"
-          )}
-        />
-      ))}
-    </div>
-  )
-}
+import { CarouselIndicator } from "~/components/utils/carousel-indicator"
 
 export default function ResearchDashboard() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
