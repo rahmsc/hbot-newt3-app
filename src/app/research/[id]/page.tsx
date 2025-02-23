@@ -1,13 +1,13 @@
 import { Suspense } from "react"
 
 import ArticleContent from "~/components/research/article-content"
-import Spinner from "~/components/utils/spinner"
+import  Spinner  from "~/components/utils/spinner"
 import getArticleById from "~/utils/supabase/articles/getArticleById"
 
 function ArticleLoading() {
   return (
     <div className="flex h-64 items-center justify-center">
-      <Spinner size={100} className="text-orange-500" />
+      <Spinner />
     </div>
   )
 }

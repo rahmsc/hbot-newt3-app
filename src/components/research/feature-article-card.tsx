@@ -45,7 +45,7 @@ export default function FeaturedArticleCard({
 
   // Use CloudFront URL instead of direct S3 bucket URL
 
-  const imageUrl = `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/${id}.png`
+  const imageUrl = `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/100.png`
 
   const truncatedSummary =
     summary?.length > (isMobile ? 80 : 120) ? `${summary.slice(0, isMobile ? 80 : 120)}...` : summary
@@ -53,10 +53,10 @@ export default function FeaturedArticleCard({
   return (
     <div className={cn("group relative w-full overflow-hidden rounded-[2rem]", isMobile ? "h-[600px]" : "h-[650px]")}>
       {/* Background Image */}
-      <img
+      <Image
         src={imageUrl}
         alt={heading}
-        // fill
+        fill
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className="object-cover transition-transform duration-300 group-hover:scale-105"
         
@@ -105,7 +105,10 @@ export default function FeaturedArticleCard({
         </div>
 
         {/* Main Content */}
-        <div className={cn("grid gap-4", isMobile ? "grid-cols-1" : "grid-cols-3 gap-8")}>
+        <div className={cn(
+          "grid gap-4",
+          isMobile ? "grid-cols-1 pb-24" : "grid-cols-3 gap-8"  // Add padding bottom for mobile to account for absolute button
+        )}>
           {/* Left side */}
           <div className={cn("flex flex-col", !isMobile && "col-span-2")}>
             <h2
@@ -121,21 +124,19 @@ export default function FeaturedArticleCard({
             </p>
           </div>
 
-          {/* Metadata and Action Button for Mobile */}
+          {/* Metadata for Mobile */}
           <div className={cn("flex flex-col", isMobile && "mt-4")}>
-            {/* 2x2 Grid for Mobile */}
             <div className={cn("grid gap-2", isMobile ? "grid-cols-2 auto-rows-fr" : "grid-cols-1")}>
-              <MetadataItem label="CONDITION" value={conditionName} />
-              <MetadataItem label="ATA" value={pressure_used} />
-              <MetadataItem label="# OF SESSIONS" value={number_of_treatments.toString()} />
-              
-              {/* Read More Button in the fourth grid position for Mobile */}
               {isMobile ? (
-                <div className="flex items-center justify-center">
-                  <FeatureArticleActions outcome_rating={outcome_rating} />
-                </div>
+                <>
+                  <MetadataItem label="CONDITION" value={conditionName} />
+                  <MetadataItem label="# OF SESSIONS" value={number_of_treatments.toString()} />
+                </>
               ) : (
                 <>
+                  <MetadataItem label="CONDITION" value={conditionName} />
+                  <MetadataItem label="ATA" value={pressure_used} />
+                  <MetadataItem label="# OF SESSIONS" value={number_of_treatments.toString()} />
                   <MetadataItem label="PEER REVIEWED" value={peer_reviewed ? "Yes" : "No"} />
                   <MetadataItem label="PUBLIC DATA" value={public_data ? "Yes" : "No"} />
                   <MetadataItem label="FUNDED" value={funded ? "Yes" : "N/A"} />
@@ -144,6 +145,13 @@ export default function FeaturedArticleCard({
             </div>
           </div>
         </div>
+
+        {/* Read More Button - Full width for mobile */}
+        {isMobile && (
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-6">
+            <FeatureArticleActions outcome_rating={outcome_rating} />
+          </div>
+        )}
       </div>
     </div>
   )

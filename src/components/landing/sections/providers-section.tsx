@@ -26,6 +26,11 @@ export default function ProvidersSection() {
   })
 
   useEffect(() => {
+    // Set loading to false once providers are loaded
+    setIsLoading(false)
+  }, [])
+
+  useEffect(() => {
     if (!emblaApi) return
 
     const onSelect = () => {

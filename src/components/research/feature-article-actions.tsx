@@ -9,14 +9,12 @@ interface FeatureArticleActionsProps {
 
 export function FeatureArticleActions({ outcome_rating, className }: FeatureArticleActionsProps) {
   return (
-    <div className="flex h-[64px] items-center justify-center">
-      <GlowingButton 
-        text="Read More"
-        className={cn(
-          "h-full w-full flex items-center justify-center",
-          className
-        )}
-      />
-    </div>
+    <GlowingButton 
+      text="Read More"
+      className={cn(
+        "w-full",
+        className
+      )}
+    />
   );
 }
