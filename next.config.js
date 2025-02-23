@@ -6,7 +6,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['hbothq-bucket.s3.ap-southeast-2.amazonaws.com'],
+    domains: [
+      'hbothq-bucket.s3.ap-southeast-2.amazonaws.com',
+      'lh3.googleusercontent.com',
+      'fastly.picsum.photos',
+    ],
     remotePatterns: [
       {
         protocol: 'https',

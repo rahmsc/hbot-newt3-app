@@ -37,6 +37,7 @@ const formSchema = z.object({
 
 export function TopNav() {
   const [user, setUser] = useState<User | null>(null)
+  const [profileData, setProfileData] = useState<{ avatar_url: string | null }>({ avatar_url: null })
   const [isScrolled, setIsScrolled] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const supabase = createClient()
@@ -71,12 +72,25 @@ export function TopNav() {
 
   useEffect(() => {
     const checkUser = async () => {
+      console.log("Checking user...")
       const {
         data: { user },
         error,
       } = await supabase.auth.getUser()
+      
+      console.log("getUser response:", { user, error })
+      
       if (!error && user) {
         setUser(user)
+        console.log("User data after login:", {
+          user: user,
+          id: user.id,
+          email: user.email,
+          metadata: user.user_metadata,
+          created_at: user.created_at
+        })
+      } else {
+        console.log("No user found or error:", error)
       }
     }
 
@@ -85,19 +99,69 @@ export function TopNav() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
+      console.log("Auth state changed - Event:", _event)
+      const currentUser = session?.user ?? null
+      setUser(currentUser)
+      if (currentUser) {
+        console.log("Auth state changed - User data:", {
+          id: currentUser.id,
+          email: currentUser.email,
+          metadata: currentUser.user_metadata,
+          created_at: currentUser.created_at
+        })
+      } else {
+        console.log("Auth state changed - No user")
+      }
     })
 
     return () => {
+      console.log("Cleaning up auth subscription")
       subscription.unsubscribe()
     }
   }, [supabase])
+
+  // Add this separate useEffect to log user state changes
+  useEffect(() => {
+    console.log("USER|||||||__________|||||||||||||||||", {
+      id: user?.id,
+      email: user?.email,
+      metadata: user?.user_metadata,
+      created_at: user?.created_at
+    })
+  }, [user])
 
   useEffect(() => {
     if (debouncedSearchTerm) {
       setOpen(true)
     }
   }, [debouncedSearchTerm])
+
+  useEffect(() => {
+    const fetchProfileData = async (userId: string) => {
+      try {
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('avatar_url')
+          .eq('id', userId)
+          .single()
+
+        if (error) {
+          console.error('Error fetching profile:', error)
+          return
+        }
+
+        if (profile) {
+          setProfileData(profile)
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error)
+      }
+    }
+
+    if (user?.id) {
+      void fetchProfileData(user.id)
+    }
+  }, [user?.id, supabase])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -116,6 +180,8 @@ export function TopNav() {
       year: "numeric",
     })
   }
+
+  console.log("USER|||||||__________|||||||||||||||||", user)
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSupabaseLoading(true)
@@ -378,7 +444,17 @@ export function TopNav() {
                   variant="ghost"
                   className={cn("relative transition-all duration-200", isScrolled ? "h-7 w-7 p-0" : "h-8 w-8 p-0")}
                 >
-                  <UserCircle className="h-full w-full" />
+                  {profileData.avatar_url || user?.user_metadata?.avatar_url ? (
+                    <Image
+                      src={profileData.avatar_url || user?.user_metadata?.avatar_url}
+                      alt="User avatar"
+                      width={32}
+                      height={32}
+                      className="h-full w-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <UserCircle className="h-full w-full" />
+                  )}
                   <span className="sr-only">Open menu</span>
                 </Button>
               </DropdownMenuTrigger>
