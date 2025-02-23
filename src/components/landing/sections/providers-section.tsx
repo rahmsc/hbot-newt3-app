@@ -2,11 +2,12 @@
 import useEmblaCarousel from "embla-carousel-react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import { Button } from "~/components/ui/button"
 import { ProviderQuickView } from "~/components/providers/provider-quick-view"
 import { ProviderCard } from "~/components/providers/provider-card"
+import { CarouselIndicator } from "~/components/utils/carousel-indicator"
 import type { Provider } from "~/types/providers"
 import { SAMPLE_PROVIDERS } from "~/data/providers"
 
@@ -14,6 +15,7 @@ export default function ProvidersSection() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false)
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null)
   const [providers] = useState<Provider[]>(SAMPLE_PROVIDERS)
+  const [currentSlide, setCurrentSlide] = useState(0)
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -21,15 +23,31 @@ export default function ProvidersSection() {
     containScroll: "trimSnaps",
   })
 
+  useEffect(() => {
+    if (!emblaApi) return
+
+    const onSelect = () => {
+      setCurrentSlide(emblaApi.selectedScrollSnap())
+    }
+
+    emblaApi.on('select', onSelect)
+
+    return () => {
+      emblaApi.off('select', onSelect)
+    }
+  }, [emblaApi])
+
   return (
     <section className="w-full pb-12 sm:pb-24">
       <div className="h-px w-full bg-gray-600" />
       <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-16">
-        <div className="space-y-2">
-          <h2 className="font-['Raleway'] text-xl font-normal tracking-[0.3em] text-gray-700 sm:text-2xl">
+        <div className="w-full space-y-2 sm:w-auto">
+          <h2 className="font-['Raleway'] text-lg sm:text-2xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
             VERIFIED PROVIDERS
           </h2>
-          <h4 className="text-sm text-gray-500">The best providers in the business. Guaranteed.</h4>
+          <h4 className="text-sm text-gray-500 text-center sm:text-left">
+            The best providers in the business. Guaranteed.
+          </h4>
         </div>
         <Link href="/providers" className="w-full sm:w-auto">
           <Button
@@ -69,6 +87,14 @@ export default function ProvidersSection() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Add Carousel Indicator for Mobile */}
+        <div className="md:hidden">
+          <CarouselIndicator 
+            total={providers.length} 
+            current={currentSlide} 
+          />
         </div>
 
         {/* Navigation Buttons - Hidden on mobile */}

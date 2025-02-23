@@ -53,12 +53,14 @@ export function ChambersSection() {
   useEffect(() => {
     if (!emblaApi) return
 
-    emblaApi.on('select', () => {
+    const onSelect = () => {
       setCurrentSlide(emblaApi.selectedScrollSnap())
-    })
+    }
+
+    emblaApi.on('select', onSelect)
 
     return () => {
-      emblaApi.off('select')
+      emblaApi.off('select', onSelect)
     }
   }, [emblaApi])
 
