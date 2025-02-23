@@ -53,22 +53,23 @@ export function ArticleItem({ article, onArticleHover }: ArticleItemProps) {
           value: `Research Article ${article.id}`,
         })
       }
+      className="w-full px-2 sm:px-4"
     >
       <div className="group relative h-[220px] sm:h-[180px] w-full overflow-hidden rounded-xl border border-gray-200 transition-shadow hover:shadow-md">
         {/* Background Image */}
         <Image
-          src={getImageUrl(article.id) || "/placeholder.svg"}
+          src={getImageUrl(article.id) || "/placeholder.png"}
           alt={article.heading}
           fill
           className="object-cover transition-transform duration-200 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          sizes="(max-width: 768px) 95vw, (max-width: 1200px) 50vw, 33vw"
         />
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/60" />
 
         {/* Content */}
-        <div className="absolute inset-0 flex flex-col justify-between p-4">
+        <div className="absolute inset-0 flex flex-col justify-between p-3 sm:p-4">
           {/* Top Section */}
           <div className="space-y-1">
             {/* Author and Date */}
@@ -103,7 +104,7 @@ export function ArticleItem({ article, onArticleHover }: ArticleItemProps) {
               type="button"
               variant="ghost"
               size="icon"
-              className={`overflow-hidden rounded-full p-2 text-white backdrop-blur-sm transition-all ${
+              className={`overflow-hidden rounded-full p-1.5 sm:p-2 text-white backdrop-blur-sm transition-all ${
                 isBookmarked ? "bg-emerald-700/20 ring-2 ring-emerald-700 hover:bg-emerald-700/30" : "hover:bg-white/20"
               }`}
               onClick={handleBookmarkClick}

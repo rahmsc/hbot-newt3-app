@@ -91,9 +91,17 @@ export default async function ResearchPage({ searchParams }: Props) {
     if (!groupedCategories.length) {
       console.warn("No categories were processed");
       return (
-        <div className="flex h-96 items-center justify-center text-gray-500">
-          No research categories available.
-        </div>
+        <main className="w-full bg-[#FAF7F4]">
+          <div className="container mx-auto px-4 py-8"> 
+            <div className="flex h-96 items-center justify-center">
+              <div className="text-center">
+                <p className="text-lg text-gray-600">
+                  No research categories available.
+                </p>
+              </div>
+            </div>
+          </div>
+        </main>
       );
     }
 
@@ -108,14 +116,29 @@ export default async function ResearchPage({ searchParams }: Props) {
       : [];
 
     return (
-      <div className="w-full">
-        <ResearchContent
-          categories={groupedCategories}
-          initialSelectedCategory={selectedCategoryId}
-          initialSelectedCondition={selectedConditionId}
-          initialSidebarOpen={false}
-        />
-      </div>
+      <main className="w-full bg-[#FAF7F4]">
+        <div className="container mx-auto py-2">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="w-full space-y-2 sm:w-auto">
+              <h1 className="font-['Raleway'] text-lg sm:text-4xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
+                RESEARCH
+              </h1>
+              <p className="text-sm sm:text-xl text-gray-500 text-center sm:text-left">
+                Explore our comprehensive collection of hyperbaric research.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-2">
+            <ResearchContent
+              categories={groupedCategories}
+              initialSelectedCategory={selectedCategoryId}
+              initialSelectedCondition={selectedConditionId}
+              initialSidebarOpen={false}
+            />
+          </div>
+        </div>
+      </main>
     );
   } catch (error) {
     console.error("Detailed error in ResearchPage:", {
@@ -123,11 +146,22 @@ export default async function ResearchPage({ searchParams }: Props) {
       message: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : undefined,
     });
+    
     return (
-      <div className="flex h-96 items-center justify-center text-gray-500">
-        An error occurred while loading the research data. Please try again
-        later.
-      </div>
+      <main className="w-full bg-[#FAF7F4]">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex h-96 items-center justify-center">
+            <div className="text-center">
+              <p className="text-lg text-gray-600">
+                An error occurred while loading the research data.
+              </p>
+              <p className="mt-2 text-sm text-gray-500">
+                Please try again later.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
     );
   }
 }

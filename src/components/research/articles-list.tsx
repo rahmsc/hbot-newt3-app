@@ -18,7 +18,7 @@ export function ArticlesList({ articles, isLoading, onArticleHover, onSearchSugg
 
   if (articles.length === 0) {
     return (
-      <div className="flex h-full flex-col items-center pt-20 p-8 text-center">
+      <div className="flex flex-col items-center md:pt-20 p-8 text-center">
         <div className="max-w-[600px] space-y-6">
           {/* Top badge */}
           <div className="mx-auto w-fit rounded-full bg-black px-6 py-2 text-sm text-white">
@@ -37,18 +37,20 @@ export function ArticlesList({ articles, isLoading, onArticleHover, onSearchSugg
           </p>
 
           {/* Example tags as buttons */}
-          <div className="flex flex-wrap justify-center gap-2">
-            <span className="text-sm">Try:</span>
-            {["Aging", "Autism", "Alzheimers"].map((tag) => (
-              <Button
-                key={tag}
-                variant="ghost"
-                className="rounded-full bg-green-100 px-3 py-1 text-sm text-gray-900 hover:bg-green-200"
-                onClick={() => onSearchSuggestionClick?.(tag)}
-              >
-                {tag}
-              </Button>
-            ))}
+          <div className="pb-4 overflow-x-auto">
+            <div className="flex items-center gap-2 min-w-max px-2">
+              <span className="text-sm">Try:</span>
+              {["Aging", "Autism", "Alzheimers"].map((tag) => (
+                <Button
+                  key={tag}
+                  variant="ghost"
+                  className="rounded-full bg-green-100 px-3 py-1 text-sm text-gray-900 hover:bg-green-200 whitespace-nowrap"
+                  onClick={() => onSearchSuggestionClick?.(tag)}
+                >
+                  {tag}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -56,7 +58,7 @@ export function ArticlesList({ articles, isLoading, onArticleHover, onSearchSugg
   }
 
   return (
-    <div className="space-y-6 sm:space-y-4 p-4">
+    <div className="sm:space-y-4 p-2">
       {articles.map((article) => (
         <ArticleItem key={article.id} article={article} onArticleHover={onArticleHover} />
       ))}
