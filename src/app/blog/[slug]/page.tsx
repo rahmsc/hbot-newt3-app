@@ -6,7 +6,7 @@ import { notFound } from "next/navigation"
 
 import RichText from "~/components/utils/rich-text"
 import ParallaxHeader from "~/components/blog/ParallaxHeader"
-import { getBlogPostBySlug } from "~/utils/airtable/blogs/getBlogPosts"
+import { getBlogPosts } from "~/utils/airtable/blogs/getBlogPosts"
 import type { BlogPost } from "~/types/blog"
 
 type PageProps = {
@@ -24,9 +24,16 @@ export default function BlogPostPage({ params }: PageProps) {
 
   useEffect(() => {
     const fetchPost = async () => {
-      const fetchedPost = await getBlogPostBySlug(params.slug)
-      if (fetchedPost) {
-        setPost(fetchedPost)
+      const posts = await getBlogPosts()
+      const matchingPost = posts.find(post => 
+        // Convert the title to a URL-friendly slug and compare
+        post.fields["URL Slug"].toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '') === params.slug
+      )
+      
+      if (matchingPost) {
+        setPost(matchingPost)
       } else {
         notFound()
       }
