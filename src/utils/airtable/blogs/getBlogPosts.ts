@@ -1,37 +1,33 @@
-import Airtable from "airtable";
+import Airtable from "airtable"
 
-import type { BlogPost } from "~/types/blog";
+import type { BlogPost } from "~/types/blog"
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
-  const base = new Airtable({
-    apiKey: process.env.AIRTABLE_API_KEY,
-  }).base(process.env.AIRTABLE_BASE_ID ?? "");
+  try {
+    if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+      throw new Error("Missing Airtable credentials")
+    }
 
-  return new Promise((resolve, reject) => {
-    base("Blogs")
+    const base = new Airtable({
+      apiKey: process.env.AIRTABLE_API_KEY,
+      endpointUrl: 'https://api.airtable.com', // Explicitly set endpoint
+      requestTimeout: 30000, // 30 second timeout
+    }).base(process.env.AIRTABLE_BASE_ID)
+
+    const records = await base("Blogs")
       .select({
         view: "Grid view",
-        maxRecords: 10, // Limit to 10 records
+        maxRecords: 10,
       })
-      .all((err, records) => {
-        if (err) {
-          console.error("Error fetching data:", err);
-          reject(new Error(String(err)));
-          return;
-        }
+      .all()
 
-        const blogPosts =
-          records?.map((record) => ({
-            id: record.id,
-            fields: record.fields as unknown as BlogPost["fields"],
-          })) ?? [];
-
-        resolve(blogPosts);
-      });
-  });
+    return records.map((record) => ({
+      id: record.id,
+      fields: record.fields as unknown as BlogPost["fields"],
+    }))
+  } catch (error) {
+    console.error("Error in getBlogPosts:", error)
+    return [] // Return empty array instead of throwing
+  }
 }
 
-export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
-  const posts = await getBlogPosts()
-  return posts.find((post) => post.fields["URL Slug"] === slug) ?? null
-}

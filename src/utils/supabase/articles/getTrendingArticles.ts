@@ -95,9 +95,11 @@ export async function getTrendingArticles(): Promise<TrendingArticle[]> {
       .slice(0, 6); // Get only the 6 most recent articles
 
     console.log('Final articles count:', allArticles.length);
-    return allArticles;
+    const result = allArticles;
+    console.log('getTrendingArticles result:', result);
+    return result;
   } catch (error) {
-    console.error("Error fetching trending articles:", error);
+    console.error('getTrendingArticles error:', error);
     return []; // Return empty array instead of throwing
   }
 }

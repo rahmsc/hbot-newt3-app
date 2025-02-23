@@ -6,9 +6,13 @@ import type { TrendingArticleProps } from "~/components/trending/trending-card";
 export async function TrendingSectionServer() {
   try {
     const [blogPosts, guides] = await Promise.all([
-      getBlogPosts(),
-      getAllGuides(),
+      getBlogPosts().catch(() => []),
+      getAllGuides().catch(() => []),
     ]);
+
+    if (!blogPosts.length && !guides.length) {
+      throw new Error("No content available");
+    }
 
     const blogArticles = blogPosts
       .filter((post) => post.fields["Content Idea"] && post.fields.Introduction)
@@ -53,11 +57,7 @@ export async function TrendingSectionServer() {
     return <TrendingSectionClient initialArticles={articles} />;
   } catch (error) {
     console.error("Error fetching content:", error);
-    return (
-      <div className="flex h-96 flex-col items-center justify-center gap-2 text-gray-500">
-        <p className="text-lg font-medium">Error loading content</p>
-        <p className="text-sm">Please try again later</p>
-      </div>
-    );
+    // Return a minimal set of articles or empty state
+    return <TrendingSectionClient initialArticles={[]} />;
   }
 }
