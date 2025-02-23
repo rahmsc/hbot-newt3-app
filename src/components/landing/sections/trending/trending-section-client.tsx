@@ -8,6 +8,7 @@ import Image from "next/image"
 import { type TrendingArticleProps, TrendingCard } from "~/components/trending/trending-card"
 import { TrendingFilter } from "~/components/trending/trending-filter"
 import { Button } from "~/components/ui/button"
+import { CarouselIndicator } from "~/components/utils/carousel-indicator"
 
 interface TrendingSectionClientProps {
   initialArticles: TrendingArticleProps[]
@@ -23,12 +24,25 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
     align: "center",
     containScroll: "trimSnaps",
   })
+  const [currentSlide, setCurrentSlide] = useState(0)
 
   useEffect(() => {
     setIsClient(true)
     setArticles(initialArticles)
     setIsLoading(false)
   }, [initialArticles])
+
+  useEffect(() => {
+    if (!emblaApi) return
+
+    emblaApi.on('select', () => {
+      setCurrentSlide(emblaApi.selectedScrollSnap())
+    })
+
+    return () => {
+      emblaApi.off('select')
+    }
+  }, [emblaApi])
 
   if (!isClient) {
     return (
@@ -77,9 +91,13 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
     <section className="w-full bg-[#FAF7F4] pb-12">
       <div className="h-px w-full bg-gray-600" />
       <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-16">
-        <div className="space-y-2">
-          <h2 className="font-['Raleway'] text-xl font-normal tracking-[0.3em] text-gray-700 sm:text-2xl">TRENDING</h2>
-          <h4 className="text-sm text-gray-500">The latest and most popular articles on hyperbaric therapy</h4>
+        <div className="w-full space-y-2 sm:w-auto">
+          <h2 className="font-['Raleway'] text-xl sm:text-2xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
+            TRENDING
+          </h2>
+          <h4 className="text-sm text-gray-500 text-center sm:text-left">
+            The latest and most popular articles on hyperbaric therapy
+          </h4>
         </div>
         <div className="w-full sm:w-auto">
           <TrendingFilter onFilterChange={setFilter} />
@@ -101,18 +119,22 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
                       minWidth: 0,
                     }}
                   >
-                    <div className="h-[280px]">
-                      {" "}
-                      {/* Match desktop small card height */}
+                    <div className="h-[380px]">
                       <TrendingCard
                         article={article}
-                        size="small" // Use small size consistently
+                        size="small"
                       />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
+            
+            <CarouselIndicator 
+              total={filteredArticles.length} 
+              current={currentSlide} 
+            />
+
             <Button
               variant="outline"
               size="icon"
