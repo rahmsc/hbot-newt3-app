@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
-import { useCallback, useState } from "react"
+import { useCallback, useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import useEmblaCarousel from "embla-carousel-react"
 import { Skeleton } from "~/components/ui/skeleton"
@@ -12,6 +12,7 @@ import type { ChamberProduct } from "~/types/database"
 import GlowingButton from "../utils/glowing-button"
 import { ChambersFilter } from "./chambers-filter"
 import { ChamberQuickView } from "./chambers-quick-view"
+import { CarouselIndicator } from "../utils/carousel-indicator"
 
 interface ChambersGridProps {
   chambers: ChamberProduct[]
@@ -21,12 +22,28 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
   const [selectedChamber, setSelectedChamber] = useState<ChamberProduct | null>(null)
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false)
   const [filter, setFilter] = useState<"all" | "portable" | "mild" | "hard">("all")
+  const [currentSlide, setCurrentSlide] = useState(0)
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "center",
     containScroll: "trimSnaps",
+    dragFree: false,
   })
+
+  useEffect(() => {
+    if (!emblaApi) return
+
+    const onSelect = () => {
+      setCurrentSlide(emblaApi.selectedScrollSnap())
+    }
+
+    emblaApi.on('select', onSelect)
+
+    return () => {
+      emblaApi.off('select', onSelect)
+    }
+  }, [emblaApi])
 
   const imageUrl = "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/products/"
 
@@ -67,33 +84,31 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
 
   return (
     <section className="w-full bg-[#FAF7F4]">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="font-['Raleway'] text-2xl sm:text-4xl font-medium tracking-[0.3em] text-gray-900">
+      <div className="container mx-auto px-4 py-2">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="w-full space-y-2 sm:w-auto">
+            <h1 className="font-['Raleway'] text-xl sm:text-4xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
               CHAMBER RANGE
             </h1>
-            <p className="mt-2 text-base sm:text-xl font-light text-gray-600">
-              Explore our curated selection of premium hyperbaric chambers ({filteredChambers.length})
+            <p className="text-sm sm:text-xl text-gray-500 text-center sm:text-left">
+              Explore our curated selection of premium hyperbaric chambers.
             </p>
           </div>
-          <ChambersFilter onFilterChange={handleFilterChange} />
+          <div className="w-full sm:w-auto">
+            <ChambersFilter onFilterChange={handleFilterChange} />
+          </div>
         </div>
 
         {/* Mobile Carousel View */}
         <div className="block sm:hidden">
-          <div className="relative px-4">
+          <div className="relative px-4 pt-4">
             <div className="overflow-hidden" ref={emblaRef}>
-              <div className="flex -ml-4">
+              <div className="flex">
                 <AnimatePresence>
                   {filteredChambers.map((chamber) => (
                     <div
                       key={chamber.id}
-                      className="pl-4"
-                      style={{
-                        flex: "0 0 85%",
-                        minWidth: 0,
-                      }}
+                      className="min-w-[90vw] flex-none px-2"
                     >
                       <motion.div
                         initial={{ opacity: 0, y: 50 }}
@@ -126,6 +141,15 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
                 </AnimatePresence>
               </div>
             </div>
+
+            {/* Add Carousel Indicator */}
+            <div className="md:hidden">
+              <CarouselIndicator 
+                total={filteredChambers.length} 
+                current={currentSlide} 
+              />
+            </div>
+
             <Button
               variant="outline"
               size="icon"

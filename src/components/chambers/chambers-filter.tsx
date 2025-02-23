@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { motion } from "framer-motion";
 
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
@@ -27,36 +26,30 @@ const filters = [
   { value: "hard", label: "Hard" },
 ];
 
-export function ChambersFilter({
-  onFilterChange,
-}: {
-  onFilterChange: (value: string) => void;
-}) {
+export function ChambersFilter({ onFilterChange }: { onFilterChange: (filter: string) => void }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[200px] justify-between bg-white/10 text-gray-900 backdrop-blur-sm"
-          >
-            {value
-              ? filters.find((filter) => filter.value === value)?.label
-              : "Filter chambers..."}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </motion.div>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-[200px] justify-between"
+        >
+          {value
+            ? filters.find((filter) => filter.value === value)?.label
+            : "Select type..."}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search filter..." />
+          <CommandInput placeholder="Search type..." />
           <CommandList>
-            <CommandEmpty>No filter found.</CommandEmpty>
+            <CommandEmpty>No type found.</CommandEmpty>
             <CommandGroup>
               {filters.map((filter) => (
                 <CommandItem
@@ -71,7 +64,7 @@ export function ChambersFilter({
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === filter.value ? "opacity-100" : "opacity-0",
+                      value === filter.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                   {filter.label}
