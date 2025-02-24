@@ -15,6 +15,7 @@ import { cn } from "~/lib/utils"
 
 interface ArticleCardProps extends RandomArticleItemProps {
   isMobile?: boolean
+  className?: string
 }
 
 export function ArticleCard({
@@ -27,6 +28,7 @@ export function ArticleCard({
   published_date,
   conditionName,
   isMobile = false,
+  className,
 }: ArticleCardProps) {
   const router = useRouter()
   const { user } = useAuth()
@@ -68,7 +70,13 @@ export function ArticleCard({
 
   return (
     <Link href={`/research/${id}`}>
-      <div className="group relative h-[325px] w-full overflow-hidden rounded-[2rem]">
+      <div
+        className={cn(
+          "group relative w-full overflow-hidden rounded-[2rem]",
+          "h-[320px]", // Restored fixed height
+          className,
+        )}
+      >
         {/* Background Image */}
         <ImageComponent />
 

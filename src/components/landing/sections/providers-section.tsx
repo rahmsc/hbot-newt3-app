@@ -106,8 +106,8 @@ export default function ProvidersSection() {
           </div>
         </div>
 
-        {/* Add Carousel Indicator for Mobile */}
-        <div className="md:hidden">
+        {/* Updated Carousel Indicator for all screen sizes */}
+        <div className="mt-4">
           <CarouselIndicator 
             total={providers.length} 
             current={currentSlide} 

@@ -93,6 +93,14 @@ export function ChambersSection() {
             </Button>
           </Link>
         </div>
+        <Link href="/chambers" className="hidden sm:block">
+          <Button
+            variant="default"
+            className="bg-emerald-700 transition-all duration-200 hover:bg-emerald-800"
+          >
+            View Chambers
+          </Button>
+        </Link>
       </div>
 
       {/* Carousel Container */}
@@ -116,8 +124,8 @@ export function ChambersSection() {
           </div>
         </div>
 
-        {/* Add Carousel Indicator for Mobile */}
-        <div className="md:hidden">
+        {/* Updated Carousel Indicator for all screen sizes */}
+        <div className="mt-4">
           <CarouselIndicator 
             total={chambers.length} 
             current={currentSlide} 
