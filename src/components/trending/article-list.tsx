@@ -79,7 +79,7 @@ export function ArticleList({
                           variant="secondary"
                           className={`backdrop-blur-sm ${
                             checkCategory(article.fields?.Category, "blog")
-                              ? "bg-emerald-700"
+                              ? "bg-[#2B5741]"
                               : checkCategory(article.fields?.Category, "guide")
                                 ? "bg-orange-700"
                                 : "bg-white/20"
@@ -88,7 +88,7 @@ export function ArticleList({
                           {getCategory(article)}
                         </Badge>
                       ) : (
-                        <Badge variant="secondary" className="bg-emerald-700">
+                        <Badge variant="secondary" className="bg-[#2B5741]">
                           Research
                         </Badge>
                       )}

@@ -88,14 +88,14 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
                   disabled={isLoading}
                   className={`h-10 w-10 overflow-hidden rounded-full p-2 transition-all ${
                     isBookmarked 
-                      ? "bg-emerald-700/20 ring-2 ring-emerald-700 hover:bg-emerald-700/30" 
+                      ? "bg-[#2B5741]/20 ring-2 ring-[#2B5741] hover:bg-[#2B5741]/30" 
                       : "bg-gray-100 hover:bg-gray-200"
                   }`}
                 >
                   <BookmarkIcon
                     className={`h-5 w-5 transition-colors ${
                       isBookmarked 
-                        ? "fill-emerald-700 text-emerald-700" 
+                        ? "fill-[#2B5741] text-[#2B5741]" 
                         : "text-gray-600"
                     }`}
                   />

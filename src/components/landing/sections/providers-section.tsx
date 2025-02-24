@@ -69,7 +69,7 @@ export default function ProvidersSection() {
         <Link href="/providers" className="w-full sm:w-auto">
           <Button
             variant="default"
-            className="w-full bg-emerald-700 transition-all duration-200 hover:bg-emerald-800 sm:w-auto"
+            className="w-full bg-[#2B5741] transition-all duration-200 hover:bg-emerald-800 sm:w-auto"
           >
             Search Providers
           </Button>

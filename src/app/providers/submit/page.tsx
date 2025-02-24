@@ -114,7 +114,7 @@ export default function SubmitPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="container relative flex h-full flex-col justify-end p-6">
           <div className="mb-4 flex gap-2">
-            <Badge variant="default" className="bg-emerald-700 backdrop-blur-sm">
+            <Badge variant="default" className="bg-[#2B5741] backdrop-blur-sm">
               Providers
             </Badge>
             <Badge variant="secondary" className="bg-white/50 backdrop-blur-sm">
@@ -131,7 +131,7 @@ export default function SubmitPage() {
       <div className="container max-w-3xl py-12">
         <Card className="overflow-hidden border-none bg-white shadow-lg">
           <CardHeader className="space-y-4 text-center">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-xl bg-emerald-700">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-xl bg-[#2B5741]">
               <Building2 className="h-10 w-10 text-white" />
             </div>
             <div className="space-y-2">
@@ -272,17 +272,17 @@ export default function SubmitPage() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full bg-emerald-700 hover:bg-emerald-800" size="lg">
+              <Button type="submit" className="w-full bg-[#2B5741] hover:bg-emerald-800" size="lg">
                 Submit Application
               </Button>
 
               <p className="text-center text-sm text-muted-foreground">
                 By continuing, you agree to our{" "}
-                <Link href="/terms" className="text-emerald-700 underline underline-offset-4 hover:text-emerald-800">
+                <Link href="/terms" className="text-[#2B5741] underline underline-offset-4 hover:text-emerald-800">
                   Terms of Use
                 </Link>{" "}
                 and our{" "}
-                <Link href="/privacy" className="text-emerald-700 underline underline-offset-4 hover:text-emerald-800">
+                <Link href="/privacy" className="text-[#2B5741] underline underline-offset-4 hover:text-emerald-800">
                   Privacy Policy
                 </Link>
                 .
@@ -291,7 +291,7 @@ export default function SubmitPage() {
               <div className="space-y-6 rounded-xl border border-gray-100 bg-gray-50/50 p-6">
                 <div className="flex gap-4">
                   <div className="flex-shrink-0">
-                    <CheckCircle className="h-6 w-6 text-emerald-700" />
+                    <CheckCircle className="h-6 w-6 text-[#2B5741]" />
                   </div>
                   <div className="space-y-1">
                     <h3 className="font-['Raleway'] text-lg font-medium">Verify Business</h3>
@@ -304,7 +304,7 @@ export default function SubmitPage() {
 
                 <div className="flex gap-4">
                   <div className="flex-shrink-0">
-                    <Info className="h-6 w-6 text-emerald-700" />
+                    <Info className="h-6 w-6 text-[#2B5741]" />
                   </div>
                   <div className="space-y-1">
                     <h3 className="font-['Raleway'] text-lg font-medium">Assessment & Scoring</h3>

@@ -107,7 +107,7 @@ export function FilterNav({
                   className={cn(
                     "group flex items-center gap-1.5 whitespace-nowrap rounded-full border px-6 py-1.5 text-sm font-medium transition-all hover:bg-gray-100",
                     selectedCategory === category.id
-                      ? "border-emerald-600 bg-emerald-50 text-emerald-700"
+                      ? "border-emerald-600 bg-emerald-50 text-[#2B5741]"
                       : "border-gray-300 bg-transparent text-gray-600",
                   )}
                 >
@@ -152,7 +152,7 @@ export function FilterNav({
                   className={cn(
                     "flex items-center whitespace-nowrap rounded-full border px-6 py-1 text-sm font-medium transition-all hover:bg-gray-100",
                     localSelectedCondition === condition.id
-                      ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                      ? "border-emerald-300 bg-emerald-50 text-[#2B5741]"
                       : "border-gray-300 bg-transparent text-gray-600 hover:border-gray-400",
                   )}
                 >

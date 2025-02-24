@@ -221,7 +221,7 @@ export function TopNav() {
                     <span>{formatDate(study.published_date)}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 font-mono">
+                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-[#2B5741] font-mono">
                       {study.pressure_used}
                     </span>
                     <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-400 font-mono">
@@ -391,7 +391,7 @@ export function TopNav() {
                 <Button
                   variant="default"
                   className={cn(
-                    "hidden bg-emerald-700 transition-all duration-200 hover:bg-emerald-800 md:inline-flex",
+                    "hidden bg-[#2B5741] transition-all duration-200 hover:bg-emerald-800 md:inline-flex",
                     isScrolled ? "h-7 text-xs" : "h-8 text-sm",
                   )}
                 >
@@ -415,7 +415,7 @@ export function TopNav() {
             <Button
               variant="outline"
               className={cn(
-                "hidden border-emerald-700 text-emerald-700 transition-all duration-200 md:inline-flex",
+                "hidden border-[#2B5741] text-[#2B5741] transition-all duration-200 md:inline-flex",
                 isScrolled ? "h-7 text-xs" : "h-8 text-sm",
               )}
               onClick={() => router.push("/chambers")}

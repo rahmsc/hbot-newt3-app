@@ -29,7 +29,7 @@ export default function LoadingSpinner() {
         {dots.map((dot, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full bg-gradient-to-r from-emerald-700 to-[#2B5741]"
+            className="absolute rounded-full bg-gradient-to-r from-[#2B5741] to-[#2B5741]"
             style={{
               width: dot.size,
               height: dot.size,

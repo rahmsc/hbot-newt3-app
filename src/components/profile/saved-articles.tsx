@@ -159,7 +159,7 @@ export function SavedArticles({ userId }: SavedArticlesProps) {
         <Link href="/research">
           <Button
             variant="default"
-            className="bg-emerald-700 hover:bg-emerald-800"
+            className="bg-[#2B5741] hover:bg-emerald-800"
           >
             Browse Studies
           </Button>
@@ -208,14 +208,14 @@ export function SavedArticles({ userId }: SavedArticlesProps) {
               <Link href={`/research/${study.id}`}>
                 <Button
                   variant="default"
-                  className="bg-emerald-700 hover:bg-emerald-800"
+                  className="bg-[#2B5741] hover:bg-emerald-800"
                 >
                   Read More
                 </Button>
               </Link>
               <Button
                 variant="outline"
-                className="border-emerald-700 text-emerald-700 hover:bg-emerald-50"
+                className="border-[#2B5741] text-[#2B5741] hover:bg-emerald-50"
                 onClick={() => void removeStudy(study.id)}
               >
                 Remove

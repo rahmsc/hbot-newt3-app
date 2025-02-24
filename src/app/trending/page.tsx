@@ -11,7 +11,7 @@ export default async function TrendingPage() {
     return (
       <div className="flex h-[calc(100vh-127px)] items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-emerald-700" />
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-[#2B5741]" />
           <p className="text-lg text-gray-600">Loading trending content...</p>
         </div>
       </div>

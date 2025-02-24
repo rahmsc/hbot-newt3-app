@@ -64,7 +64,7 @@ export function ProviderCard({ name, rating, reviewCount, location, image, onQui
 
       {/* Verified Badge */}
       <div className="absolute left-4 sm:left-6 top-4 sm:top-6">
-        <span className="mb-2 inline-block rounded-full border border-emerald-700 bg-gray-100 px-2 sm:px-3 py-1 font-mono text-[10px] sm:text-xs uppercase tracking-wide text-emerald-700">
+        <span className="mb-2 inline-block rounded-full border border-[#2B5741] bg-gray-100 px-2 sm:px-3 py-1 font-mono text-[10px] sm:text-xs uppercase tracking-wide text-[#2B5741]">
           Verified
         </span>
       </div>

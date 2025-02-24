@@ -28,7 +28,7 @@
 //               variant="default"
 //               className={`backdrop-blur-sm ${
 //                 post.category.main.toLowerCase() === "blog"
-//                   ? "bg-emerald-700"
+//                   ? "bg-[#2B5741]"
 //                   : post.category.main.toLowerCase() === "guide"
 //                     ? "bg-orange-700"
 //                     : "bg-white/20"

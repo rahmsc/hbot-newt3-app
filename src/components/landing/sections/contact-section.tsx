@@ -129,7 +129,7 @@ const ContactSection = () => {
               />
               <Button
                 type="submit"
-                className="h-12 sm:h-14 w-full rounded-full bg-emerald-600 px-4 sm:px-6 text-base sm:text-lg font-semibold text-white transition-all hover:bg-emerald-500 hover:shadow-lg active:scale-95 touch-none"
+                className="h-12 sm:h-14 w-full rounded-full bg-[#2B5741] px-4 sm:px-6 text-base sm:text-lg font-semibold text-white transition-all hover:bg-emerald-500 hover:shadow-lg active:scale-95 touch-none"
                 disabled={isLoading}
               >
                 {isLoading ? "Subscribing..." : "Subscribe Now"}

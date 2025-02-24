@@ -105,13 +105,13 @@ export function ArticleItem({ article, onArticleHover }: ArticleItemProps) {
               variant="ghost"
               size="icon"
               className={`overflow-hidden rounded-full p-1.5 sm:p-2 text-white backdrop-blur-sm transition-all ${
-                isBookmarked ? "bg-emerald-700/20 ring-2 ring-emerald-700 hover:bg-emerald-700/30" : "hover:bg-white/20"
+                isBookmarked ? "bg-[#2B5741]/20 ring-2 ring-[#2B5741] hover:bg-[#2B5741]/30" : "hover:bg-white/20"
               }`}
               onClick={handleBookmarkClick}
               disabled={isBookmarkLoading}
             >
               <BookmarkIcon
-                className={`h-4 w-4 transition-colors ${isBookmarked ? "fill-white text-emerald-700" : "text-white"}`}
+                className={`h-4 w-4 transition-colors ${isBookmarked ? "fill-white text-[#2B5741]" : "text-white"}`}
               />
             </Button>
           </div>

@@ -87,7 +87,7 @@ export function ChambersSection() {
           <Link href="/chambers" className="mt-4 block w-full sm:hidden">
             <Button
               variant="default"
-              className="w-full bg-emerald-700 transition-all duration-200 hover:bg-emerald-800 sm:w-auto"
+              className="w-full bg-[#2B5741] transition-all duration-200 hover:bg-emerald-800 sm:w-auto"
             >
               View Chambers
             </Button>
@@ -96,7 +96,7 @@ export function ChambersSection() {
         <Link href="/chambers" className="hidden sm:block">
           <Button
             variant="default"
-            className="bg-emerald-700 transition-all duration-200 hover:bg-emerald-800"
+            className="bg-[#2B5741] transition-all duration-200 hover:bg-emerald-800"
           >
             View Chambers
           </Button>

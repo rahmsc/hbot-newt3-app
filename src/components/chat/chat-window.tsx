@@ -79,7 +79,7 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
       className="fixed bottom-4 right-4 z-50 w-96 rounded-lg bg-white shadow-xl"
     >
       {/* Chat Header */}
-      <div className="flex items-center justify-between rounded-t-lg bg-emerald-700 p-4">
+      <div className="flex items-center justify-between rounded-t-lg bg-[#2B5741] p-4">
         <h3 className="text-lg font-semibold text-white">HBOT AI Assistant</h3>
         <button
           type="button"
@@ -103,7 +103,7 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
               <div
                 className={`rounded-lg p-3 ${
                   m.role === 'user'
-                    ? 'bg-emerald-700 text-white'
+                    ? 'bg-[#2B5741] text-white'
                     : 'bg-gray-100 text-gray-900'
                 }`}
               >
@@ -113,7 +113,7 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
           ))}
           {isLoading && (
             <div className="flex items-center justify-center">
-              <div className="animate-pulse text-emerald-700">...</div>
+              <div className="animate-pulse text-[#2B5741]">...</div>
             </div>
           )}
         </div>
@@ -126,13 +126,13 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
             value={input}
             onChange={handleInputChange}
             placeholder="Ask about HBOT..."
-            className="flex-1 rounded-full border px-4 py-2 focus:border-emerald-700 focus:outline-none focus:ring-1 focus:ring-emerald-700"
+            className="flex-1 rounded-full border px-4 py-2 focus:border-[#2B5741] focus:outline-none focus:ring-1 focus:ring-[#2B5741]"
             disabled={isLoading}
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="rounded-full bg-emerald-700 px-4 py-2 text-white hover:bg-emerald-600 disabled:opacity-50"
+            className="rounded-full bg-[#2B5741] px-4 py-2 text-white hover:bg-emerald-600 disabled:opacity-50"
           >
             Send
           </button>

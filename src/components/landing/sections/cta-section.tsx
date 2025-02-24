@@ -67,7 +67,7 @@ export function CTASubscriptionSection() {
           >
             <a
               href="tel:1234567890"
-              className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 sm:gap-3 rounded-full bg-emerald-700 px-6 sm:px-8 py-4 text-base sm:text-lg font-semibold text-white transition-all hover:scale-105 hover:bg-emerald-500 hover:shadow-lg active:scale-95 touch-none"
+              className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 sm:gap-3 rounded-full bg-[#2B5741] px-6 sm:px-8 py-4 text-base sm:text-lg font-semibold text-white transition-all hover:scale-105 hover:bg-emerald-500 hover:shadow-lg active:scale-95 touch-none"
             >
               <Phone className="h-5 w-5 sm:h-6 sm:w-6" />
               <span className="whitespace-nowrap">Speak To A Specialist</span>
@@ -76,7 +76,7 @@ export function CTASubscriptionSection() {
             <button
               type="button"
               onClick={() => setIsChatOpen(true)}
-              className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 sm:gap-3 rounded-full border-2 border-emerald-700 bg-white px-6 sm:px-8 py-4 text-base sm:text-lg font-semibold text-emerald-700 transition-all hover:scale-105 hover:bg-gray-100 hover:shadow-lg active:scale-95 touch-none"
+              className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 sm:gap-3 rounded-full border-2 border-[#2B5741] bg-white px-6 sm:px-8 py-4 text-base sm:text-lg font-semibold text-[#2B5741] transition-all hover:scale-105 hover:bg-gray-100 hover:shadow-lg active:scale-95 touch-none"
             >
               <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6" />
               <span className="whitespace-nowrap">Chat with AI Assistant</span>

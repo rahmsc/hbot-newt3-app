@@ -41,7 +41,7 @@ export function TrendingCard({ article, size = "medium" }: TrendingCardProps) {
         <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 text-white">
           <Badge
             className={`mb-2 sm:mb-4 w-fit font-mono text-xs uppercase tracking-wider text-white ${
-              article.type === "blog" ? "bg-emerald-700 hover:bg-emerald-800" : "bg-orange-500 hover:bg-orange-600"
+              article.type === "blog" ? "bg-[#2B5741] hover:bg-emerald-800" : "bg-orange-500 hover:bg-orange-600"
             }`}
             variant="secondary"
           >

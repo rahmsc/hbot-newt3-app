@@ -55,7 +55,7 @@ export default async function ChamberProductPage({ params }: PageProps) {
 
             {/* Badges */}
             <div className="flex gap-3">
-              <span className="rounded-full bg-emerald-700 px-4 py-2 text-sm font-medium text-white">
+              <span className="rounded-full bg-[#2B5741] px-4 py-2 text-sm font-medium text-white">
                 {chamber.capacity}
               </span>
               <span className="rounded-full bg-purple-600 px-4 py-2 text-sm font-medium text-white">
@@ -67,14 +67,14 @@ export default async function ChamberProductPage({ params }: PageProps) {
             <div className="flex items-center gap-3">
               <Button
                 size="lg"
-                className="flex-1 rounded-full bg-emerald-700 text-lg font-medium text-white hover:bg-emerald-800"
+                className="flex-1 rounded-full bg-[#2B5741] text-lg font-medium text-white hover:bg-emerald-800"
               >
                 Speak To An Expert
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="aspect-square rounded-full border-emerald-700 p-0 text-emerald-700 hover:bg-emerald-50"
+                className="aspect-square rounded-full border-[#2B5741] p-0 text-[#2B5741] hover:bg-emerald-50"
               >
                 <Bookmark className="h-6 w-6" />
               </Button>
@@ -195,7 +195,7 @@ export default async function ChamberProductPage({ params }: PageProps) {
         <section className="mx-auto max-w-5xl py-16 text-center">
           <h2 className="relative mb-12 font-['Raleway'] text-4xl font-bold tracking-wider sm:text-5xl">
             The Hyperbaric HQ Standard
-            <div className="absolute -bottom-4 left-1/2 h-1 w-48 -translate-x-1/2 bg-emerald-700" />
+            <div className="absolute -bottom-4 left-1/2 h-1 w-48 -translate-x-1/2 bg-[#2B5741]" />
           </h2>
 
           <p className="mx-auto max-w-4xl text-xl leading-relaxed text-gray-600">
@@ -206,7 +206,7 @@ export default async function ChamberProductPage({ params }: PageProps) {
           <div className="mt-12">
             <Link
               href="/join-hq"
-              className="inline-block rounded-full bg-emerald-700 px-12 py-4 text-lg font-medium text-white transition-colors hover:bg-emerald-800"
+              className="inline-block rounded-full bg-[#2B5741] px-12 py-4 text-lg font-medium text-white transition-colors hover:bg-emerald-800"
             >
               Learn More
             </Link>

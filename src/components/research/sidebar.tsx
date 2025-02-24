@@ -156,7 +156,7 @@ export function Sidebar({
                             className={cn(
                               "group relative w-full justify-start rounded-md px-3 py-1.5 text-left text-sm transition-all",
                               condition.id === selectedConditionId
-                                ? "bg-emerald-50 font-medium text-emerald-700"
+                                ? "bg-emerald-50 font-medium text-[#2B5741]"
                                 : "text-gray-600 hover:bg-gray-50"
                             )}
                           >
@@ -167,7 +167,7 @@ export function Sidebar({
                                   className={cn(
                                     "ml-2 rounded-full px-2 py-0.5 text-xs",
                                     condition.id === selectedConditionId
-                                      ? "bg-emerald-100 text-emerald-700"
+                                      ? "bg-emerald-100 text-[#2B5741]"
                                       : "bg-gray-100 text-gray-500"
                                   )}
                                 >
@@ -176,7 +176,7 @@ export function Sidebar({
                               )}
                             </div>
                             {condition.id === selectedConditionId && (
-                              <div className="absolute inset-y-0 -left-4 w-0.5 bg-emerald-700" />
+                              <div className="absolute inset-y-0 -left-4 w-0.5 bg-[#2B5741]" />
                             )}
                           </Button>
                         ))}

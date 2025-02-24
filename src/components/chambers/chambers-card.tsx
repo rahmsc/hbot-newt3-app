@@ -62,7 +62,7 @@ export function ChamberCard({
               <div className="flex items-center space-x-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-emerald-700"
+                  className="h-4 w-4 text-[#2B5741]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -83,7 +83,7 @@ export function ChamberCard({
                 <div className="flex items-center space-x-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-emerald-700"
+                    className="h-4 w-4 text-[#2B5741]"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"

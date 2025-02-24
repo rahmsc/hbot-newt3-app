@@ -118,14 +118,14 @@ export default function FeaturedArticleCard({
               className={cn(
                 "overflow-hidden rounded-full p-2 text-white backdrop-blur-sm transition-all",
                 isBookmarked
-                  ? "bg-emerald-700/20 ring-2 ring-emerald-700 hover:bg-emerald-700/30"
+                  ? "bg-[#2B5741]/20 ring-2 ring-[#2B5741] hover:bg-[#2B5741]/30"
                   : "hover:bg-white/20",
               )}
             >
               <Bookmark
                 className={cn(
                   "transition-colors",
-                  isBookmarked ? "fill-white text-emerald-700" : "text-white",
+                  isBookmarked ? "fill-white text-[#2B5741]" : "text-white",
                   isMobile ? "h-6 w-6" : "h-8 w-8",
                 )}
               />

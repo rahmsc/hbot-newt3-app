@@ -43,7 +43,7 @@ export function ProviderQuickView({
           <div className="flex flex-1 flex-col gap-6 p-6">
             {/* Header */}
             <div>
-              <span className="mb-2 inline-block rounded-full border border-emerald-700 bg-gray-100 px-3 py-1 font-mono text-xs uppercase tracking-wide text-emerald-700">
+              <span className="mb-2 inline-block rounded-full border border-[#2B5741] bg-gray-100 px-3 py-1 font-mono text-xs uppercase tracking-wide text-[#2B5741]">
                 Verified
               </span>
               <h2 className="font-['Raleway'] text-4xl font-light tracking-wide text-gray-900">
@@ -103,7 +103,7 @@ export function ProviderQuickView({
                   {provider.categories.map((category) => (
                     <span
                       key={category}
-                      className="rounded-full border border-emerald-700 bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
+                      className="rounded-full border border-[#2B5741] bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
                     >
                       {category}
                     </span>

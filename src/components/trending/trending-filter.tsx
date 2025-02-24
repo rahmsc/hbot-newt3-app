@@ -26,8 +26,8 @@ export function TrendingFilter({ onFilterChange }: TrendingFilterProps) {
           onClick={() => handleFilterChange("blogs")}
           className={`rounded-full text-sm font-medium ${
             activeFilter === "blogs"
-              ? "bg-emerald-700 text-white hover:bg-emerald-600"
-              : "border-emerald-700 text-emerald-700 hover:bg-emerald-50"
+              ? "bg-[#2B5741] text-white hover:bg-emerald-600"
+              : "border-[#2B5741] text-[#2B5741] hover:bg-emerald-50"
           }`}
         >
           Blogs
@@ -37,8 +37,8 @@ export function TrendingFilter({ onFilterChange }: TrendingFilterProps) {
           onClick={() => handleFilterChange("guides")}
           className={`rounded-full text-sm font-medium ${
             activeFilter === "guides"
-              ? "bg-emerald-700 text-white hover:bg-emerald-600"
-              : "border-emerald-700 text-emerald-700 hover:bg-emerald-50"
+              ? "bg-[#2B5741] text-white hover:bg-emerald-600"
+              : "border-[#2B5741] text-[#2B5741] hover:bg-emerald-50"
           }`}
         >
           Guides
@@ -48,8 +48,8 @@ export function TrendingFilter({ onFilterChange }: TrendingFilterProps) {
           onClick={() => handleFilterChange("latest")}
           className={`rounded-full text-sm font-medium ${
             activeFilter === "latest"
-              ? "bg-emerald-700 text-white hover:bg-emerald-600"
-              : "border-emerald-700 text-emerald-700 hover:bg-emerald-50"
+              ? "bg-[#2B5741] text-white hover:bg-emerald-600"
+              : "border-[#2B5741] text-[#2B5741] hover:bg-emerald-50"
           }`}
         >
           Latest

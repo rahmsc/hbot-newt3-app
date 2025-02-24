@@ -15,7 +15,7 @@ export function CarouselIndicator({ total, current, className }: CarouselIndicat
           className={cn(
             "h-2 bg-gray-300 transition-all duration-300",
             index === current 
-              ? "w-8 rounded-full bg-emerald-700" 
+              ? "w-8 rounded-full bg-[#2B5741]" 
               : "w-2 rounded-full"
           )}
         />

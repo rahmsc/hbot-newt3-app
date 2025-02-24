@@ -217,7 +217,7 @@ export function ResearchContent({
           </Button>
 
           {selectedCondition && (
-            <Badge variant="outline" className="gap-1 border-emerald-700 text-emerald-700">
+            <Badge variant="outline" className="gap-1 border-[#2B5741] text-[#2B5741]">
               {selectedCondition.name}
               <Button
                 variant="ghost"

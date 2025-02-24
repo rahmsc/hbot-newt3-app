@@ -64,7 +64,7 @@ export function TrendingContent({ featuredPosts = [], listPosts = [] }: Trending
               <Button
                 variant={filter === "latest" ? "default" : "outline"}
                 onClick={() => setFilter("latest")}
-                className="rounded-full bg-emerald-600 text-sm font-medium text-white hover:bg-emerald-700"
+                className="rounded-full bg-emerald-600 text-sm font-medium text-white hover:bg-[#2B5741]"
               >
                 Latest
               </Button>

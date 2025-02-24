@@ -134,7 +134,7 @@ export function ExpertInquiryForm({ chamber, onClose }: InquiryFormProps) {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-md transition-colors duration-300"
+            className="w-full h-12 bg-emerald-600 hover:bg-[#2B5741] text-white font-semibold rounded-md transition-colors duration-300"
           >
             {isSubmitting ? "Sending..." : "Send Inquiry"}
             <ArrowRight className="ml-2 h-5 w-5" />

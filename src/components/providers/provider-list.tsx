@@ -72,7 +72,7 @@ export function ProviderCard({ provider }: { provider: (typeof SAMPLE_PROVIDERS)
               {provider.categories.map((category) => (
                 <span
                   key={category}
-                  className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700"
+                  className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-[#2B5741]"
                 >
                   {category}
                 </span>
@@ -82,7 +82,7 @@ export function ProviderCard({ provider }: { provider: (typeof SAMPLE_PROVIDERS)
             {/* Details */}
             <div className="space-y-3 rounded-2xl bg-gray-50 p-4">
               <div className="flex items-start gap-3">
-                <Clock className="mt-1 h-4 w-4 text-emerald-700" />
+                <Clock className="mt-1 h-4 w-4 text-[#2B5741]" />
                 <div>
                   <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
                     Hours
@@ -91,7 +91,7 @@ export function ProviderCard({ provider }: { provider: (typeof SAMPLE_PROVIDERS)
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Phone className="mt-1 h-4 w-4 text-emerald-700" />
+                <Phone className="mt-1 h-4 w-4 text-[#2B5741]" />
                 <div>
                   <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
                     Phone
@@ -106,7 +106,7 @@ export function ProviderCard({ provider }: { provider: (typeof SAMPLE_PROVIDERS)
               <Button
                 variant="default"
                 size="lg"
-                className="flex-1 bg-emerald-700 hover:bg-emerald-800"
+                className="flex-1 bg-[#2B5741] hover:bg-emerald-800"
               >
                 Book Now
               </Button>
