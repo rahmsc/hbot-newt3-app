@@ -37,11 +37,21 @@ export function MetadataItem({
     <div
       className={cn(
         "flex flex-col items-center justify-between overflow-hidden rounded-full bg-white/10 backdrop-blur-sm",
-        isMobile ? "p-1.5" : "p-2",
+        isMobile ? "p-1" : "p-2",
       )}
     >
-      <div className="font-mono text-xs tracking-[0.2em] text-gray-300">{label}</div>
-      <div className="font-['Roboto'] text-sm tracking-widest text-white">{value}</div>
+      <div className={cn(
+        "font-mono tracking-[0.2em] text-gray-300",
+        isMobile ? "text-[10px]" : "text-xs"
+      )}>
+        {label}
+      </div>
+      <div className={cn(
+        "font-['Roboto'] tracking-widest text-white",
+        isMobile ? "text-xs" : "text-sm"
+      )}>
+        {value}
+      </div>
     </div>
   )
 }

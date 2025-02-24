@@ -17,12 +17,18 @@ import { CarouselIndicator } from "~/components/utils/carousel-indicator"
 // import LoadingSpinner from "~/components/utils/spinner"
 
 export default function ResearchDashboard() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: "center",
-    containScroll: "trimSnaps",
-    dragFree: false,
-    skipSnaps: false,
-  })
+  // Define options before using it
+  const options: EmblaOptionsType = {
+    loop: true,
+    align: "start",
+    slidesToScroll: 1,
+    breakpoints: {
+      "(min-width: 768px)": { slidesToScroll: 2 },
+      "(min-width: 1024px)": { slidesToScroll: 3 },
+    },
+  }
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(options)
   const [isLatestView, setIsLatestView] = useState(true)
   const [categories, setCategories] = useState<CategoryWithConditions[]>([])
   const [selectedConditions, setSelectedConditions] = useState<number[]>([])
@@ -76,23 +82,30 @@ export default function ResearchDashboard() {
 
   useEffect(() => {
     const fetchArticles = async () => {
+      setIsLoading(true)
       setError(null)
       try {
         let fetchedArticles: RandomArticleItemProps[]
         if (selectedConditions.length > 0) {
-          fetchedArticles = await getLatestArticles(selectedConditions[0])
+          fetchedArticles = await getLatestArticles(5, selectedConditions[0]?.toString() ?? "")
         } else {
-          fetchedArticles = await getLatestArticles()
+          fetchedArticles = await getLatestArticles(5)
         }
         setArticles(fetchedArticles)
+        setCurrentSlide(0)
+        if (emblaApi) {
+          emblaApi.scrollTo(0)
+        }
       } catch (e: any) {
         setError(e.message || "An error occurred while fetching articles.")
         setArticles([])
+      } finally {
+        setIsLoading(false)
       }
     }
 
     void fetchArticles()
-  }, [selectedConditions])
+  }, [selectedConditions, emblaApi])
 
   useEffect(() => {
     if (!emblaApi) return
@@ -107,17 +120,6 @@ export default function ResearchDashboard() {
       emblaApi.off("select", onSelect)
     }
   }, [emblaApi])
-
-  // Update the carousel options
-  const options: EmblaOptionsType = {
-    loop: true,
-    align: "start",
-    slidesToScroll: 1,
-    breakpoints: {
-      "(min-width: 768Px)": { slidesToScroll: 2 },
-      "(min-width: 1024px)": { slidesToScroll: 3 },
-    },
-  }
 
   return (
     <section className="w-full">
@@ -136,6 +138,7 @@ export default function ResearchDashboard() {
         categoriesWithConditions={categories}
         onConditionsSelect={handleConditionsSelect}
         selectedConditions={selectedConditions}
+        isLatestView={isLatestView}
       />
 
       <div className="mx-auto max-w-[1400px] px-2 sm:px-4 py-2">
