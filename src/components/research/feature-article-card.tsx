@@ -7,7 +7,6 @@ import { useArticleBookmark } from "~/hooks/use-article-bookmark"
 import { Button } from "~/components/ui/button"
 import { cn } from "~/lib/utils"
 import { FeatureArticleActions } from "./feature-article-actions"
-import { MetadataItem } from "../utils/metadata-item"
 
 interface FeaturedArticleCardProps {
   id: number
@@ -23,6 +22,28 @@ interface FeaturedArticleCardProps {
   outcome_rating: string
   conditionName: string
   isMobile?: boolean
+}
+
+export function MetadataItem({
+  label,
+  value,
+  isMobile = false,
+}: {
+  label: string
+  value: string
+  isMobile?: boolean
+}) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-between overflow-hidden rounded-full bg-white/10 backdrop-blur-sm",
+        isMobile ? "p-1.5" : "p-2",
+      )}
+    >
+      <div className="font-mono text-xs tracking-[0.2em] text-gray-300">{label}</div>
+      <div className="font-['Roboto'] text-sm tracking-widest text-white">{value}</div>
+    </div>
+  )
 }
 
 export default function FeaturedArticleCard({
@@ -43,9 +64,7 @@ export default function FeaturedArticleCard({
   const { user } = useAuth()
   const { isBookmarked, isLoading, toggleBookmark } = useArticleBookmark(id, user?.id)
 
-  // Use CloudFront URL instead of direct S3 bucket URL
-
-  const imageUrl = `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/100.png`
+  const imageUrl = `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/${id}.png`
 
   const truncatedSummary =
     summary?.length > (isMobile ? 80 : 120) ? `${summary.slice(0, isMobile ? 80 : 120)}...` : summary
@@ -54,12 +73,12 @@ export default function FeaturedArticleCard({
     <div className={cn("group relative w-full overflow-hidden rounded-[2rem]", isMobile ? "h-[600px]" : "h-[650px]")}>
       {/* Background Image */}
       <Image
-        src={imageUrl}
+        src={imageUrl || "/placeholder.svg"}
         alt={heading}
         fill
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className="object-cover transition-transform duration-300 group-hover:scale-105"
-        
+        priority
       />
 
       {/* Gradient Overlay */}
@@ -105,10 +124,7 @@ export default function FeaturedArticleCard({
         </div>
 
         {/* Main Content */}
-        <div className={cn(
-          "grid gap-4",
-          isMobile ? "grid-cols-1 pb-24" : "grid-cols-3 gap-8"  // Add padding bottom for mobile to account for absolute button
-        )}>
+        <div className={cn("grid", isMobile ? "grid-cols-1 gap-4 pb-24" : "grid-cols-3 gap-8")}>
           {/* Left side */}
           <div className={cn("flex flex-col", !isMobile && "col-span-2")}>
             <h2
@@ -122,15 +138,16 @@ export default function FeaturedArticleCard({
             <p className={cn("mb-6 leading-relaxed text-gray-200 drop-shadow", isMobile ? "text-sm" : "text-md")}>
               {truncatedSummary}
             </p>
+            {!isMobile && <FeatureArticleActions outcome_rating={outcome_rating} />}
           </div>
 
-          {/* Metadata for Mobile */}
+          {/* Metadata */}
           <div className={cn("flex flex-col", isMobile && "mt-4")}>
             <div className={cn("grid gap-2", isMobile ? "grid-cols-2 auto-rows-fr" : "grid-cols-1")}>
               {isMobile ? (
                 <>
-                  <MetadataItem label="CONDITION" value={conditionName} />
-                  <MetadataItem label="# OF SESSIONS" value={number_of_treatments.toString()} />
+                  <MetadataItem label="CONDITION" value={conditionName} isMobile />
+                  <MetadataItem label="# OF SESSIONS" value={number_of_treatments.toString()} isMobile />
                 </>
               ) : (
                 <>
@@ -146,7 +163,7 @@ export default function FeaturedArticleCard({
           </div>
         </div>
 
-        {/* Read More Button - Full width for mobile */}
+        {/* Mobile Action Button */}
         {isMobile && (
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-6">
             <FeatureArticleActions outcome_rating={outcome_rating} />

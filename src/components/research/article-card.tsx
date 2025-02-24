@@ -1,14 +1,21 @@
-"use client";
+"use client"
 
-import { BookmarkIcon } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useAuth } from "~/contexts/auth-context";
-import { useArticleBookmark } from "~/hooks/use-article-bookmark";
-import { Button } from "~/components/ui/button";
-import type { RandomArticleItemProps } from "~/utils/supabase/articles/getLatestArticles";
-import GlowingButton from "~/components/utils/glowing-button";
-import { useRouter } from "next/navigation";
+import type React from "react"
+
+import { BookmarkIcon } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useAuth } from "~/contexts/auth-context"
+import { useArticleBookmark } from "~/hooks/use-article-bookmark"
+import { Button } from "~/components/ui/button"
+import GlowingButton from "~/components/utils/glowing-button"
+import type { RandomArticleItemProps } from "~/utils/supabase/articles/getLatestArticles"
+import { cn } from "~/lib/utils"
+
+interface ArticleCardProps extends RandomArticleItemProps {
+  isMobile?: boolean
+}
 
 export function ArticleCard({
   id,
@@ -19,20 +26,16 @@ export function ArticleCard({
   authors = "Unknown Author",
   published_date,
   conditionName,
-}: RandomArticleItemProps) {
-  const router = useRouter();
-  const { user } = useAuth();
-  const { isBookmarked, isLoading, toggleBookmark } = useArticleBookmark(
-    id,
-    user?.id,
-  );
+  isMobile = false,
+}: ArticleCardProps) {
+  const router = useRouter()
+  const { user } = useAuth()
+  const { isBookmarked, isLoading, toggleBookmark } = useArticleBookmark(id, user?.id)
 
-  const imageUrl =
-    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/";
+  const imageUrl = "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/"
 
-  const showCondition =
-    conditionName && conditionName.toLowerCase() !== "unknown";
-  const showTreatments = number_of_treatments && number_of_treatments > 0;
+  const showCondition = conditionName && conditionName.toLowerCase() !== "unknown"
+  const showTreatments = number_of_treatments && number_of_treatments > 0
 
   const processedAuthors = authors
     ? authors
@@ -41,26 +44,33 @@ export function ArticleCard({
         .slice(0, 1)
         .map((author) => author.trim())
         .join(", ") + (authors.split(/[,]/).length > 3 ? " et al." : "")
-    : "Unknown Author";
+    : "Unknown Author"
 
   const handleBookmarkClick = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
-    void toggleBookmark();
-  };
+    e.preventDefault() // Prevent navigation
+    void toggleBookmark()
+  }
+
+  const ImageComponent = () => {
+    const commonProps = {
+      src: `${imageUrl}${id}.png`,
+      alt: heading,
+      className: "object-cover transition-transform duration-300 group-hover:scale-105",
+      sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    }
+
+    return isMobile ? (
+      <Image {...commonProps} width={500} height={300} priority={false} />
+    ) : (
+      <Image {...commonProps} fill />
+    )
+  }
 
   return (
     <Link href={`/research/${id}`}>
       <div className="group relative h-[325px] w-full overflow-hidden rounded-[2rem]">
         {/* Background Image */}
-        <Image 
-          src={`${imageUrl}${id}.png`}
-          alt={heading}
-          width={500}
-          height={300}
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          priority={false}
-        />
+        <ImageComponent />
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
@@ -84,29 +94,24 @@ export function ArticleCard({
               type="button"
               variant="ghost"
               size="icon"
-              className={`overflow-hidden rounded-full p-2 text-white backdrop-blur-sm transition-all ${
-                isBookmarked 
-                  ? "bg-emerald-700/20 ring-2 ring-emerald-700 hover:bg-emerald-700/30" 
-                  : "hover:bg-white/20"
-              }`}
+              className={cn(
+                "overflow-hidden rounded-full p-2 text-white backdrop-blur-sm transition-all",
+                isBookmarked
+                  ? "bg-emerald-700/20 ring-2 ring-emerald-700 hover:bg-emerald-700/30"
+                  : "hover:bg-white/20",
+              )}
               onClick={handleBookmarkClick}
               disabled={isLoading}
             >
               <BookmarkIcon
-                className={`h-6 w-6 transition-colors ${
-                  isBookmarked 
-                    ? "fill-white text-emerald-700" 
-                    : "text-white"
-                }`}
+                className={cn("h-6 w-6 transition-colors", isBookmarked ? "fill-white text-emerald-700" : "text-white")}
               />
             </Button>
           </div>
 
           {/* Bottom Section */}
           <div className="space-y-4">
-            <h3 className="font-['Raleway'] text-2xl font-normal leading-tight text-white drop-shadow-md">
-              {heading}
-            </h3>
+            <h3 className="font-['Raleway'] text-2xl font-normal leading-tight text-white drop-shadow-md">{heading}</h3>
             <div className="flex justify-center">
               <GlowingButton text="Read More" onClick={() => router.push(`/research/${id}`)} />
             </div>
@@ -114,5 +119,6 @@ export function ArticleCard({
         </div>
       </div>
     </Link>
-  );
+  )
 }
+
