@@ -4,6 +4,7 @@ import { Menu, X, Search } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet"
 import { Input } from "~/components/ui/input"
+import { cn } from "~/lib/utils"
 
 import type { ConditionIdArticlesProps } from "~/utils/supabase/articles/getArticlesByCondition"
 import getArticlesByCondition from "~/utils/supabase/articles/getArticlesByCondition"
@@ -29,6 +30,7 @@ interface ResearchContentProps {
   initialSelectedCategory?: number | null
   initialSelectedCondition?: number | null
   initialSidebarOpen?: boolean
+  isMobile?: boolean
 }
 
 export function ResearchContent({
@@ -36,6 +38,7 @@ export function ResearchContent({
   initialSelectedCategory,
   initialSelectedCondition,
   initialSidebarOpen = true,
+  isMobile = false,
 }: ResearchContentProps) {
   const [updatedCategories, setCategories] = useState(categories)
   const [selectedConditionId, setSelectedConditionId] = useState<number | null>(null)
@@ -197,38 +200,50 @@ export function ResearchContent({
       </div>
 
       <div className="flex-1 overflow-hidden">
-        {/* Mobile Search and Selected Condition - Updated spacing */}
-        <div className="md:hidden px-4 pt-2 pb-1 pl-16">
-          <div className="space-y-1">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
-              <Input
-                type="search"
-                placeholder="Search conditions..."
-                value={mobileSearchQuery}
-                onChange={(e) => handleMobileSearch(e.target.value)}
-                className="w-full pl-9 pr-4"
-              />
-            </div>
-            {selectedCondition && (
-              <Badge variant="outline" className="gap-1 border-emerald-700 text-emerald-700">
-                {selectedCondition.name}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-4 w-4 p-0 hover:bg-transparent"
-                  onClick={() => handleConditionSelect(null)}
-                >
-                  <X className="h-3 w-3" />
-                </Button>
-              </Badge>
-            )}
-          </div>
+        {/* Collapsed state header - Show on desktop when sidebar is closed */}
+        <div
+          className={cn(
+            "absolute left-0 top-0 z-50 flex h-[48px] items-center gap-2 px-4 transition-all duration-300",
+            isSidebarOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+          )}
+        >
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 hover:bg-gray-100"
+            onClick={() => setIsSidebarOpen(true)}
+          >
+            <Menu className="h-6 w-6 text-gray-600" />
+          </Button>
+
+          {selectedCondition && (
+            <Badge variant="outline" className="gap-1 border-emerald-700 text-emerald-700">
+              {selectedCondition.name}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-4 w-4 p-0 hover:bg-transparent"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleConditionSelect(null)
+                  setSidebarSearchQuery("")
+                  setArticles([])
+                  setHoveredArticle(null)
+                }}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </Badge>
+          )}
         </div>
 
-        <div className="grid h-full md:grid-cols-2 gap-4 p-4 pt-2 md:pt-4">
+        <div className="grid h-full md:grid-cols-2 gap-2 p-2">
           {/* Articles Column */}
           <div className="flex h-full flex-col overflow-hidden">
+            {/* Spacer when header is visible */}
+            {!isSidebarOpen && <div className="h-[24px] shrink-0" />}
+
+            {/* Articles List Container */}
             <div className="flex-1 overflow-hidden rounded-lg shadow-sm">
               <div className="h-full overflow-auto">
                 <ArticlesList
@@ -242,7 +257,9 @@ export function ResearchContent({
           </div>
 
           {/* Article Preview - Hidden on mobile */}
-          <div className="hidden md:block h-full overflow-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+          <div className={cn("h-full overflow-auto rounded-lg border border-gray-200 bg-white shadow-sm",
+            isMobile ? "hidden" : "block"
+          )}>
             <ArticlePreview article={hoveredArticle} />
           </div>
         </div>

@@ -36,33 +36,20 @@ export default async function ResearchPage({ searchParams }: Props) {
       : undefined;
 
     if (!Array.isArray(categoriesAndConditions)) {
-      throw new Error(
-        "Categories and conditions data is not in expected format",
-      );
+      throw new Error("Categories and conditions data is not in expected format");
     }
 
     const groupedCategories: GroupedCategory[] = categoriesAndConditions.reduce(
       (acc: GroupedCategory[], curr) => {
-        if (
-          !curr.category_id ||
-          !curr.category_name ||
-          !curr.condition_id ||
-          !curr.condition_name
-        ) {
+        if (!curr.category_id || !curr.category_name || !curr.condition_id || !curr.condition_name) {
           console.warn("Missing required fields in category/condition:", curr);
           return acc;
         }
 
-        const existingCategory = acc.find(
-          (category) => category.categoryId === curr.category_id,
-        );
+        const existingCategory = acc.find(category => category.categoryId === curr.category_id);
 
         if (existingCategory) {
-          if (
-            !existingCategory.conditions.some(
-              (cond) => cond.id === curr.condition_id,
-            )
-          ) {
+          if (!existingCategory.conditions.some(cond => cond.id === curr.condition_id)) {
             existingCategory.conditions.push({
               id: curr.condition_id,
               name: curr.condition_name,
@@ -75,13 +62,11 @@ export default async function ResearchPage({ searchParams }: Props) {
         acc.push({
           categoryId: curr.category_id,
           categoryName: curr.category_name,
-          conditions: [
-            {
-              id: curr.condition_id,
-              name: curr.condition_name,
-              articleCount: articleCounts[curr.condition_id] ?? 0,
-            },
-          ],
+          conditions: [{
+            id: curr.condition_id,
+            name: curr.condition_name,
+            articleCount: articleCounts[curr.condition_id] ?? 0,
+          }],
         });
         return acc;
       },
@@ -89,19 +74,10 @@ export default async function ResearchPage({ searchParams }: Props) {
     );
 
     if (!groupedCategories.length) {
-      console.warn("No categories were processed");
       return (
-        <main className="w-full bg-[#FAF7F4]">
-          <div className="container mx-auto px-4 py-8"> 
-            <div className="flex h-96 items-center justify-center">
-              <div className="text-center">
-                <p className="text-lg text-gray-600">
-                  No research categories available.
-                </p>
-              </div>
-            </div>
-          </div>
-        </main>
+        <div className="flex h-96 items-center justify-center text-gray-500">
+          No research categories available.
+        </div>
       );
     }
 
@@ -111,31 +87,31 @@ export default async function ResearchPage({ searchParams }: Props) {
       groupedCategories[0]?.conditions[0]?.id ?? 
       null;
 
-    const initialArticles = initialConditionId
-      ? await getArticlesByCondition(initialConditionId)
-      : [];
-
     return (
-      <main className="w-full bg-[#FAF7F4]">
-        <div className="container mx-auto py-2">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="w-full space-y-2 sm:w-auto">
-              <h1 className="font-['Raleway'] text-lg sm:text-4xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
-                RESEARCH
-              </h1>
-              <p className="text-sm sm:text-xl text-gray-500 text-center sm:text-left">
-                Explore our comprehensive collection of hyperbaric research.
-              </p>
+      <main className="w-full">
+        <div className="container mx-auto max-w-7xl">
+          <div className="h-[calc(100vh-127px)]">
+            {/* Mobile View */}
+            <div className="block md:hidden">
+              <ResearchContent
+                categories={groupedCategories}
+                initialSelectedCategory={selectedCategoryId}
+                initialSelectedCondition={selectedConditionId}
+                initialSidebarOpen={false}
+                isMobile={true}
+              />
             </div>
-          </div>
 
-          <div className="mt-2">
-            <ResearchContent
-              categories={groupedCategories}
-              initialSelectedCategory={selectedCategoryId}
-              initialSelectedCondition={selectedConditionId}
-              initialSidebarOpen={false}
-            />
+            {/* Desktop View */}
+            <div className="hidden md:block h-full">
+              <ResearchContent
+                categories={groupedCategories}
+                initialSelectedCategory={selectedCategoryId}
+                initialSelectedCondition={selectedConditionId}
+                initialSidebarOpen={true}
+                isMobile={false}
+              />
+            </div>
           </div>
         </div>
       </main>
@@ -146,22 +122,10 @@ export default async function ResearchPage({ searchParams }: Props) {
       message: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : undefined,
     });
-    
     return (
-      <main className="w-full bg-[#FAF7F4]">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex h-96 items-center justify-center">
-            <div className="text-center">
-              <p className="text-lg text-gray-600">
-                An error occurred while loading the research data.
-              </p>
-              <p className="mt-2 text-sm text-gray-500">
-                Please try again later.
-              </p>
-            </div>
-          </div>
-        </div>
-      </main>
+      <div className="flex h-96 items-center justify-center text-gray-500">
+        An error occurred while loading the research data. Please try again later.
+      </div>
     );
   }
 }
