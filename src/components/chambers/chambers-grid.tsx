@@ -86,13 +86,13 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
 
   return (
     <section className="w-full bg-[#FAF7F4]">
-      <div className="container mx-auto px-4 py-2">
+      <div className="container mx-auto px-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="w-full space-y-2 sm:w-auto">
-            <h1 className="font-['Raleway'] text-xl sm:text-4xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
+            <h1 className="font-['Raleway'] text-lg sm:text-4xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
               CHAMBER RANGE
             </h1>
-            <p className="text-sm sm:text-xl text-gray-500 text-center sm:text-left">
+            <p className="text-sm sm:text-xl text-gray-500 font-light text-center sm:text-left">
               Explore our curated selection of premium hyperbaric chambers.
             </p>
           </div>

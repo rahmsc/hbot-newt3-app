@@ -25,7 +25,7 @@ export default async function ChambersPage() {
 
   return (
     <div className="w-full bg-[#FAF7F4]">
-      <div className="container mx-auto px-4 py-6 md:py-8 lg:py-12">
+      <div className="container mx-auto pt-2">
         <div className="space-y-2 md:space-y-12 lg:space-y-16">
           <ChambersGrid chambers={chambers} />
           <WhyWorkSection />
