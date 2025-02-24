@@ -1,47 +1,23 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useRef } from "react"
 import Image from "next/image"
 
 interface ParallaxHeaderProps {
   title: string
   imageUrl: string
   subtitle?: string
+  progress: number
 }
 
-export default function ParallaxHeader({ title, imageUrl, subtitle }: ParallaxHeaderProps) {
-  const [scrollY, setScrollY] = useState(0)
-  const [windowHeight, setWindowHeight] = useState(0)
+export default function ParallaxHeader({ title, imageUrl, subtitle, progress }: ParallaxHeaderProps) {
   const headerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowHeight(window.innerHeight)
-    }
-    const handleScroll = () => setScrollY(window.scrollY)
-
-    handleResize()
-    handleScroll()
-
-    window.addEventListener("resize", handleResize)
-    window.addEventListener("scroll", handleScroll)
-
-    return () => {
-      window.removeEventListener("resize", handleResize)
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
-
   // Constants
-  const parallaxRange = windowHeight // Parallax effect completes over one full viewport height
-  const initialZoom = 1.2 // Initial zoom level (110%)
-
-  // Calculate progress
-  const progress = Math.min(scrollY / parallaxRange, 1)
+  const initialZoom = 1.2 // Initial zoom level
 
   // Calculate image zoom and title opacity
   const imageZoom = initialZoom - progress * (initialZoom - 1)
-
   const titleOpacity = progress < 0.2 ? 1 : 1 - (progress - 0.2) / (0.55 - 0.2)
 
   return (
@@ -50,9 +26,10 @@ export default function ParallaxHeader({ title, imageUrl, subtitle }: ParallaxHe
         <Image
           src={imageUrl || "/placeholder.svg"}
           alt={title}
-          layout="fill"
-          objectFit="cover"
-          className="transition-transform duration-300 ease-out"
+          fill
+          priority
+          sizes="100vw"
+          className="transition-transform duration-300 ease-out object-cover"
           style={{
             transform: `scale(${imageZoom})`,
           }}

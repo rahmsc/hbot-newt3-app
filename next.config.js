@@ -11,6 +11,7 @@ const nextConfig = {
       'lh3.googleusercontent.com',
       'fastly.picsum.photos',
       'picsum.photos',
+      'd144dqt8e4woe2.cloudfront.net',
     ],
     remotePatterns: [
       {
