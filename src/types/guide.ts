@@ -9,5 +9,5 @@ export interface GuidePageProp {
     "Guide Body": string;
     Date: Date;
     Approved: boolean;
-  };
+    };
 }

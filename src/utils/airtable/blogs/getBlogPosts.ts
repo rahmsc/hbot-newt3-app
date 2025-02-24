@@ -65,8 +65,8 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
     }
 
     return {
-      id: records[0].id,
-      fields: records[0].fields as BlogPost["fields"],
+      id: records[0]?.id ?? "",
+      fields: records[0]?.fields as unknown as BlogPost["fields"],
     }
   } catch (error) {
     console.error("Error in getBlogPostBySlug:", error)
