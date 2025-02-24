@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import type { User } from "@supabase/supabase-js"
 import { Search, UserCircle, CalendarIcon, SearchIcon, UsersIcon, X, LogOut, ShoppingCart, Mail } from "lucide-react"
 import Image from "next/image"
@@ -10,7 +12,7 @@ import { signout } from "~/app/(auth)/auth/login/action"
 
 import LoginButton from "~/components/auth/LoginButton"
 import { Button } from "~/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "~/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "~/components/ui/dropdown-menu"
 import { Input } from "~/components/ui/input"
 import { cn } from "~/lib/utils"
@@ -25,8 +27,6 @@ import { subscribeToNewsletter } from "~/actions/subscribe"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
-import type React from "react" // Added import for React
 import { sendGAEvent } from "@next/third-parties/google"
 
 const formSchema = z.object({
@@ -58,8 +58,6 @@ export function TopNav() {
     },
   })
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640 // sm breakpoint
-
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY
@@ -72,18 +70,12 @@ export function TopNav() {
 
   useEffect(() => {
     const checkUser = async () => {
-    
       const {
         data: { user },
         error,
       } = await supabase.auth.getUser()
-      
-
-      
       if (!error && user) {
         setUser(user)
-      } else {
-        console.log("No user found or error:", error)
       }
     }
 
@@ -92,13 +84,10 @@ export function TopNav() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-     
-      const currentUser = session?.user ?? null
-      setUser(currentUser)
+      setUser(session?.user ?? null)
     })
 
     return () => {
-      console.log("Cleaning up auth subscription")
       subscription.unsubscribe()
     }
   }, [supabase])
@@ -112,14 +101,10 @@ export function TopNav() {
   useEffect(() => {
     const fetchProfileData = async (userId: string) => {
       try {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('avatar_url')
-          .eq('id', userId)
-          .single()
+        const { data: profile, error } = await supabase.from("profiles").select("avatar_url").eq("id", userId).single()
 
         if (error) {
-          console.error('Error fetching profile:', error)
+          console.error("Error fetching profile:", error)
           return
         }
 
@@ -127,7 +112,7 @@ export function TopNav() {
           setProfileData(profile)
         }
       } catch (error) {
-        console.error('Error fetching profile:', error)
+        console.error("Error fetching profile:", error)
       }
     }
 
@@ -135,11 +120,6 @@ export function TopNav() {
       void fetchProfileData(user.id)
     }
   }, [user?.id, supabase])
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    setUser(null)
-  }
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -152,6 +132,13 @@ export function TopNav() {
       month: "short",
       year: "numeric",
     })
+  }
+
+  const handleMobileSearchClick = () => {
+    setIsSearchExpanded(true)
+    setTimeout(() => {
+      inputRef.current?.focus()
+    }, 100)
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -185,17 +172,9 @@ export function TopNav() {
       setIsSupabaseLoading(false)
     }
 
-    // Send GA event after attempt (success or failure)
     sendGAEvent("event_top", "buttonClicked", {
       value: "Subscribe(HQ Insider)",
     })
-  }
-
-  const handleMobileSearchClick = () => {
-    setIsSearchExpanded(true)
-    setTimeout(() => {
-      inputRef.current?.focus()
-    }, 100)
   }
 
   const SearchResults = () => (
@@ -235,11 +214,7 @@ export function TopNav() {
                 <div className="mt-1 flex flex-wrap items-center gap-3 text-xs">
                   <div className="flex items-center gap-1 text-muted-foreground">
                     <UsersIcon className="h-3 w-3" />
-                    <HighlightedText
-                      text={study.authors}
-                      highlight={searchTerm}
-                      className="max-w-[200px] truncate"
-                    />
+                    <HighlightedText text={study.authors} highlight={searchTerm} className="max-w-[200px] truncate" />
                   </div>
                   <div className="flex items-center gap-1 text-muted-foreground">
                     <CalendarIcon className="h-3 w-3" />
@@ -294,7 +269,7 @@ export function TopNav() {
             </Link>
           </div>
 
-          {/* Desktop Search - Only render when not in mobile view */}
+          {/* Desktop Search */}
           {!isSearchExpanded && (
             <div className="hidden max-w-sm items-center gap-2 sm:flex">
               <Popover open={open} onOpenChange={setOpen}>
@@ -349,7 +324,7 @@ export function TopNav() {
             </div>
           )}
 
-          {/* Mobile Search - Only render when expanded */}
+          {/* Mobile Search */}
           {isSearchExpanded && (
             <div className="fixed inset-x-0 top-0 z-[100] bg-white/80 backdrop-blur-md transition-all duration-200 sm:hidden">
               <div className="container mx-auto p-4">
@@ -399,6 +374,7 @@ export function TopNav() {
               isSearchExpanded ? "sm:flex hidden" : "flex",
             )}
           >
+            {/* Mobile Search Button */}
             <Button
               variant="ghost"
               size={isScrolled ? "sm" : "default"}
@@ -409,6 +385,45 @@ export function TopNav() {
               <span className="sr-only">Search</span>
             </Button>
 
+            {/* Desktop Buttons */}
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="default"
+                  className={cn(
+                    "hidden bg-emerald-700 transition-all duration-200 hover:bg-emerald-800 md:inline-flex",
+                    isScrolled ? "h-7 text-xs" : "h-8 text-sm",
+                  )}
+                >
+                  Subscribe
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Subscribe to Our Newsletter</DialogTitle>
+                  <DialogDescription>Stay updated with our latest news and offers.</DialogDescription>
+                </DialogHeader>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <Input type="email" {...form.register("email")} placeholder="Enter your email" required />
+                  <Button type="submit" disabled={isSupabaseLoading}>
+                    {isSupabaseLoading ? "Subscribing..." : "Subscribe"}
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
+
+            <Button
+              variant="outline"
+              className={cn(
+                "hidden border-emerald-700 text-emerald-700 transition-all duration-200 md:inline-flex",
+                isScrolled ? "h-7 text-xs" : "h-8 text-sm",
+              )}
+              onClick={() => router.push("/chambers")}
+            >
+              Shop Chambers
+            </Button>
+
+            {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -417,7 +432,7 @@ export function TopNav() {
                 >
                   {profileData.avatar_url || user?.user_metadata?.avatar_url ? (
                     <Image
-                      src={user?.user_metadata?.avatar_url}
+                      src={user?.user_metadata?.avatar_url || "/placeholder.svg"}
                       alt="User avatar"
                       width={32}
                       height={32}
@@ -449,12 +464,12 @@ export function TopNav() {
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem asChild>
-                  <Link href="/chambers" className="flex items-center">
+                  <Link href="/chambers" className="flex items-center md:hidden">
                     <ShoppingCart className="mr-2 h-4 w-4" />
                     Shop Chambers
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setIsDialogOpen(true)} className="flex items-center">
+                <DropdownMenuItem onClick={() => setIsDialogOpen(true)} className="flex items-center md:hidden">
                   <Mail className="mr-2 h-4 w-4" />
                   Subscribe to Newsletter
                 </DropdownMenuItem>
@@ -463,21 +478,6 @@ export function TopNav() {
           </div>
         </div>
       </div>
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Subscribe to Our Newsletter</DialogTitle>
-            <DialogDescription>Stay updated with our latest news and offers.</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <Input type="email" {...form.register("email")} placeholder="Enter your email" required />
-            <Button type="submit" disabled={isSupabaseLoading}>
-              {isSupabaseLoading ? "Subscribing..." : "Subscribe"}
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
     </nav>
   )
 }
