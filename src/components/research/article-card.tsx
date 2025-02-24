@@ -56,15 +56,15 @@ export function ArticleCard({
   const ImageComponent = () => {
     const commonProps = {
       src: `${imageUrl}${id}.png`,
-      alt: heading,
+      alt: heading ?? "Article thumbnail",
       className: "object-cover transition-transform duration-300 group-hover:scale-105",
       sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     }
 
     return isMobile ? (
-      <Image {...commonProps} width={500} height={300} priority={false} />
+      <Image {...commonProps} alt={heading ?? "Article thumbnail"} width={500} height={300} priority={false} />
     ) : (
-      <Image {...commonProps} fill />
+      <Image {...commonProps} alt={heading ?? "Article thumbnail"} fill />
     )
   }
 

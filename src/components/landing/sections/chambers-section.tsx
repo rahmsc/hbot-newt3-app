@@ -74,7 +74,7 @@ export function ChambersSection() {
   }
 
   return (
-    <section className="w-full pb-12">
+    <section className="w-full py-12">
       <div className="h-px w-full bg-gray-600" />
       <div className="flex flex-col items-start justify-between gap-4 px-4 pt-2 sm:flex-row sm:items-center sm:px-16">
         <div className="w-full space-y-2 pt-2 sm:w-auto">

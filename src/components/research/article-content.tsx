@@ -42,7 +42,7 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
   }, [])
 
   const imageUrl = "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/"
-  const progress = Math.min(scrollY / (windowHeight * 1.5), 1) // Increased scroll range
+  const progress = Math.min(scrollY / (windowHeight * 1.5), 1)
 
   return (
     <div className="relative min-h-screen">
@@ -50,6 +50,7 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
         title={foundArticle.heading}
         imageUrl={`${imageUrl}${foundArticle.id}.png`}
         subtitle={foundArticle.conditionId}
+        progress={progress}
       />
       <div
         className="relative z-10 mx-auto max-w-5xl px-2 sm:px-6 lg:px-8"
