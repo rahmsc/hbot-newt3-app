@@ -48,12 +48,12 @@ export function FeaturedArticles({ articles, isMobile }: FeaturedArticlesProps) 
   )
 
   return (
-    <section className="w-full">
+    <section className="container mx-auto max-w-7xl px-2 py-4">
       <div className="space-y-2">
         <div className="px-4">
-          <hr className="mb-4 sm:mb-2 border-t border-gray-700" />
+          <hr className="mb-4 sm:mb-8 border-t border-gray-700" />
           <h2 className="font-['Raleway'] text-xl sm:text-2xl font-normal tracking-[0.2em] sm:tracking-[0.3em] text-gray-700 pb-4 sm:pb-8 text-center sm:text-left">
-            FEATURED
+            FEATURED ARTICLES
           </h2>
         </div>
 
@@ -84,15 +84,15 @@ export function FeaturedArticles({ articles, isMobile }: FeaturedArticlesProps) 
         </div>
 
         {/* Desktop Grid View */}
-        <div className="hidden md:grid gap-4 md:grid-cols-3">
+        <div className="hidden md:grid gap-2 md:grid-cols-3">
           <div className="md:col-span-2">
-            <div className="h-[600px]">
+            <div className="aspect-[16/9]">
               <TrendingCard article={mainArticle} size="large" />
             </div>
           </div>
-          <div className="grid grid-rows-3 gap-4">
+          <div className="grid grid-rows-3 gap-1">
             {validSideArticles.slice(0, 3).map((article, index) => (
-              <div key={article.link || index} className="h-[190px]">
+              <div key={article.link || index} className="h-full">
                 <TrendingCard article={article} size="featured-side" />
               </div>
             ))}
