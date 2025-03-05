@@ -1,12 +1,10 @@
 import Image from "next/image";
 import ContactSection from "~/components/landing/sections/contact-section";
-
-import { Button } from "~/components/ui/button";
+import { CTASubscriptionSection } from "~/components/landing/sections/cta-section";
 
 const JoinHQPage = () => {
-  // const imageUrl = `https://picsum.photos/${Math.floor(Math.random() * 1000)}`;
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen w-full bg-white">
       {/* Hero Section */}
       <div className="relative h-[400px] w-full bg-black">
         <div className="absolute inset-0">
@@ -20,11 +18,11 @@ const JoinHQPage = () => {
         <div className="container relative mx-auto h-full">
           <div className="relative z-10 flex h-full flex-col justify-center px-6 sm:px-12">
             <div className="max-w-3xl">
-              <h1 className="mb-2 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+              <h1 className="mb-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
                 JOIN THE WORLD&apos;S MOST ADVANCED HYPERBARIC OXYGEN THERAPY
                 ECOSYSTEM.
               </h1>
-              <p className="text-lg text-white/90">
+              <p className="text-lg leading-relaxed text-white/90">
                 Access the latest research. Find the best support. Get the best
                 hyperbaric oxygen chambers, wellness products and services. All
                 at your finger tips.
@@ -34,197 +32,110 @@ const JoinHQPage = () => {
         </div>
       </div>
 
-      {/* Save Everything Section */}
-      <div className="mx-auto max-w-7xl px-4 py-16">
-        <div className="mb-12">
-          <h2 className="mb-4 text-4xl font-bold italic">
-            Save everything you need in one place.
-          </h2>
-          <p className="text-gray-600">
-            Save 1,000&apos;s of hours on research. Save the research that
-            supports your needs. Get the best hyperbaric chambers. Have your
-            questions answered, find Save 1,000&apos;s of hours on research.
-            Save the research that supports your needs. Get the best hyperbaric
-            chambers. Have your questions answered, find Save 1,000&apos;s of
-            hours on research. Save the research that supports your needs. Get
-            the best hyperbaric chambers. Have your questions answered, find
+      {/* Header Section */}
+      <div className="mx-auto max-w-4xl px-6 py-12 sm:py-20 text-center">
+        <h1 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
+          The Science of health demands a new standard.
+        </h1>
+        <p className="mx-auto max-w-3xl text-base leading-relaxed text-gray-700 sm:text-lg">
+          With more available than ever before, it is never been harder to know what information to trust, which products to choose and what protocols to follow. This is why we created our platform. We have designed a method that allows you to access a trusted source to process current, health assessed and easily curated supported and health and wellness products.
+        </p>
+      </div>
+
+      {/* Our Mission Section */}
+      <div className="bg-gray-50 py-12 sm:py-20">
+        <div className="mx-auto max-w-4xl px-6">
+          <h2 className="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">Our Mission</h2>
+          <p className="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+            To transform the current healthcare system into one that is proactive and data-driven — this is known as medicine 3.0
+          </p>
+          <p className="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+            We help you sort the best things, make and heal illnesses earlier than ever before, and help us live like the best version of ourselves.
+          </p>
+          <p className="text-base leading-relaxed text-gray-700 sm:text-lg">
+            We envision a world where wellbeing is forethought & everyone is empowered to reach their peak potential.
           </p>
         </div>
-
-        {/* Resource Cards */}
-        <div className="rounded-lg border border-gray-200 p-6">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="relative aspect-square overflow-hidden rounded-lg">
-              <Image
-                src={`https://picsum.photos/${Math.floor(Math.random() * 1000)}`}
-                alt="Peer Reviewed Research"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute bottom-0 w-full bg-black p-2 text-center text-sm text-white">
-                Peer Reviewed Research
-              </div>
-            </div>
-
-            <div className="relative aspect-square overflow-hidden rounded-lg">
-              <Image
-                src={`https://picsum.photos/${Math.floor(Math.random() * 1000)}`}
-                alt="Guidance & Support"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute bottom-0 w-full bg-black p-2 text-center text-sm text-white">
-                Guidance & Support
-              </div>
-            </div>
-
-            <div className="relative aspect-square overflow-hidden rounded-lg">
-              <Image
-                src={`https://picsum.photos/${Math.floor(Math.random() * 1000)}`}
-                alt="Advanced Hyperbaric Systems"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute bottom-0 w-full bg-black p-2 text-center text-sm text-white">
-                Advanced Hyperbaric Systems
-              </div>
-            </div>
-
-            <div className="relative aspect-square overflow-hidden rounded-lg">
-              <Image
-                src={`https://picsum.photos/${Math.floor(Math.random() * 1000)}`}
-                alt="Supporting Supplements"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute bottom-0 w-full bg-black p-2 text-center text-sm text-white">
-                Supporting Supplements
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
-      {/* Proactive Research Section */}
-      <div className="bg-gray-50 py-16">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="mb-12">
-            <h2 className="mb-4 text-4xl font-bold italic">
-              Proactive research that covers the whole you
-            </h2>
-            <p className="text-gray-600">
-              Save the research that shows the science that supports your own
-              journey and what you need and how to use it. Save the research
-              that shows the science that supports your own journey and what you
-              need and how to use it. Save the research that shows the science
-              that supports your own journey.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {/* First Row */}
-            {[1, 2, 3, 4].map((index) => (
-              <div
-                key={`row1-${index}`}
-                className="relative aspect-square overflow-hidden rounded-lg"
-              >
-                <Image
-                  src={`https://picsum.photos/${Math.floor(Math.random() * 1000)}`}
-                  alt={`Research Item ${index}`}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute bottom-0 w-full bg-black p-2 text-center text-sm text-white">
-                  {index === 1 && "Peer Reviewed Research"}
-                  {index === 2 && "Guidance & Support"}
-                  {index === 3 && "Advanced Hyperbaric Systems"}
-                  {index === 4 && "Supporting Supplements"}
-                </div>
-              </div>
-            ))}
-
-            {/* Second Row */}
-            {[1, 2, 3, 4].map((index) => (
-              <div
-                key={`row2-${index}`}
-                className="relative aspect-square overflow-hidden rounded-lg"
-              >
-                <Image
-                  src={`https://picsum.photos/${Math.floor(Math.random() * 1000)}`}
-                  alt={`Research Item ${index + 4}`}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute bottom-0 w-full bg-black p-2 text-center text-sm text-white">
-                  {index === 1 && "Peer Reviewed Research"}
-                  {index === 2 && "Guidance & Support"}
-                  {index === 3 && "Advanced Hyperbaric Systems"}
-                  {index === 4 && "Supporting Supplements"}
-                </div>
-              </div>
-            ))}
-
-            {/* Third Row */}
-            {[1, 2, 3, 4].map((index) => (
-              <div
-                key={`row3-${index}`}
-                className="relative aspect-square overflow-hidden rounded-lg"
-              >
-                <Image
-                  src={`https://picsum.photos/${Math.floor(Math.random() * 1000)}`}
-                  alt={`Research Item ${index + 8}`}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute bottom-0 w-full bg-black p-2 text-center text-sm text-white">
-                  {index === 1 && "Peer Reviewed Research"}
-                  {index === 2 && "Guidance & Support"}
-                  {index === 3 && "Advanced Hyperbaric Systems"}
-                  {index === 4 && "Supporting Supplements"}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* How We Do It Section */}
+      <div className="mx-auto max-w-4xl px-6 py-12 sm:py-20">
+        <h2 className="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">How We Do It</h2>
+        <p className="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+          We have created tools to let you peek inside your inner workings, so you can take control of your health, navigate understanding your body and achieve your optimal wellness so you can move forward with confidence.
+        </p>
+        <p className="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+          From the latest research to cutting-edge devices, we offer education, assessments & protocols to meet your health needs and empower your choices and our team of top experts design a custom health strategy that works with you.
+        </p>
+        <p className="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+          We help provide access with the latest devices and scientific research, continually supported with tests, technologies, and protocols to support your specific requirements. Whether you're looking to optimize performance, recover from injury, or want to simply discover how best to tackle the rest of your life!
+        </p>
+        <p className="text-base leading-relaxed text-gray-700 sm:text-lg">
+          We know health can be complex, so we've made it simple. Want to find what matters most without the guesswork? We have protocols and plans to help you feel your best with our team of doctors & a universe of your health — no more empty claims!
+        </p>
       </div>
 
-      {/* For People Who Want More Section */}
-      <div className="mx-auto max-w-7xl px-4 py-16">
-        <div className="mb-12">
-          <h2 className="mb-4 text-2xl font-bold">For people who want more</h2>
-          <div className="space-y-6">
-            <p className="text-gray-600">
-              Save 1,000&apos;s of hours on research. Save the research that
-              supports your needs. Get the best hyperbaric chambers. have your
-              questions answered, find Save 1,000&apos;s of hours on research.
-              Save the research that supports your needs. Get the best
-              hyperbaric chambers. have your questions answered, find Save
-              1,000&apos;s of hours on research. Save the research that supports
-              your needs. Get the best hyperbaric chambers. have your questions
-              answered, find
-            </p>
-            <p className="text-gray-600">
-              Save 1,000&apos;s of hours on research. Save the research that
-              supports your needs. Get the best hyperbaric chambers. have your
-              questions answered, find Save 1,000&apos;s of hours on research.
-              Save the research that supports your needs. Get the best
-              hyperbaric chambers. have your questions answered, find Save
-              1,000&apos;s of hours on research. Save the research that supports
-              your needs. Get the best hyperbaric chambers. have your questions
-              answered, find
-            </p>
+      {/* Hyperbaric HQ Framework Section */}
+      <div className="bg-gray-50 py-12 sm:py-20">
+        <div className="mx-auto max-w-4xl px-6">
+          <h2 className="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">Hyperbaric HQ Framework</h2>
+          <p className="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+            Disrupting hyperbaric oxygen therapy with bio-engineering.
+          </p>
+          <p className="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+            HBOT-HQ is a specialized customer-centric research-led service from our team of O₂-HBOT applications, vetted protocols, and expert knowledge.
+          </p>
+          <p className="mb-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+            Access exclusive technology, the latest research and reputable HBOT solutions — all in one place.
+          </p>
+          
+          <div className="mb-8">
+            <p className="mb-3 font-medium text-base text-gray-800 sm:text-lg">With the Hyperbaric HQ Framework, you gain access to:</p>
+            <ul className="space-y-2 pl-4 text-base text-gray-700 sm:text-lg">
+              <li className="flex items-start">
+                <span className="mr-2 mt-1.5 text-gray-800">•</span>
+                <span className="leading-relaxed">Clinical research, trials and studies for numerous conditions</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2 mt-1.5 text-gray-800">•</span>
+                <span className="leading-relaxed">Best practice protocols for specific health needs</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2 mt-1.5 text-gray-800">•</span>
+                <span className="leading-relaxed">Up-to-date technology and all relevant insights from our community of models</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2 mt-1.5 text-gray-800">•</span>
+                <span className="leading-relaxed">Carefully selected premium hyperbaric chambers and accessories</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2 mt-1.5 text-gray-800">•</span>
+                <span className="leading-relaxed">Personalized advice to Hyperbaric HBOT benefits and protocols</span>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Framework Diagram */}
+          <div className="mx-auto max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl py-6 sm:py-8">
+            <div className="relative">
+              <Image 
+                src="/images/hyperbaric-framework.png" 
+                alt="Hyperbaric HQ Framework Diagram"
+                width={500}
+                height={500}
+                className="mx-auto object-contain w-full h-auto shadow-md rounded-lg"
+                priority
+              />
+            </div>
           </div>
         </div>
       </div>
 
       {/* CTA Section */}
-      <div className="bg-gray-50 py-16 text-center">
-        <Button
-          size="lg"
-          className="bg-[#F8E7DD] px-8 text-black hover:bg-[#F8E7DD]/90"
-        >
-          Join HQ
-        </Button>
+      <div className="py-12 sm:py-20 text-center">
+        <CTASubscriptionSection />
       </div>
+      
       <ContactSection />
     </div>
   );
