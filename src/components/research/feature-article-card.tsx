@@ -2,6 +2,7 @@
 
 import { Bookmark } from "lucide-react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useAuth } from "~/contexts/auth-context"
 import { useArticleBookmark } from "~/hooks/use-article-bookmark"
 import { Button } from "~/components/ui/button"
@@ -71,6 +72,7 @@ export default function FeaturedArticleCard({
   conditionName,
   isMobile = false,
 }: FeaturedArticleCardProps) {
+  const router = useRouter()
   const { user } = useAuth()
   const { isBookmarked, isLoading, toggleBookmark } = useArticleBookmark(id, user?.id)
 
@@ -148,7 +150,12 @@ export default function FeaturedArticleCard({
             <p className={cn("mb-6 leading-relaxed text-gray-200 drop-shadow", isMobile ? "text-sm" : "text-md")}>
               {truncatedSummary}
             </p>
-            {!isMobile && <FeatureArticleActions outcome_rating={outcome_rating} />}
+            {!isMobile && (
+              <FeatureArticleActions 
+                outcome_rating={outcome_rating} 
+                onClick={() => router.push(`/research/${id}`)} 
+              />
+            )}
           </div>
 
           {/* Metadata */}
@@ -176,7 +183,10 @@ export default function FeaturedArticleCard({
         {/* Mobile Action Button */}
         {isMobile && (
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-6">
-            <FeatureArticleActions outcome_rating={outcome_rating} />
+            <FeatureArticleActions 
+              outcome_rating={outcome_rating} 
+              onClick={() => router.push(`/research/${id}`)} 
+            />
           </div>
         )}
       </div>

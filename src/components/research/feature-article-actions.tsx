@@ -5,9 +5,10 @@ import { cn } from "~/lib/utils";
 interface FeatureArticleActionsProps {
   outcome_rating: string;
   className?: string;
+  onClick?: () => void;
 }
 
-export function FeatureArticleActions({ outcome_rating, className }: FeatureArticleActionsProps) {
+export function FeatureArticleActions({ outcome_rating, className, onClick }: FeatureArticleActionsProps) {
   return (
     <GlowingButton 
       text="Read More"
@@ -15,6 +16,7 @@ export function FeatureArticleActions({ outcome_rating, className }: FeatureArti
         "w-full",
         className
       )}
+      onClick={onClick}
     />
   );
 }
