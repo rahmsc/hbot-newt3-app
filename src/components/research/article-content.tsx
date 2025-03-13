@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { format } from "date-fns"
 
 import type { ArticlesProps } from "~/utils/supabase/articles/getArticleById"
+import { getConditionWithCategory } from "~/utils/supabase/articles/getConditionWithCategory"
 
 import AccordionTemplate from "../utils/accordion-template"
 import ParallaxHeader from "../blog/ParallaxHeader"
@@ -17,45 +18,93 @@ import { useAuth } from "~/contexts/auth-context";
 function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
   const [scrollY, setScrollY] = useState(0)
   const [windowHeight, setWindowHeight] = useState(0)
+  const [conditionInfo, setConditionInfo] = useState<{ condition_name: string; category_name: string } | null>(null)
   const { user } = useAuth();
   const { isBookmarked, isLoading, toggleBookmark } = useArticleBookmark(
     foundArticle.id,
     user?.id,
   );
 
+  // Fetch condition information
   useEffect(() => {
-    const handleResize = () => {
-      setWindowHeight(window.innerHeight)
+    const fetchConditionInfo = async () => {
+      if (foundArticle.conditionId) {
+        try {
+          const data = await getConditionWithCategory(Number(foundArticle.conditionId))
+          if (data) {
+            setConditionInfo(data)
+          }
+        } catch (error) {
+          console.error("Error fetching condition info:", error)
+        }
+      }
     }
-    const handleScroll = () => setScrollY(window.scrollY)
+    
+    fetchConditionInfo()
+  }, [foundArticle.conditionId])
 
-    handleResize()
-    handleScroll()
-
-    window.addEventListener("resize", handleResize)
-    window.addEventListener("scroll", handleScroll)
-
-    return () => {
-      window.removeEventListener("resize", handleResize)
-      window.removeEventListener("scroll", handleScroll)
+  // Throttled scroll handler to improve performance
+  const handleScroll = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      setScrollY(window.scrollY)
     }
   }, [])
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    
+    // Set initial dimensions
+    setWindowHeight(window.innerHeight)
+    handleScroll()
+
+    let scrollTimeout: NodeJS.Timeout
+    const throttledScrollHandler = () => {
+      if (!scrollTimeout) {
+        scrollTimeout = setTimeout(() => {
+          handleScroll()
+          scrollTimeout = null
+        }, 10) // Small throttle for smoother performance
+      }
+    }
+
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight)
+    }
+
+    window.addEventListener("resize", handleResize)
+    window.addEventListener("scroll", throttledScrollHandler)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+      window.removeEventListener("scroll", throttledScrollHandler)
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+    }
+  }, [handleScroll])
+
   const imageUrl = "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/"
-  const progress = Math.min(scrollY / (windowHeight * 1.5), 1)
+  
+  // Adjust the progress calculation for smoother transitions
+  // Using a different formula that provides more control over the transition
+  const progress = Math.min(scrollY / (windowHeight * 0.8), 1)
+  
+  // Calculate the content offset based on progress
+  const contentOffset = Math.max(30, (1 - progress) * 100)
 
   return (
     <div className="relative min-h-screen">
       <ParallaxHeader
         title={foundArticle.heading}
         imageUrl={`${imageUrl}${foundArticle.id}.png`}
-        subtitle={foundArticle.conditionId}
+        subtitle={conditionInfo ? `${conditionInfo.condition_name}` : undefined}
         progress={progress}
       />
+      
+      {/* Content container with a more stable transform */}
       <div
-        className="relative z-10 mx-auto max-w-5xl px-2 sm:px-6 lg:px-8"
+        className="relative z-10 mx-auto max-w-5xl px-2 sm:px-6 lg:px-8 transition-transform duration-100 ease-out"
         style={{
-          transform: `translateY(${(1 - progress) * 100}vh)`, // Reduced from 150vh for better mobile experience
+          transform: `translateY(${contentOffset}vh)`,
+          opacity: progress > 0.1 ? 1 : 0, // Fade in content only after scrolling starts
         }}
       >
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl pb-6 sm:pb-12">
@@ -63,7 +112,7 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
             <div className="grid grid-cols-2 gap-4 sm:flex sm:flex-row sm:justify-between sm:space-x-8 sm:space-y-0">
               <div className="space-y-1 sm:space-y-2">
                 <p className="text-sm sm:text-base font-bold text-red-600">CONDITION</p>
-                <p className="text-sm sm:text-base">{foundArticle.conditionId}</p>
+                <p className="text-sm sm:text-base">{conditionInfo?.condition_name ?? foundArticle.conditionId}</p>
               </div>
               <div className="space-y-1 sm:space-y-2">
                 <p className="text-sm sm:text-base font-bold text-red-600">PRESSURE USED</p>

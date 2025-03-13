@@ -43,7 +43,7 @@ export default function ParallaxHeader({ title, imageUrl, subtitle, progress }: 
         }}
       >
         <h1 className="text-center text-4xl font-bold text-white sm:text-5xl mb-4">{title}</h1>
-        {subtitle && <p className="text-center text-xl text-white">{subtitle}</p>}
+        {subtitle && <p className="text-center text-xl text-white tracking-widest">{subtitle}</p>}
       </div>
     </div>
   )
