@@ -34,7 +34,7 @@ export function MobileChamberCard({ chamber, onQuickView }: MobileChamberCardPro
         </h3>
         <p className="mb-4 flex flex-col gap-2 font-mono text-sm text-gray-200">
           <span>Type: {chamber.type}</span>
-          <span>Max Pressure: {chamber.ata} ATA</span>
+          <span>Max Pressure: {chamber.ata}</span>
           <span>Capacity: {chamber.capacity}</span>
         </p>
         <GlowingButton text="More Info" onClick={() => onQuickView(chamber)} className="w-full" />

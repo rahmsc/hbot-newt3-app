@@ -6,6 +6,7 @@ import { notFound } from "next/navigation"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "~/components/ui/accordion"
 import { Button } from "~/components/ui/button"
 import { getChamberData } from "~/utils/supabase/chambers/getChamberData"
+import { HBOTInquiryForm } from "~/components/chambers/hbot-inquiry-form"
 
 interface PageProps {
   params: {
@@ -65,12 +66,7 @@ export default async function ChamberProductPage({ params }: PageProps) {
 
             {/* Action Buttons */}
             <div className="flex items-center gap-3">
-              <Button
-                size="lg"
-                className="flex-1 rounded-full bg-[#2B5741] text-lg font-medium text-white hover:bg-emerald-800"
-              >
-                Speak To An Expert
-              </Button>
+              <HBOTInquiryForm />
               <Button
                 size="lg"
                 variant="outline"
