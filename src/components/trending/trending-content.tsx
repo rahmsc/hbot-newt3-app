@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { TrendingCard, type TrendingArticleProps } from "~/components/trending/trending-card"
+import { TrendingCard } from "~/components/trending/trending-card"
+import type { BlogDbEntry } from "~/types/blog"
 import { Button } from "~/components/ui/button"
 import { Pagination } from "~/components/ui/pagination"
 
 interface TrendingContentProps {
-  featuredPosts: TrendingArticleProps[]
-  listPosts: TrendingArticleProps[]
+  featuredPosts: BlogDbEntry[]
+  listPosts: BlogDbEntry[]
 }
 
 const ITEMS_PER_PAGE = 9
@@ -18,11 +19,11 @@ export function TrendingContent({ featuredPosts = [], listPosts = [] }: Trending
 
   const filteredListPosts = listPosts.filter((article) => {
     if (filter === "all") return true
-    if (filter === "blogs") return article.type === "blog"
-    if (filter === "guides") return article.type === "guide"
+    if (filter === "blogs") return article.category === "blog"
+    if (filter === "guides") return article.category === "guide"
     if (filter === "latest") {
       return listPosts
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .sort((a, b) => new Date(b.publish_date).getTime() - new Date(a.publish_date).getTime())
         .slice(0, 9)
         .includes(article)
     }
@@ -92,7 +93,8 @@ export function TrendingContent({ featuredPosts = [], listPosts = [] }: Trending
               <div className="md:col-span-2 md:grid md:grid-cols-2 md:gap-6">
                 {featuredPosts.slice(1, 4).map((post, index) => (
                   post && (
-                    <div key={index}>
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+<div key={index}>
                       <TrendingCard article={post} size="small" />
                     </div>
                   )
@@ -107,7 +109,8 @@ export function TrendingContent({ featuredPosts = [], listPosts = [] }: Trending
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {currentItems.map((post, index) => (
                 post && (
-                  <div key={index}>
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+<div key={index}>
                     <TrendingCard article={post} size="medium" />
                   </div>
                 )

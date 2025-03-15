@@ -1,4 +1,4 @@
-import { getTrendingArticles } from "~/utils/supabase/articles/getTrendingArticles";
+import { getTrendingArticles } from "~/utils/supabase/trending/getTrendingArticles";
 import { TrendingSectionClient } from "./trending-section-client";
 
 export default async function TrendingSection() {

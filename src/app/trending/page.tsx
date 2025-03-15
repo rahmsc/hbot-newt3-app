@@ -1,8 +1,8 @@
 import { TrendingHeader } from "~/components/trending/trending-header"
 import { FeaturedArticles } from "~/components/trending/featured-articles"
 import { ArticleGrid } from "~/components/trending/article-grid"
-import { getTrendingArticles } from "~/utils/supabase/articles/getTrendingArticles"
-import type { TrendingArticleProps } from "~/components/trending/trending-card"
+import { getTrendingArticles } from "~/utils/supabase/trending/getTrendingArticles"
+import type { BlogDbEntry } from "~/types/blog"
 
 export default async function TrendingPage() {
   const articles = await getTrendingArticles()
@@ -19,7 +19,7 @@ export default async function TrendingPage() {
   }
 
   // Filter out undefined values and ensure type safety
-  const validArticles = articles.filter((article): article is TrendingArticleProps => 
+    const validArticles = articles.filter((article): article is BlogDbEntry => 
     article !== undefined
   )
 

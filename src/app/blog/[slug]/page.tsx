@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { useRouter, notFound } from "next/navigation"
+import { useRouter,  } from "next/navigation"
 import RichText from "~/components/utils/rich-text"
 import ParallaxHeader from "~/components/blog/ParallaxHeader"
-import { getBlogPostBySlug } from "~/utils/airtable/blogs/getBlogPosts"
-import type { BlogPost } from "~/types/blog"
+import { getBlogPostBySlug } from "~/utils/supabase/blogs/getBlogPosts"
+import type { BlogDbEntry, RichContent } from "~/types/blog"
 import Spinner from "~/components/utils/spinner"
 
 
@@ -18,7 +18,7 @@ type PageProps = {
 
 export default function BlogPostPage({ params }: PageProps) {
   const router = useRouter()
-  const [post, setPost] = useState<BlogPost | null>(null)
+  const [post, setPost] = useState<BlogDbEntry | null>(null)
   const [scrollY, setScrollY] = useState(0)
   const [windowHeight, setWindowHeight] = useState(0)
 
@@ -28,7 +28,7 @@ export default function BlogPostPage({ params }: PageProps) {
       if (fetchedPost) {
         setPost(fetchedPost)
       } else {
-        notFound()
+        console.log("not found", fetchedPost)
       }
     }
     fetchPost()
@@ -61,8 +61,8 @@ export default function BlogPostPage({ params }: PageProps) {
   return (
     <div className="relative min-h-screen">
       <ParallaxHeader
-        title={post.fields["Content Idea"]}
-        imageUrl={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/header/${post.fields["ID Blog"]}.png`}
+        title={post.title}
+        imageUrl={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/header/${post.blog_id}.png`}
         progress={progress}
       />
       <div
@@ -74,17 +74,20 @@ export default function BlogPostPage({ params }: PageProps) {
         <article className="bg-white rounded-t-3xl shadow-xl">
           <div className="px-6 py-16">
             <div className="mb-6 sm:mb-10">
-              <RichText 
-                content={post.fields.Introduction} 
+              {/* <RichText 
+                content={post.introduction} 
                 className="leading-relaxed prose prose-sm sm:prose-base mx-auto"
-              />
+              /> */}
+              <p>
+                {post.introduction as unknown as string}
+              </p>
             </div>
 
             <div className="mb-6 sm:mb-10 overflow-hidden rounded-lg shadow-lg">
               <div className="relative aspect-[16/9]">
                 <Image
-                  src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/bodyimage1/${post.fields["ID Blog"]}.png`}
-                  alt={post.fields["Content Idea"]}
+                  src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/bodyimage1/${post.blog_id}.png`}
+                  alt={post.title}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1000px"
@@ -95,7 +98,7 @@ export default function BlogPostPage({ params }: PageProps) {
 
             <div className="mb-6 sm:mb-10">
               <RichText 
-                content={post.fields["Enriched Blog"]} 
+                content={post.body as unknown as RichContent} 
                 className="leading-relaxed prose prose-sm sm:prose-base mx-auto"
               />
             </div>
@@ -103,8 +106,8 @@ export default function BlogPostPage({ params }: PageProps) {
             <div className="mb-6 sm:mb-10 overflow-hidden rounded-lg shadow-lg">
               <div className="relative aspect-[16/9]">
                 <Image
-                  src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/bodyimage2/${post.fields["ID Blog"]}.png`}
-                  alt={post.fields["Content Idea"]}
+                  src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/bodyimage2/${post.blog_id}.png`}
+                  alt={post.title}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1000px"

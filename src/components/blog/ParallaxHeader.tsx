@@ -1,49 +1,43 @@
 "use client"
 
-import { useRef } from "react"
 import Image from "next/image"
 
 interface ParallaxHeaderProps {
   title: string
   imageUrl: string
-  subtitle?: string
   progress: number
 }
 
-export default function ParallaxHeader({ title, imageUrl, subtitle, progress }: ParallaxHeaderProps) {
-  const headerRef = useRef<HTMLDivElement>(null)
-
-  // Constants
-  const initialZoom = 1.2 // Initial zoom level
-
-  // Calculate image zoom and title opacity
-  const imageZoom = initialZoom - progress * (initialZoom - 1)
-  const titleOpacity = progress < 0.2 ? 1 : 1 - (progress - 0.2) / (0.55 - 0.2)
-
+export default function ParallaxHeader({ title, imageUrl, progress }: ParallaxHeaderProps) {
   return (
-    <div ref={headerRef} className="fixed top-0 left-0 w-full h-screen overflow-hidden z-0">
-      <div className="absolute inset-0">
-        <Image
-          src={imageUrl || "/placeholder.svg"}
-          alt={title}
-          fill
-          priority
-          sizes="100vw"
-          className="transition-transform duration-300 ease-out object-cover"
-          style={{
-            transform: `scale(${imageZoom})`,
-          }}
-        />
-      </div>
-      <div className="absolute inset-0 bg-black bg-opacity-30" />
-      <div
-        className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-300 ease-out"
+    <div className="fixed inset-0 h-[100vh] overflow-hidden">
+      <div className="absolute inset-0 bg-black/50 z-10" />
+      <div 
+        className="absolute inset-0"
         style={{
-          opacity: titleOpacity,
+          transform: `translateY(${progress * -20}%)`,
+          opacity: 1 - progress * 0.5,
         }}
       >
-        <h1 className="text-center text-4xl font-bold text-white sm:text-5xl mb-4">{title}</h1>
-        {subtitle && <p className="text-center text-xl text-white tracking-widest">{subtitle}</p>}
+        <Image
+          src={imageUrl}
+          alt={title}
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
+      </div>
+      <div className="absolute inset-0 z-20 flex items-center justify-center">
+        <h1 
+          className="text-4xl md:text-6xl font-bold text-white text-center max-w-4xl px-4"
+          style={{
+            transform: `translateY(${progress * -50}px)`,
+            opacity: 1 - progress,
+          }}
+        >
+          {title}
+        </h1>
       </div>
     </div>
   )

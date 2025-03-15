@@ -1,13 +1,13 @@
 "use client"
 
-import type { TrendingArticleProps } from "./trending-card"
+import type { BlogDbEntry } from "~/types/blog"
 import { TrendingCard } from "./trending-card"
 import useEmblaCarousel from "embla-carousel-react"
 import { useState, useEffect } from "react"
 import { CarouselIndicator } from "~/components/utils/carousel-indicator"
 
 interface FeaturedArticlesProps {
-  articles: TrendingArticleProps[]
+  articles: BlogDbEntry[]
   isMobile?: boolean
 }
 
@@ -44,7 +44,7 @@ export function FeaturedArticles({ articles, isMobile }: FeaturedArticlesProps) 
 
   const sideArticles = articles.slice(1)
   const validSideArticles = sideArticles.filter(
-    (article): article is TrendingArticleProps => article !== undefined && article !== null,
+    (article): article is BlogDbEntry => article !== undefined && article !== null,
   )
 
   return (
@@ -64,7 +64,7 @@ export function FeaturedArticles({ articles, isMobile }: FeaturedArticlesProps) 
               <div className="flex -ml-4">
                 {[mainArticle, ...validSideArticles].map((article, index) => (
                   <div
-                    key={article.link || index}
+                    key={article.blog_id || index}
                     className="min-w-[85vw] flex-none pl-4"
                   >
                     <div className="relative h-[500px] overflow-hidden rounded-2xl shadow-lg transition duration-200 hover:shadow-md">
@@ -92,7 +92,7 @@ export function FeaturedArticles({ articles, isMobile }: FeaturedArticlesProps) 
           </div>
           <div className="grid grid-rows-3 gap-1">
             {validSideArticles.slice(0, 3).map((article, index) => (
-              <div key={article.link || index} className="h-full">
+              <div key={article.blog_id || index} className="h-full">
                 <TrendingCard article={article} size="featured-side" />
               </div>
             ))}

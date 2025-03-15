@@ -3,9 +3,10 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 
 import { cn } from "../../lib/utils";
+import type { RichContent } from "~/types/blog";
 
 interface RichTextProps {
-  content: string;
+  content: RichContent;
   className?: string;
 }
 
@@ -78,7 +79,7 @@ export default function RichText({ content, className }: RichTextProps) {
           ),
         }}
       >
-        {content}
+        {content as unknown as string}
       </ReactMarkdown>
     </div>
   );
