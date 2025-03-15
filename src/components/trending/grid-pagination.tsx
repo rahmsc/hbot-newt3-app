@@ -24,6 +24,7 @@ export function GridPagination({ currentPage, totalPages, onPageChange }: GridPa
       <div className="flex items-center gap-2">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
           <button
+            type="button"
             key={page}
             onClick={() => onPageChange(page)}
             className={`h-2 w-2 rounded-full transition-all ${
