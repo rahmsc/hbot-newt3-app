@@ -115,7 +115,7 @@ export function Sidebar({
 
           {/* Categories List */}
           <ScrollArea className="flex-1 px-3">
-            <div className="space-y-1 pb-4">
+            <div className="pb-4">
               {categories.map((category) => {
                 const filteredConditions = filterConditions(category.conditions);
                 
@@ -147,7 +147,7 @@ export function Sidebar({
 
                     {/* Conditions List */}
                     {openCategory === category.categoryId.toString() && (
-                      <div className="ml-7 space-y-1">
+                      <div className="ml-7">
                         {filteredConditions.map((condition) => (
                           <Button
                             key={condition.id}

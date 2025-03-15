@@ -3,6 +3,7 @@ import Image from "next/image"
 import type { ConditionIdArticlesProps } from "~/utils/supabase/articles/getArticlesByCondition"
 import { FeatureArticleActions } from "./feature-article-actions"
 import { Badge } from "~/components/ui/badge"
+import { Button } from "~/components/ui/button"
 
 interface ArticlePreviewProps {
   article: ConditionIdArticlesProps | null
@@ -24,11 +25,6 @@ export function ArticlePreview({ article }: ArticlePreviewProps) {
 
   return (
     <div className="flex h-full flex-col bg-white p-8">
-      {/* Article Image */}
-      <div className="mb-6 relative h-48 w-full overflow-hidden rounded-xl">
-        <Image src={"/images/products/1.png"} alt={article.heading ?? ""} fill className="object-cover" />
-      </div>
-
       {/* Author and Date */}
       <div className="mb-4">
         <div className="flex items-center gap-4 font-mono text-sm text-gray-600">
@@ -39,7 +35,7 @@ export function ArticlePreview({ article }: ArticlePreviewProps) {
       </div>
 
       {/* Main Content */}
-      <div className="mb-6 flex-grow">
+      <div className="mb-6">
         <h2 className="font-['Raleway'] text-3xl font-bold leading-tight text-gray-900 mb-4">{article.heading}</h2>
         <div className="prose prose-sm max-w-none text-gray-600">
           <p>{article.summary}</p>
@@ -58,15 +54,14 @@ export function ArticlePreview({ article }: ArticlePreviewProps) {
         <MetadataItem label="PUBLIC DATA" value={article.public_data ? "Yes" : "No"} />
         <MetadataItem label="FUNDED" value={article.funded ? "Yes" : "N/A"} />
       </div>
-      <div className="mb-6">
 
       {/* Feature Article Actions */}
-      <div className="flex justify-start">
+ 
+        <div className="flex p-4 justify-start">
+          <FeatureArticleActions outcome_rating={article.outcome_rating} />
+        </div>
+      </div>
 
-      <FeatureArticleActions outcome_rating={article.outcome_rating} />
-      </div>
-      </div>
-    </div>
   )
 }
 

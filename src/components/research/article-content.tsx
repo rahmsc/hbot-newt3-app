@@ -14,6 +14,7 @@ import { Button } from "../ui/button"
 import { BookmarkIcon } from "lucide-react"
 import { useArticleBookmark } from "~/hooks/use-article-bookmark"
 import { useAuth } from "~/contexts/auth-context";
+import type { RichContent } from "~/types/blog";
 
 function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
   const [scrollY, setScrollY] = useState(0)
@@ -62,7 +63,7 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
       if (!scrollTimeout) {
         scrollTimeout = setTimeout(() => {
           handleScroll()
-          scrollTimeout = null
+          clearTimeout(scrollTimeout)
         }, 10) // Small throttle for smoother performance
       }
     }
@@ -95,7 +96,6 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
       <ParallaxHeader
         title={foundArticle.heading}
         imageUrl={`${imageUrl}${foundArticle.id}.png`}
-        subtitle={conditionInfo ? `${conditionInfo.condition_name}` : undefined}
         progress={progress}
       />
       
@@ -157,20 +157,20 @@ function ArticleContent({ foundArticle }: { foundArticle: ArticlesProps }) {
               <div className="space-y-6 sm:space-y-8 lg:w-2/3">
                 <AccordionTemplate
                   trigger={<h2 className="text-center text-2xl sm:text-3xl font-semibold">Outcome</h2>}
-                  content={<RichText content={foundArticle.summary} className="text-sm sm:text-base leading-relaxed text-gray-700" />}
+                  content={<RichText content={foundArticle.summary as unknown as RichContent} className="text-sm sm:text-base leading-relaxed text-gray-700" />}
                   defaultOpen={true}
                 />
                 <AccordionTemplate
                   trigger={<h2 className="text-2xl sm:text-3xl font-semibold">Introduction</h2>}
-                  content={<RichText content={foundArticle.introduction} className="text-sm sm:text-base leading-relaxed text-gray-700" />}
+                  content={<RichText content={foundArticle.introduction as unknown as RichContent} className="text-sm sm:text-base leading-relaxed text-gray-700" />}
                 />
                 <AccordionTemplate
                   trigger={<h2 className="text-2xl sm:text-3xl font-semibold">Results</h2>}
-                  content={<RichText content={foundArticle.results} className="text-sm sm:text-base leading-relaxed text-gray-700" />}
+                  content={<RichText content={foundArticle.results as unknown as RichContent} className="text-sm sm:text-base leading-relaxed text-gray-700" />}
                 />
                 <AccordionTemplate
                   trigger={<h2 className="text-2xl sm:text-3xl font-semibold">Conclusion</h2>}
-                  content={<RichText content={foundArticle.conclusion || ""} className="text-sm sm:text-base leading-relaxed text-gray-700" />}
+                  content={<RichText content={foundArticle.conclusion as unknown as RichContent} className="text-sm sm:text-base leading-relaxed text-gray-700" />}
                 />
               </div>
 
