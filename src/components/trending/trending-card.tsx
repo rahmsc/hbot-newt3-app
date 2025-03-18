@@ -92,7 +92,7 @@ export function TrendingCard({ article, size = "medium" }: TrendingCardProps) {
     <Link href={`/${category}/${article.url_slug}`} className="group block h-full">
       <article className="relative h-full w-full overflow-hidden rounded-[2rem] bg-white">
         <Image
-          src={imgError ? "/placeholder.png" : `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/${article.category === "Guide" ? "guide" : "blog"}/header/${article.blog_id}.png`}
+          src={imgError ? "/placeholder.png" : `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/${article.blog_id}_1.png`}
           alt={article.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"

@@ -62,7 +62,7 @@ export default function BlogPostPage({ params }: PageProps) {
     <div className="relative min-h-screen">
       <ParallaxHeader
         title={post.title}
-        imageUrl={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/header/${post.blog_id}.png`}
+        imageUrl={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/${post.blog_id}_1.png`}
         progress={progress}
       />
       <div
@@ -86,7 +86,7 @@ export default function BlogPostPage({ params }: PageProps) {
             <div className="mb-6 sm:mb-10 overflow-hidden rounded-lg shadow-lg">
               <div className="relative aspect-[16/9]">
                 <Image
-                  src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/bodyimage1/${post.blog_id}.png`}
+                  src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/${post.blog_id}_2.png`}
                   alt={post.title}
                   fill
                   className="object-cover"
@@ -106,7 +106,7 @@ export default function BlogPostPage({ params }: PageProps) {
             <div className="mb-6 sm:mb-10 overflow-hidden rounded-lg shadow-lg">
               <div className="relative aspect-[16/9]">
                 <Image
-                  src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/bodyimage2/${post.blog_id}.png`}
+                  src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/${post.blog_id}_3.png`}
                   alt={post.title}
                   fill
                   className="object-cover"

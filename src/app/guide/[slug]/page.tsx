@@ -61,7 +61,7 @@ export default function GuidePage({ params }: PageProps) {
     <div className="relative min-h-screen">
       <ParallaxHeader
         title={guide.title}
-        imageUrl={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/guides/header/${guide.blog_id}.png`}
+        imageUrl={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/${guide.blog_id}_1.png`}
         progress={progress}
       />
       <div
@@ -82,7 +82,7 @@ export default function GuidePage({ params }: PageProps) {
             <div className="mb-6 sm:mb-10 overflow-hidden rounded-lg shadow-lg">
               <div className="relative aspect-[16/9]">
                 <Image
-                  src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/guides/image2/${guide.blog_id}.png`}
+                  src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/${guide.blog_id}_2.png`}
                   alt={guide.title}
                   fill
                   className="object-cover"

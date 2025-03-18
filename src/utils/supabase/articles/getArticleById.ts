@@ -74,7 +74,7 @@ export default async function getArticleById(
     }
 
     if (!data) {
-      console.log("No data found for article ID:", id);
+      // console.log("No data found for article ID:", id);
       throw new Error(`No article found with ID: ${id}`);
     }
 
