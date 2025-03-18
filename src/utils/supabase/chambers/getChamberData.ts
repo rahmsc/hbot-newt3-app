@@ -3,17 +3,18 @@
 import { createClient } from "~/utils/supabase/server";
 import type { ChamberProps } from "~/types/chambers";
 
-export async function getChamberData(slug: string): Promise<ChamberProps | null> {
+export async function getChamberData(
+  slug: string,
+): Promise<ChamberProps | null> {
   const supabase = await createClient();
 
   try {
- 
     const searchName = slug.split("-").join(" ").toLowerCase();
-
 
     const { data, error } = await supabase
       .from("chamber_products")
-      .select(`
+      .select(
+        `
         id,
         name,
         type,
@@ -27,8 +28,10 @@ export async function getChamberData(slug: string): Promise<ChamberProps | null>
         benefits,
         tech_dco,
         inclusion,
-        who_for
-      `)
+        who_for,
+        images
+      `,
+      )
       .ilike("name", searchName)
       .single();
 
@@ -43,4 +46,42 @@ export async function getChamberData(slug: string): Promise<ChamberProps | null>
     return null;
   }
 }
-  
+
+export async function getAllChambers(): Promise<ChamberProps[]> {
+  const supabase = await createClient();
+
+  try {
+    const { data, error } = await supabase
+      .from("chamber_products")
+      .select(
+        `
+        id,
+        name,
+        type,
+        info,
+        capacity,
+        ata,
+        features,
+        size_guide,
+        warranty,
+        certification,
+        benefits,
+        tech_dco,
+        inclusion,
+        who_for,
+        images
+      `,
+      )
+      .order("name");
+
+    if (error) {
+      console.error("Error fetching all chambers:", error);
+      return [];
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error in getAllChambers:", error);
+    return [];
+  }
+}

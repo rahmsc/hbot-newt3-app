@@ -13,6 +13,7 @@ export interface ChamberProps {
   tech_dco: string | null;
   inclusion: string | null;
   who_for: string | null;
+  images?: string[] | null;
 }
 
 // You might want to create a helper type for required fields

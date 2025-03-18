@@ -1,17 +1,21 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import Image from "next/image"
-import type { ChamberProduct } from "~/types/database"
-import GlowingButton from "../utils/glowing-button"
+import { motion } from "framer-motion";
+import Image from "next/image";
+import type { ChamberProps } from "~/types/chambers";
+import GlowingButton from "../utils/glowing-button";
 
 interface MobileChamberCardProps {
-  chamber: ChamberProduct
-  onQuickView: (chamber: ChamberProduct) => void
+  chamber: ChamberProps;
+  onQuickView?: (chamber: ChamberProps) => void;
 }
 
-export function MobileChamberCard({ chamber, onQuickView }: MobileChamberCardProps) {
-  const imageUrl = "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/products/"
+export function MobileChamberCard({
+  chamber,
+  onQuickView,
+}: MobileChamberCardProps) {
+  const imageUrl =
+    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/";
 
   return (
     <motion.div
@@ -22,7 +26,7 @@ export function MobileChamberCard({ chamber, onQuickView }: MobileChamberCardPro
       className="relative h-[500px] overflow-hidden rounded-2xl shadow-lg"
     >
       <Image
-        src={`${imageUrl}${chamber.id}.png`}
+        src={`${imageUrl}${chamber.images?.[0] ?? `${chamber.id}_1`}.png`}
         alt={chamber.name ?? "Chamber"}
         fill
         className="object-cover"
@@ -37,9 +41,14 @@ export function MobileChamberCard({ chamber, onQuickView }: MobileChamberCardPro
           <span>Max Pressure: {chamber.ata}</span>
           <span>Capacity: {chamber.capacity}</span>
         </p>
-        <GlowingButton text="More Info" onClick={() => onQuickView(chamber)} className="w-full" />
+        {onQuickView && (
+          <GlowingButton
+            text="More Info"
+            onClick={() => onQuickView(chamber)}
+            className="w-full"
+          />
+        )}
       </div>
     </motion.div>
-  )
+  );
 }
-

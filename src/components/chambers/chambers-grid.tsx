@@ -1,28 +1,32 @@
-"use client"
+"use client";
 
-import { AnimatePresence, motion } from "framer-motion"
-import Image from "next/image"
-import { useCallback, useState, useEffect } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import useEmblaCarousel from "embla-carousel-react"
-import { Skeleton } from "~/components/ui/skeleton"
-import { Button } from "~/components/ui/button"
-import type { ChamberProduct } from "~/types/database"
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import { useCallback, useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
+import { Skeleton } from "~/components/ui/skeleton";
+import { Button } from "~/components/ui/button";
+import type { ChamberProduct } from "~/types/database";
 
-import GlowingButton from "../utils/glowing-button"
-import { ChambersFilter } from "./chambers-filter"
-import { ChamberQuickView } from "./chambers-quick-view"
-import { CarouselIndicator } from "../utils/carousel-indicator"
+import GlowingButton from "../utils/glowing-button";
+import { ChambersFilter } from "./chambers-filter";
+import { ChamberQuickView } from "./chambers-quick-view";
+import { CarouselIndicator } from "../utils/carousel-indicator";
 
 interface ChambersGridProps {
-  chambers: ChamberProduct[]
+  chambers: ChamberProduct[];
 }
 
 export function ChambersGrid({ chambers }: ChambersGridProps) {
-  const [selectedChamber, setSelectedChamber] = useState<ChamberProduct | null>(null)
-  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false)
-  const [filter, setFilter] = useState<"all" | "portable" | "mild" | "hard">("all")
-  const [currentSlide, setCurrentSlide] = useState(0)
+  const [selectedChamber, setSelectedChamber] = useState<ChamberProduct | null>(
+    null,
+  );
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+  const [filter, setFilter] = useState<"all" | "portable" | "mild" | "hard">(
+    "all",
+  );
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -31,42 +35,43 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
     dragFree: true,
     slidesToScroll: 1,
     inViewThreshold: 0.7,
-  })
+  });
 
   useEffect(() => {
-    if (!emblaApi) return
+    if (!emblaApi) return;
 
     const onSelect = () => {
-      setCurrentSlide(emblaApi.selectedScrollSnap())
-    }
+      setCurrentSlide(emblaApi.selectedScrollSnap());
+    };
 
-    emblaApi.on('select', onSelect)
+    emblaApi.on("select", onSelect);
 
     return () => {
-      emblaApi.off('select', onSelect)
-    }
-  }, [emblaApi])
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi]);
 
-  const imageUrl = "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/products/"
+  const imageUrl =
+    "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/";
 
   const filteredChambers = chambers.filter((chamber) => {
-    if (filter === "all") return true
-    return chamber.type?.toLowerCase().includes(filter.toLowerCase())
-  })
+    if (filter === "all") return true;
+    return chamber.type?.toLowerCase().includes(filter.toLowerCase());
+  });
 
   const handleViewClick = useCallback((chamber: ChamberProduct) => {
-    setSelectedChamber(chamber)
-    setIsQuickViewOpen(true)
-  }, [])
+    setSelectedChamber(chamber);
+    setIsQuickViewOpen(true);
+  }, []);
 
   const handleCloseQuickView = useCallback(() => {
-    setIsQuickViewOpen(false)
-    setSelectedChamber(null)
-  }, [])
+    setIsQuickViewOpen(false);
+    setSelectedChamber(null);
+  }, []);
 
   const handleFilterChange = (value: string) => {
-    setFilter(value as "all" | "portable" | "mild" | "hard")
-  }
+    setFilter(value as "all" | "portable" | "mild" | "hard");
+  };
 
   if (!chambers?.length) {
     return (
@@ -81,7 +86,7 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
           </div>
         </div>
       </section>
-    )
+    );
   }
 
   return (
@@ -89,10 +94,10 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
       <div className="container mx-auto px-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="w-full space-y-2 sm:w-auto">
-            <h1 className="font-['Raleway'] text-lg sm:text-4xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
+            <h1 className="text-center font-['Raleway'] text-lg font-normal tracking-[0.5em] text-gray-700 sm:text-left sm:text-4xl sm:tracking-[0.3em]">
               CHAMBER RANGE
             </h1>
-            <p className="text-sm sm:text-xl text-gray-500 font-light text-center sm:text-left">
+            <p className="text-center text-sm font-light text-gray-500 sm:text-left sm:text-xl">
               Explore our curated selection of premium hyperbaric chambers.
             </p>
           </div>
@@ -105,7 +110,7 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
         <div className="block sm:hidden">
           <div className="relative pt-4">
             <div className="overflow-visible" ref={emblaRef}>
-              <div className="flex -ml-4">
+              <div className="-ml-4 flex">
                 <AnimatePresence>
                   {filteredChambers.map((chamber) => (
                     <div
@@ -120,7 +125,7 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
                         className="relative h-[500px] overflow-hidden rounded-2xl shadow-lg"
                       >
                         <Image
-                          src={`${imageUrl}${chamber.id}.png`}
+                          src={`${imageUrl}${chamber.images?.[0] ?? `${chamber.id}_1`}.png`}
                           alt={chamber.name ?? "Chamber"}
                           fill
                           className="object-cover"
@@ -135,7 +140,11 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
                             <span>Max Pressure: {chamber.ata} ATA</span>
                             <span>Capacity: {chamber.capacity}</span>
                           </p>
-                          <GlowingButton text="More Info" onClick={() => handleViewClick(chamber)} className="w-full" />
+                          <GlowingButton
+                            text="More Info"
+                            onClick={() => handleViewClick(chamber)}
+                            className="w-full"
+                          />
                         </div>
                       </motion.div>
                     </div>
@@ -146,16 +155,16 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
 
             {/* Remove the navigation buttons since we're using the peek effect */}
             <div className="md:hidden">
-              <CarouselIndicator 
-                total={filteredChambers.length} 
-                current={currentSlide} 
+              <CarouselIndicator
+                total={filteredChambers.length}
+                current={currentSlide}
               />
             </div>
           </div>
         </div>
 
         {/* Desktop Grid View */}
-        <div className="hidden sm:grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+        <div className="hidden grid-cols-1 gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           <AnimatePresence>
             {filteredChambers.map((chamber) => (
               <motion.div
@@ -169,7 +178,7 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
                 <div className="overflow-hidden rounded-lg shadow-lg transition-shadow hover:shadow-xl">
                   <div className="relative h-[550px]">
                     <Image
-                      src={`${imageUrl}${chamber.id}.png`}
+                      src={`${imageUrl}${chamber.images?.[0] ?? `${chamber.id}_1`}.png`}
                       alt={chamber.name ?? "Chamber"}
                       fill
                       className="object-cover"
@@ -184,7 +193,11 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
                         <span>Max Pressure: {chamber.ata} ATA</span>
                         <span>Capacity: {chamber.capacity}</span>
                       </p>
-                      <GlowingButton text="More Info" onClick={() => handleViewClick(chamber)} className="w-full" />
+                      <GlowingButton
+                        text="More Info"
+                        onClick={() => handleViewClick(chamber)}
+                        className="w-full"
+                      />
                     </div>
                   </div>
                 </div>
@@ -194,8 +207,11 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
         </div>
       </div>
 
-      <ChamberQuickView isOpen={isQuickViewOpen} onClose={handleCloseQuickView} chamber={selectedChamber} />
+      <ChamberQuickView
+        isOpen={isQuickViewOpen}
+        onClose={handleCloseQuickView}
+        chamber={selectedChamber}
+      />
     </section>
-  )
+  );
 }
-
