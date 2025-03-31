@@ -52,8 +52,10 @@ const filterOptions = [
 
 export function ChambersFilter({
   onFilterChange,
+  resetTrigger = 0,
 }: {
   onFilterChange: (filters: Record<string, string>) => void;
+  resetTrigger?: number;
 }) {
   const [open, setOpen] = React.useState(false);
   const [selectedFilters, setSelectedFilters] = React.useState<
@@ -68,6 +70,18 @@ export function ChambersFilter({
   const activeFilterCount = Object.values(selectedFilters).filter(
     (value) => value !== "all",
   ).length;
+
+  // Listen for changes to the resetTrigger and reset filters when it changes
+  React.useEffect(() => {
+    if (resetTrigger > 0) {
+      const resetValues = {
+        type: "all",
+        shell: "all",
+        capacity: "all",
+      };
+      setSelectedFilters(resetValues);
+    }
+  }, [resetTrigger]);
 
   const handleFilterSelect = (category: string, value: string) => {
     const newFilters = {
@@ -95,7 +109,7 @@ export function ChambersFilter({
       .map(([category, value]) => {
         const categoryData = filterOptions.find((c) => c.id === category);
         const option = categoryData?.options.find((o) => o.value === value);
-        return option?.label || value;
+        return option?.label ?? value;
       });
 
     if (activeFilters.length === 0) {
