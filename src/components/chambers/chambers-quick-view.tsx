@@ -58,25 +58,6 @@ export function ChamberQuickView({
 
   if (!chamber) return null;
 
-  // Using the same parsing logic as the chamber detail page
-  const featureItems = chamber.features
-    ? chamber.features
-        .split("\n\n")
-        .filter((block) => block.trim() !== "")
-        .map((block) => {
-          const lines = block.split("\n").filter((line) => line.trim() !== "");
-          return {
-            title: lines[0]?.trim() || "",
-            description: lines.slice(1).join("\n").trim() || "",
-          };
-        })
-    : [];
-
-  // Get just the first feature
-  const firstFeature = featureItems[0];
-  // Check if there are additional features
-  const hasMoreFeatures = featureItems.length > 1;
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl overflow-hidden rounded-xl bg-transparent p-0">
@@ -97,13 +78,26 @@ export function ChamberQuickView({
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
 
           <ScrollArea className="absolute inset-0 h-full">
-            <div className="flex h-full flex-col justify-between p-8">
-              <div className="space-y-6">
-                <div>
-                  <h2 className="font-['Raleway'] text-4xl font-bold text-white">
-                    {chamber.name}
-                  </h2>
-                  <p className="mt-2 text-xl text-gray-300">{chamber.type}</p>
+            <div className="flex h-full flex-col p-8">
+              <div className="space-y-12">
+                <div className="relative py-8">
+                  <div className="text-left">
+                    <h2 className="font-['Raleway'] text-4xl font-bold text-white">
+                      {chamber.name}
+                    </h2>
+                    <p className="mt-2 text-xl text-gray-300">{chamber.type}</p>
+                  </div>
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <Link
+                      href={`/chambers/${chamber.name?.toLowerCase().replace(/\s+/g, "-")}`}
+                      className="w-64"
+                    >
+                      <GlowingButton
+                        text="View Full Details"
+                        className="w-full"
+                      />
+                    </Link>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4">
@@ -129,73 +123,18 @@ export function ChamberQuickView({
                     </p>
                   </div>
                 </div>
-                {/* Chamber Description */}
+
                 {chamber.info && (
                   <div className="space-y-2">
                     <h3 className="text-xl font-semibold text-white">About</h3>
-                    <p className="text-sm leading-relaxed text-gray-300">
+                    <p className="text-base leading-relaxed tracking-wide text-gray-300">
                       {chamber.info.split("\n\n")[0]}
                     </p>
-                    <p className="text-sm leading-relaxed text-gray-300">
+                    <p className="text-base leading-relaxed tracking-wide text-gray-300">
                       {chamber.info.split("\n\n")[1]}
                     </p>
                   </div>
                 )}
-
-                {/* Modified Features Section - Only First Feature */}
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-white">
-                    Key Features
-                  </h3>
-
-                  {firstFeature && (
-                    <div className="space-y-3">
-                      <div className="rounded-lg bg-white/10 p-4 backdrop-blur-sm">
-                        <div className="flex items-start gap-3">
-                          <div className="mt-0.5 rounded-full bg-emerald-500/20 p-1.5">
-                            <CheckCircle className="h-4 w-4 text-emerald-500" />
-                          </div>
-                          <div className="space-y-2">
-                            <span className="text-sm font-medium text-gray-200">
-                              {firstFeature.title}
-                            </span>
-                            {firstFeature.description && (
-                              <p className="text-xs text-gray-300">
-                                {firstFeature.description}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {hasMoreFeatures && (
-                        <div className="rounded-lg bg-gradient-to-r from-emerald-500/20 to-transparent p-4">
-                          <p className="text-sm text-gray-200">
-                            <span className="font-medium text-emerald-400">
-                              +{featureItems.length - 1} more features
-                            </span>{" "}
-                            available on the full details page
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex gap-4 pt-6">
-                <Link
-                  href={`/chambers/${chamber.name?.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="w-full"
-                >
-                  <GlowingButton
-                    text="View Full Details"
-                    className="w-full"
-                    icon={
-                      <ChevronDown className="ml-2 h-4 w-4 transition-transform group-hover:translate-y-1" />
-                    }
-                  />
-                </Link>
               </div>
             </div>
           </ScrollArea>

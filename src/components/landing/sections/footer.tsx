@@ -51,10 +51,10 @@ const Footer = () => {
           {/* Column 4: Contact Info and Social Links */}
           <div className="flex flex-col space-y-2 pt-4">
             <a
-              href="mailto:hello@hyperbarichq.com"
+              href="mailto:breathebetter@hyperbarichq.com"
               className="text-lg font-semibold hover:underline"
             >
-              hello@hyperbarichq.com
+              breathebetter@hyperbarichq.com
             </a>
             <div className="my-4 flex space-x-4">
               <a

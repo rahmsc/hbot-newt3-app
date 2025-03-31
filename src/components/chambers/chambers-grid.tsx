@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -23,9 +24,11 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
     null,
   );
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
-  const [filter, setFilter] = useState<"all" | "portable" | "mild" | "hard">(
-    "all",
-  );
+  const [filters, setFilters] = useState({
+    type: "all",
+    shell: "all",
+    capacity: "all",
+  });
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -55,8 +58,34 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
     "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/";
 
   const filteredChambers = chambers.filter((chamber) => {
-    if (filter === "all") return true;
-    return chamber.type?.toLowerCase().includes(filter.toLowerCase());
+    // Type filter (Sit Up vs Lay Down)
+    if (
+      filters.type &&
+      filters.type !== "all" &&
+      !chamber.type?.toLowerCase().includes(filters.type.toLowerCase())
+    ) {
+      return false;
+    }
+
+    // Shell filter (Hard Shell vs Soft Shell)
+    if (
+      filters.shell &&
+      filters.shell !== "all" &&
+      !chamber.type?.toLowerCase().includes(filters.shell.toLowerCase())
+    ) {
+      return false;
+    }
+
+    // Capacity filter
+    if (filters.capacity && filters.capacity !== "all") {
+      // Extract just the number from capacity field (e.g., "1 Person" -> "1")
+      const capacityNumber = chamber.capacity?.match(/^(\d+)/)?.[1];
+      if (capacityNumber !== filters.capacity) {
+        return false;
+      }
+    }
+
+    return true;
   });
 
   const handleViewClick = useCallback((chamber: ChamberProduct) => {
@@ -69,8 +98,8 @@ export function ChambersGrid({ chambers }: ChambersGridProps) {
     setSelectedChamber(null);
   }, []);
 
-  const handleFilterChange = (value: string) => {
-    setFilter(value as "all" | "portable" | "mild" | "hard");
+  const handleFilterChange = (newFilters: Record<string, string>) => {
+    setFilters(newFilters);
   };
 
   if (!chambers?.length) {
