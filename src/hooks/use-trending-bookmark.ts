@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "~/utils/supabase/client";
 import { useToast } from "~/hooks/use-toast";
 
-export function useArticleBookmark(articleId: number, userId?: string) {
+export function useTrendingBookmark(itemId: number, userId?: string) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const supabase = createClient();
@@ -20,7 +20,7 @@ export function useArticleBookmark(articleId: number, userId?: string) {
       try {
         const { data, error } = await supabase
           .from("profiles")
-          .select("saved_articles")
+          .select("saved_trending")
           .eq("id", userId)
           .single();
 
@@ -30,24 +30,24 @@ export function useArticleBookmark(articleId: number, userId?: string) {
         }
 
         setIsBookmarked(
-          Array.isArray(data?.saved_articles) &&
-            data.saved_articles.includes(articleId),
+          Array.isArray(data?.saved_trending) &&
+            data.saved_trending.includes(itemId),
         );
       } catch (error) {
-        console.error("Error checking bookmark status:", error);
+        console.error("Error checking trending bookmark status:", error);
       } finally {
         setIsLoading(false);
       }
     }
 
-    checkBookmarkStatus();
-  }, [articleId, userId, supabase]);
+    void checkBookmarkStatus();
+  }, [itemId, userId, supabase]);
 
   const toggleBookmark = async () => {
     if (!userId) {
       toast({
         title: "Please log in",
-        description: "You need to be logged in to bookmark articles",
+        description: "You need to be logged in to bookmark content",
         variant: "destructive",
       });
       return;
@@ -56,10 +56,10 @@ export function useArticleBookmark(articleId: number, userId?: string) {
     try {
       setIsLoading(true);
 
-      // Get current saved articles
+      // Get current saved trending items
       const { data: profileData, error: fetchError } = await supabase
         .from("profiles")
-        .select("saved_articles")
+        .select("saved_trending")
         .eq("id", userId)
         .single();
 
@@ -68,44 +68,41 @@ export function useArticleBookmark(articleId: number, userId?: string) {
         throw fetchError;
       }
 
-      // Ensure saved_articles is an array
-      const currentSavedArticles: number[] = Array.isArray(
-        profileData?.saved_articles,
+      // Get current saved items or initialize empty array
+      const currentSavedItems: number[] = Array.isArray(
+        profileData?.saved_trending,
       )
-        ? profileData.saved_articles
+        ? profileData.saved_trending
         : [];
-      // Update saved articles - ensure we're working with numbers
-      const newSavedArticles = isBookmarked
-        ? currentSavedArticles.filter((id) => id !== articleId)
-        : [...currentSavedArticles, articleId];
 
-      // Update the profile with the array of integers
-      const { data: updateData, error: updateError } = await supabase
+      // Update saved items
+      const newSavedItems = isBookmarked
+        ? currentSavedItems.filter((id) => id !== itemId)
+        : [...currentSavedItems, itemId];
+
+      // Update the profile
+      const { error: updateError } = await supabase
         .from("profiles")
         .update({
-          saved_articles: newSavedArticles,
+          saved_trending: newSavedItems,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", userId)
-        .select()
-        .single();
+        .eq("id", userId);
 
       if (updateError) {
         console.error("Error updating profile:", updateError);
         throw updateError;
       }
 
-      console.log("Update response:", updateData);
-
       setIsBookmarked(!isBookmarked);
       toast({
-        title: isBookmarked ? "Bookmark removed" : "Article bookmarked",
+        title: isBookmarked ? "Bookmark removed" : "Content bookmarked",
         description: isBookmarked
-          ? "Article removed from your saved items"
-          : "Article saved to your profile",
+          ? "Item removed from your saved trending content"
+          : "Item saved to your profile",
       });
     } catch (error) {
-      console.error("Error toggling bookmark:", error);
+      console.error("Error toggling trending bookmark:", error);
       toast({
         title: "Error",
         description: "Failed to update bookmark. Please try again.",

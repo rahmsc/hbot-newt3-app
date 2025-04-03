@@ -30,4 +30,5 @@ export interface Profile {
   location?: string | null;
   company?: string | null;
   saved_articles: number[];
+  saved_trending: number[];
 }

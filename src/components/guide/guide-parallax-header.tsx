@@ -1,65 +1,95 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import Image from "next/image"
+import Image from "next/image";
+import { Bookmark } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { useAuth } from "~/contexts/auth-context";
+import { useTrendingBookmark } from "~/hooks/use-trending-bookmark";
 
 interface GuideParallaxHeaderProps {
-  imageUrl: string
+  title: string;
+  imageUrl: string;
+  progress: number;
+  guideId: number;
 }
 
-export default function GuideParallaxHeader({ imageUrl }: GuideParallaxHeaderProps) {
-  const [scrollY, setScrollY] = useState(0)
-  const [windowHeight, setWindowHeight] = useState(0)
-  const headerRef = useRef<HTMLDivElement>(null)
+export default function GuideParallaxHeader({
+  title,
+  imageUrl,
+  progress,
+  guideId,
+}: GuideParallaxHeaderProps) {
+  const { user } = useAuth();
+  const { isBookmarked, isLoading, toggleBookmark } = useTrendingBookmark(
+    guideId,
+    user?.id,
+  );
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowHeight(window.innerHeight)
-    }
-    const handleScroll = () => setScrollY(window.scrollY)
-
-    handleResize()
-    handleScroll()
-
-    window.addEventListener("resize", handleResize)
-    window.addEventListener("scroll", handleScroll)
-
-    return () => {
-      window.removeEventListener("resize", handleResize)
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
-
-  const imageHeight = windowHeight * 1.1 // 125% of viewport height
-  const scrollRange = imageHeight - windowHeight
-  const scrollProgress = Math.min(scrollY / scrollRange, 1)
-  const blurAmount = Math.max(0, (scrollProgress - 0.5) * 20) // Delayed blur effect
+  const handleBookmarkClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    void toggleBookmark();
+  };
 
   return (
-    <div
-      ref={headerRef}
-      className="sticky top-8 left-0 w-full overflow-hidden z-0"
-      style={{ height: `${imageHeight}px` }}
-    >
+    <div className="fixed inset-0 h-[100vh] overflow-hidden">
+      <div className="absolute inset-0 z-10 bg-black/50" />
       <div
-        className="relative transition-all duration-300 ease-out"
+        className="absolute inset-0"
         style={{
-          width: "95%",
-          margin: "0 auto",
-          height: "100%",
-          transform: `translateY(-${Math.min(scrollProgress, 0.75) * 25}%)`,
-          filter: `blur(${blurAmount}px)`,
+          transform: `translateY(${progress * 10}%)`,
+          opacity: 1 - progress * 0.5,
         }}
       >
         <Image
-          src={imageUrl || "/placeholder.svg"}
-          alt="Guide header"
-          layout="fill"
-          objectFit="cover"
-          className="transition-transform duration-300 ease-out"
+          src={imageUrl}
+          alt={title}
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
         />
       </div>
+      <div className="absolute inset-0 z-20 flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-6 px-4">
+          <h1
+            className="max-w-4xl text-center text-4xl font-bold text-white md:text-6xl"
+            style={{
+              transform: `translateY(${progress * -50}px)`,
+              opacity: 1 - progress,
+            }}
+          >
+            {title}
+          </h1>
+          {user && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="lg"
+              className={`flex items-center space-x-2 rounded-full bg-black/30 px-6 py-3 text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-black/40 ${
+                isBookmarked
+                  ? "bg-[#2B5741] ring-2 ring-[#2B5741] hover:bg-[#2B5741]/90"
+                  : ""
+              }`}
+              onClick={handleBookmarkClick}
+              disabled={isLoading}
+              style={{
+                transform: `translateY(${progress * -50}px)`,
+                opacity: 1 - progress,
+              }}
+            >
+              <Bookmark
+                className={`h-5 w-5 transition-colors sm:h-6 sm:w-6 ${
+                  isBookmarked ? "fill-white stroke-white" : "stroke-white"
+                }`}
+                strokeWidth={2.5}
+              />
+              <span className="ml-2 text-sm font-medium sm:text-base">
+                {isBookmarked ? "Saved" : "Save for Later"}
+              </span>
+            </Button>
+          )}
+        </div>
+      </div>
     </div>
-  )
+  );
 }
-

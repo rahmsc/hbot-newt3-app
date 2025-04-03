@@ -1,48 +1,52 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { sendGAEvent } from "@next/third-parties/google"
-import { BookmarkIcon } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "~/components/ui/button"
-import { useAuth } from "~/contexts/auth-context"
-import { useArticleBookmark } from "~/hooks/use-article-bookmark"
-import type { ConditionIdArticlesProps } from "~/utils/supabase/articles/getArticlesByCondition"
+import { sendGAEvent } from "@next/third-parties/google";
+import { BookmarkIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "~/components/ui/button";
+import { useAuth } from "~/contexts/auth-context";
+import { useArticleBookmark } from "~/hooks/use-article-bookmark";
+import type { ConditionIdArticlesProps } from "~/utils/supabase/articles/getArticlesByCondition";
 
 interface ArticleItemProps {
-  article: ConditionIdArticlesProps
-  onArticleHover: (article: ConditionIdArticlesProps | null) => void
+  article: ConditionIdArticlesProps;
+  onArticleHover: (article: ConditionIdArticlesProps | null) => void;
 }
 
 export function ArticleItem({ article, onArticleHover }: ArticleItemProps) {
-  const { user } = useAuth()
-  const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useArticleBookmark(article.id, user?.id)
+  const { user } = useAuth();
+  const {
+    isBookmarked,
+    isLoading: isBookmarkLoading,
+    toggleBookmark,
+  } = useArticleBookmark(article.id, user?.id);
 
   const handleBookmarkClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    void toggleBookmark()
-  }
+    e.preventDefault();
+    void toggleBookmark();
+  };
 
   const getImageUrl = (articleId: number) => {
-    return `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/${articleId}.png`
-  }
+    return `https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/research-articles/${articleId}.png`;
+  };
 
   const formatAuthors = (authors: string) => {
-    if (!authors) return "Unknown Author"
+    if (!authors) return "Unknown Author";
 
     const authorsList = authors
       .split(/[,]/)
       .map((author) => author.trim())
-      .filter(Boolean)
+      .filter(Boolean);
 
     if (authorsList.length <= 4) {
-      return authorsList.join(", ")
+      return authorsList.join(", ");
     }
 
-    return `${authorsList.slice(0, 4).join(", ")} et al.`
-  }
+    return `${authorsList.slice(0, 4).join(", ")} et al.`;
+  };
 
   return (
     <Link
@@ -55,7 +59,7 @@ export function ArticleItem({ article, onArticleHover }: ArticleItemProps) {
       }
       className="w-full px-2 sm:px-4"
     >
-      <div className="group relative h-[220px] sm:h-[180px] w-full overflow-hidden rounded-xl border border-gray-200 transition-shadow hover:shadow-md">
+      <div className="group relative h-[220px] w-full overflow-hidden rounded-xl border border-gray-200 transition-shadow hover:shadow-md sm:h-[180px]">
         {/* Background Image */}
         <Image
           src={getImageUrl(article.id) || "/placeholder.png"}
@@ -86,7 +90,9 @@ export function ArticleItem({ article, onArticleHover }: ArticleItemProps) {
             </div>
 
             {/* Title */}
-            <h3 className="line-clamp-2 font-serif text-lg font-medium leading-tight text-white">{article.heading}</h3>
+            <h3 className="line-clamp-2 font-serif text-lg font-medium leading-tight text-white">
+              {article.heading}
+            </h3>
           </div>
 
           {/* Bottom Section */}
@@ -104,8 +110,10 @@ export function ArticleItem({ article, onArticleHover }: ArticleItemProps) {
               type="button"
               variant="ghost"
               size="icon"
-              className={`overflow-hidden rounded-full p-1.5 sm:p-2 text-white backdrop-blur-sm transition-all ${
-                isBookmarked ? "bg-[#2B5741]/20 ring-2 ring-[#2B5741] hover:bg-[#2B5741]/30" : "hover:bg-white/20"
+              className={`overflow-hidden rounded-full p-1.5 text-white backdrop-blur-sm transition-all sm:p-2 ${
+                isBookmarked
+                  ? "bg-[#2B5741]/20 ring-2 ring-[#2B5741] hover:bg-[#2B5741]/30"
+                  : "hover:bg-white/20"
               }`}
               onClick={handleBookmarkClick}
               disabled={isBookmarkLoading}
@@ -118,6 +126,5 @@ export function ArticleItem({ article, onArticleHover }: ArticleItemProps) {
         </div>
       </div>
     </Link>
-  )
+  );
 }
-

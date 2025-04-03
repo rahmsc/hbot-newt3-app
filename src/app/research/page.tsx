@@ -14,13 +14,13 @@ interface GroupedCategory {
 }
 
 interface Props {
-  searchParams: { 
+  searchParams: {
     selectedCategory?: string;
     condition?: string;
   };
 }
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function ResearchPage({ searchParams }: Props) {
   try {
@@ -30,26 +30,39 @@ export default async function ResearchPage({ searchParams }: Props) {
     const selectedCategoryId = searchParams.selectedCategory
       ? Number.parseInt(searchParams.selectedCategory)
       : undefined;
-    
+
     const selectedConditionId = searchParams.condition
       ? Number.parseInt(searchParams.condition)
       : undefined;
 
     if (!Array.isArray(categoriesAndConditions)) {
-      throw new Error("Categories and conditions data is not in expected format");
+      throw new Error(
+        "Categories and conditions data is not in expected format",
+      );
     }
 
     const groupedCategories: GroupedCategory[] = categoriesAndConditions.reduce(
       (acc: GroupedCategory[], curr) => {
-        if (!curr.category_id || !curr.category_name || !curr.condition_id || !curr.condition_name) {
+        if (
+          !curr.category_id ||
+          !curr.category_name ||
+          !curr.condition_id ||
+          !curr.condition_name
+        ) {
           console.warn("Missing required fields in category/condition:", curr);
           return acc;
         }
 
-        const existingCategory = acc.find(category => category.categoryId === curr.category_id);
+        const existingCategory = acc.find(
+          (category) => category.categoryId === curr.category_id,
+        );
 
         if (existingCategory) {
-          if (!existingCategory.conditions.some(cond => cond.id === curr.condition_id)) {
+          if (
+            !existingCategory.conditions.some(
+              (cond) => cond.id === curr.condition_id,
+            )
+          ) {
             existingCategory.conditions.push({
               id: curr.condition_id,
               name: curr.condition_name,
@@ -62,11 +75,13 @@ export default async function ResearchPage({ searchParams }: Props) {
         acc.push({
           categoryId: curr.category_id,
           categoryName: curr.category_name,
-          conditions: [{
-            id: curr.condition_id,
-            name: curr.condition_name,
-            articleCount: articleCounts[curr.condition_id] ?? 0,
-          }],
+          conditions: [
+            {
+              id: curr.condition_id,
+              name: curr.condition_name,
+              articleCount: articleCounts[curr.condition_id] ?? 0,
+            },
+          ],
         });
         return acc;
       },
@@ -82,14 +97,18 @@ export default async function ResearchPage({ searchParams }: Props) {
     }
 
     // Update initial articles fetch to use the condition from URL if available
-    const initialConditionId = selectedConditionId ?? 
-      (selectedCategoryId ? groupedCategories.find(cat => cat.categoryId === selectedCategoryId)?.conditions[0]?.id : null) ?? 
-      groupedCategories[0]?.conditions[0]?.id ?? 
+    const initialConditionId =
+      selectedConditionId ??
+      (selectedCategoryId
+        ? groupedCategories.find((cat) => cat.categoryId === selectedCategoryId)
+            ?.conditions[0]?.id
+        : null) ??
+      groupedCategories[0]?.conditions[0]?.id ??
       null;
 
     return (
       <main className="w-full">
-        <div className="container mx-auto max-w-7xl">
+        <div className="container mx-auto max-w-[90rem]">
           <div className="h-[calc(100vh-127px)]">
             {/* Mobile View */}
             <div className="block md:hidden">
@@ -103,7 +122,7 @@ export default async function ResearchPage({ searchParams }: Props) {
             </div>
 
             {/* Desktop View */}
-            <div className="hidden md:block h-full">
+            <div className="hidden h-full md:block">
               <ResearchContent
                 categories={groupedCategories}
                 initialSelectedCategory={selectedCategoryId}
@@ -124,7 +143,8 @@ export default async function ResearchPage({ searchParams }: Props) {
     });
     return (
       <div className="flex h-96 items-center justify-center text-gray-500">
-        An error occurred while loading the research data. Please try again later.
+        An error occurred while loading the research data. Please try again
+        later.
       </div>
     );
   }

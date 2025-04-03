@@ -1,62 +1,61 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import { useRouter,  } from "next/navigation"
-import RichText from "~/components/utils/rich-text"
-import ParallaxHeader from "~/components/blog/ParallaxHeader"
-import { getBlogPostBySlug } from "~/utils/supabase/blogs/getBlogPosts"
-import type { BlogDbEntry, RichContent } from "~/types/blog"
-import Spinner from "~/components/utils/spinner"
-
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import RichText from "~/components/utils/rich-text";
+import ParallaxHeader from "~/components/blog/ParallaxHeader";
+import { getBlogPostBySlug } from "~/utils/supabase/blogs/getBlogPosts";
+import type { BlogDbEntry, RichContent } from "~/types/blog";
+import Spinner from "~/components/utils/spinner";
 
 type PageProps = {
   params: {
-    slug: string
-  }
-}
+    slug: string;
+  };
+};
 
 export default function BlogPostPage({ params }: PageProps) {
-  const router = useRouter()
-  const [post, setPost] = useState<BlogDbEntry | null>(null)
-  const [scrollY, setScrollY] = useState(0)
-  const [windowHeight, setWindowHeight] = useState(0)
+  const router = useRouter();
+  const [post, setPost] = useState<BlogDbEntry | null>(null);
+  const [scrollY, setScrollY] = useState(0);
+  const [windowHeight, setWindowHeight] = useState(0);
 
   useEffect(() => {
     const fetchPost = async () => {
-      const fetchedPost = await getBlogPostBySlug(params.slug)
+      const fetchedPost = await getBlogPostBySlug(params.slug);
       if (fetchedPost) {
-        setPost(fetchedPost)
+        setPost(fetchedPost);
       } else {
-        console.log("not found", fetchedPost)
+        console.log("not found", fetchedPost);
       }
-    }
-    fetchPost()
-  }, [params.slug])
+    };
+    fetchPost();
+  }, [params.slug]);
 
   useEffect(() => {
     const handleResize = () => {
-      setWindowHeight(window.innerHeight)
-    }
-    const handleScroll = () => setScrollY(window.scrollY)
+      setWindowHeight(window.innerHeight);
+    };
+    const handleScroll = () => setScrollY(window.scrollY);
 
-    handleResize()
-    handleScroll()
+    handleResize();
+    handleScroll();
 
-    window.addEventListener("resize", handleResize)
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener("resize", handleResize)
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   if (!post) {
-    return <div>Loading...</div>
+    return <Spinner />;
   }
 
-  const progress = Math.min(scrollY / (windowHeight * 1.5), 1)
+  const progress = Math.min(scrollY / (windowHeight * 1.5), 1);
 
   return (
     <div className="relative min-h-screen">
@@ -64,26 +63,25 @@ export default function BlogPostPage({ params }: PageProps) {
         title={post.title}
         imageUrl={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/${post.blog_id}_1.png`}
         progress={progress}
+        blogId={post.blog_id}
       />
       <div
         className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8"
         style={{
-          transform: `translateY(${(1 - progress) * 150}vh)`,
+          transform: `translateY(${(1 - progress) * 100}vh)`,
         }}
       >
-        <article className="bg-white rounded-t-3xl shadow-xl">
+        <article className="rounded-t-3xl bg-white shadow-xl">
           <div className="px-6 py-16">
             <div className="mb-6 sm:mb-10">
               {/* <RichText 
                 content={post.introduction} 
                 className="leading-relaxed prose prose-sm sm:prose-base mx-auto"
               /> */}
-              <p>
-                {post.introduction as unknown as string}
-              </p>
+              <p>{post.introduction as unknown as string}</p>
             </div>
 
-            <div className="mb-6 sm:mb-10 overflow-hidden rounded-lg shadow-lg">
+            <div className="mb-6 overflow-hidden rounded-lg shadow-lg sm:mb-10">
               <div className="relative aspect-[16/9]">
                 <Image
                   src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/${post.blog_id}_2.png`}
@@ -97,13 +95,13 @@ export default function BlogPostPage({ params }: PageProps) {
             </div>
 
             <div className="mb-6 sm:mb-10">
-              <RichText 
-                content={post.body as unknown as RichContent} 
-                className="leading-relaxed prose prose-sm sm:prose-base mx-auto"
+              <RichText
+                content={post.body as unknown as RichContent}
+                className="prose prose-sm mx-auto leading-relaxed sm:prose-base"
               />
             </div>
 
-            <div className="mb-6 sm:mb-10 overflow-hidden rounded-lg shadow-lg">
+            <div className="mb-6 overflow-hidden rounded-lg shadow-lg sm:mb-10">
               <div className="relative aspect-[16/9]">
                 <Image
                   src={`https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/blogs/${post.blog_id}_3.png`}
@@ -118,6 +116,5 @@ export default function BlogPostPage({ params }: PageProps) {
         </article>
       </div>
     </div>
-  )
+  );
 }
-

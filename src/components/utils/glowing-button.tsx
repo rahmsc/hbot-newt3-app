@@ -31,7 +31,7 @@ export default function GlowingButton({
       <div className="absolute inset-0 animate-glow-pulse bg-[#2B5741]/80 opacity-75 blur-[4px]" />
 
       {/* Glass effect button */}
-      <div className="relative z-10 rounded-full border border-emerald-500/20 bg-[#2B5741]/60 px-4 py-2 backdrop-blur-[2px]">
+      <div className="relative z-10 rounded-full border border-emerald-500/20 bg-[#2B5741] px-4 py-2 backdrop-blur-[2px]">
         {text}
         {icon && <span className="ml-2">{icon}</span>}
       </div>
