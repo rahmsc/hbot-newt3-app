@@ -8,26 +8,23 @@ export interface Testimonial {
 export const testimonials: Testimonial[] = [
   {
     id: 1,
-    quote: "Becoming a healthier dad for my kids - priceless.",
-    author: "Josh Watts",
-    title: "Founder of Capital",
+    quote:
+      "After researching HBOT for months, Hyperbaric HQ provided the clarity and confidence I needed to move forward.",
+    author: "Dr. Sarah K.",
+    title: "Chiropractor",
   },
   {
     id: 2,
-    quote: "HBOT therapy changed my recovery journey completely.",
-    author: "Sarah Chen",
-    title: "Professional Athlete",
+    quote:
+      "Finding reliable information about hyperbaric therapy felt impossible until I discovered Hyperbaric HQ. Their evidence-based approach helped me make the right choice for my recovery journey.",
+    author: "Michael T.",
+    title: "Stroke Recovery Patient",
   },
   {
     id: 3,
-    quote: "The support and expertise from the HQ team is unmatched.",
-    author: "Dr. Michael Roberts",
-    title: "Medical Director",
-  },
-  {
-    id: 4,
-    quote: "A game-changer for our patients' treatment outcomes.",
-    author: "Dr. Emma Thompson",
-    title: "Clinical Specialist",
+    quote:
+      "From selecting the perfect chamber to implementing protocols, their support has been invaluable. My practice has grown 30% since adding HBOT with their guidance.",
+    author: "Jennifer L.",
+    title: "Wellness Center Owner",
   },
 ];
