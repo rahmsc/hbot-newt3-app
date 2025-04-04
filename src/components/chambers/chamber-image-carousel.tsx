@@ -26,7 +26,7 @@ export function ChamberImageCarousel({
   chamberName,
   chambers = [],
   displayMode = "images",
-  onQuickView = () => {},
+  onQuickView,
 }: ChamberImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
@@ -112,7 +112,10 @@ export function ChamberImageCarousel({
           >
             {images.map((image, index) => (
               <div
-                key={`carousel-${image}-${index}`}
+                key={`carousel-${image}-${
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                  index
+                }`}
                 className={cn(
                   "absolute inset-0 transition-opacity duration-500",
                   currentIndex === index
@@ -149,7 +152,10 @@ export function ChamberImageCarousel({
                     : "pointer-events-none opacity-0",
                 )}
               >
-                <ChamberCard chamber={chamber} onQuickView={onQuickView} />
+                <ChamberCard
+                  chamber={chamber}
+                  onQuickView={(chamber) => onQuickView?.(chamber)}
+                />
               </div>
             ))}
           </div>
@@ -181,7 +187,10 @@ export function ChamberImageCarousel({
           {images.map((_, index) => (
             <button
               type="button"
-              key={`thumb-${index}`}
+              key={`thumb-${
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                index
+              }`}
               onClick={(e) => goToImage(index, e)}
               className={cn(
                 "h-2 rounded-full transition-all duration-300",

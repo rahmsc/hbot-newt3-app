@@ -1,51 +1,56 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import useEmblaCarousel from "embla-carousel-react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import Image from "next/image"
+import { useState, useEffect } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
-import { type TrendingArticleProps, TrendingCard } from "~/components/trending/trending-card"
-import { TrendingFilter } from "~/components/trending/trending-filter"
-import { Button } from "~/components/ui/button"
-import { CarouselIndicator } from "~/components/utils/carousel-indicator"
-import LoadingSpinner from "~/components/utils/spinner"
+import { TrendingCard } from "~/components/trending/trending-card";
+import { TrendingFilter } from "~/components/trending/trending-filter";
+import { Button } from "~/components/ui/button";
+import { CarouselIndicator } from "~/components/utils/carousel-indicator";
+import LoadingSpinner from "~/components/utils/spinner";
+import type { BlogDbEntry } from "~/types/blog";
 
 interface TrendingSectionClientProps {
-  initialArticles: TrendingArticleProps[]
+  initialArticles: BlogDbEntry[];
 }
 
-export function TrendingSectionClient({ initialArticles }: TrendingSectionClientProps) {
-  const [isClient, setIsClient] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [filter, setFilter] = useState<"all" | "blogs" | "guides" | "latest">("all")
-  const [articles, setArticles] = useState<TrendingArticleProps[]>([])
+export function TrendingSectionClient({
+  initialArticles,
+}: TrendingSectionClientProps) {
+  const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [filter, setFilter] = useState<"all" | "blogs" | "guides" | "latest">(
+    "all",
+  );
+  const [articles, setArticles] = useState<BlogDbEntry[]>([]);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "center",
     containScroll: "trimSnaps",
-  })
-  const [currentSlide, setCurrentSlide] = useState(0)
+  });
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    setIsClient(true)
-    setArticles(initialArticles)
-    setIsLoading(false)
-  }, [initialArticles])
+    setIsClient(true);
+    setArticles(initialArticles);
+    setIsLoading(false);
+  }, [initialArticles]);
 
   useEffect(() => {
-    if (!emblaApi) return
+    if (!emblaApi) return;
 
     const onSelect = () => {
-      setCurrentSlide(emblaApi.selectedScrollSnap())
-    }
+      setCurrentSlide(emblaApi.selectedScrollSnap());
+    };
 
-    emblaApi.on('select', onSelect)
+    emblaApi.on("select", onSelect);
 
     return () => {
-      emblaApi.off('select', onSelect)
-    }
-  }, [emblaApi])
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi]);
 
   if (!isClient || isLoading) {
     return (
@@ -54,7 +59,7 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
           <LoadingSpinner />
         </div>
       </section>
-    )
+    );
   }
 
   if (!articles || articles.length === 0) {
@@ -62,33 +67,37 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
       <section className="w-full bg-[#FAF7F4] pb-12">
         <div className="p-4 text-center">No articles available</div>
       </section>
-    )
+    );
   }
 
   const filteredArticles = articles
     .filter((article) => {
-      if (filter === "all") return true
-      if (filter === "blogs") return article.type === "blog"
-      if (filter === "guides") return article.type === "guide"
+      if (filter === "all") return true;
+      if (filter === "blogs") return article.category === "Blog";
+      if (filter === "guides") return article.category === "Guide";
       if (filter === "latest") {
         return articles
-          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+          .sort(
+            (a, b) =>
+              new Date(b.publish_date).getTime() -
+              new Date(a.publish_date).getTime(),
+          )
           .slice(0, 5)
-          .includes(article)
+          .includes(article);
       }
-      return true
+      return true;
     })
-    .slice(0, 5)
+    .slice(0, 5);
 
   return (
     <section className="w-full bg-[#FAF7F4] pb-12">
       <div className="h-px w-full bg-gray-600" />
       <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-16">
         <div className="w-full space-y-2 sm:w-auto">
-          <h2 className="font-['Raleway'] text-xl sm:text-2xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
+          <h2 className="text-center font-['Raleway'] text-xl font-normal tracking-[0.5em] text-gray-700 sm:text-left sm:text-2xl sm:tracking-[0.3em]">
             TRENDING
           </h2>
-          <h4 className="text-sm text-gray-500 text-center sm:text-left">
+          <h4 className="text-center text-sm text-gray-500 sm:text-left">
             The latest and most popular articles on hyperbaric therapy
           </h4>
         </div>
@@ -102,10 +111,10 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
         {filteredArticles.length > 0 ? (
           <div className="relative px-4">
             <div className="overflow-hidden" ref={emblaRef}>
-              <div className="flex -ml-4">
+              <div className="-ml-4 flex">
                 {filteredArticles.map((article) => (
                   <div
-                    key={article.link}
+                    key={article.url_slug}
                     className="pl-4"
                     style={{
                       flex: "0 0 85%",
@@ -113,25 +122,22 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
                     }}
                   >
                     <div className="h-[380px]">
-                      <TrendingCard
-                        article={article}
-                        size="small"
-                      />
+                      <TrendingCard article={article} size="small" />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            
-            <CarouselIndicator 
-              total={filteredArticles.length} 
-              current={currentSlide} 
+
+            <CarouselIndicator
+              total={filteredArticles.length}
+              current={currentSlide}
             />
 
             <Button
               variant="outline"
               size="icon"
-              className="absolute -left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+              className="absolute -left-2 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
               onClick={() => emblaApi?.scrollPrev()}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -139,7 +145,7 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
             <Button
               variant="outline"
               size="icon"
-              className="absolute -right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+              className="absolute -right-2 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
               onClick={() => emblaApi?.scrollNext()}
             >
               <ChevronRight className="h-4 w-4" />
@@ -181,6 +187,5 @@ export function TrendingSectionClient({ initialArticles }: TrendingSectionClient
         </div>
       </div>
     </section>
-  )
+  );
 }
-

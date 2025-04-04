@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import RichText from "~/components/utils/rich-text";
-import ParallaxHeader from "~/components/blog/ParallaxHeader";
+import ParallaxHeader from "~/components/blog/parallax-header";
 import { getBlogPostBySlug } from "~/utils/supabase/blogs/getBlogPosts";
 import type { BlogDbEntry, RichContent } from "~/types/blog";
 import Spinner from "~/components/utils/spinner";

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
@@ -130,7 +131,10 @@ export function ImageGalleryModal({
           {images.map((_, index) => (
             <button
               type="button"
-              key={`thumb-${index}`}
+              key={`thumb-${
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                index
+              }`}
               onClick={() => setCurrentIndex(index)}
               className={cn(
                 "h-2 rounded-full transition-all duration-300",
