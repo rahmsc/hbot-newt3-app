@@ -1,19 +1,21 @@
-"use client"
+"use client";
 
-import useEmblaCarousel from "embla-carousel-react"
-import type { EmblaOptionsType } from "embla-carousel"
-import { useCallback, useEffect, useState } from "react"
-import { FilterNav } from "~/components/landing/sections/research/filter-nav"
-import { ArticleCard } from "~/components/research/article-card"
-import FeaturedArticleCard from "~/components/research/feature-article-card"
+import useEmblaCarousel from "embla-carousel-react";
+import type { EmblaOptionsType } from "embla-carousel";
+import { useCallback, useEffect, useState } from "react";
+import { FilterNav } from "~/components/landing/sections/research/filter-nav";
+import { ArticleCard } from "~/components/research/article-card";
+import FeaturedArticleCard from "~/components/research/feature-article-card";
 import {
   type CategoryWithConditions,
   getCategoryWithConditions,
-} from "~/utils/supabase/articles/getCategoryWithConditions"
-import { getConditionData } from "~/utils/supabase/articles/getConditionData"
-import getLatestArticles, { type RandomArticleItemProps } from "~/utils/supabase/articles/getLatestArticles"
+} from "~/utils/supabase/articles/getCategoryWithConditions";
+import { getConditionData } from "~/utils/supabase/articles/getConditionData";
+import getLatestArticles, {
+  type RandomArticleItemProps,
+} from "~/utils/supabase/articles/getLatestArticles";
 // import { cn } from "~/lib/utils"
-import { CarouselIndicator } from "~/components/utils/carousel-indicator"
+import { CarouselIndicator } from "~/components/utils/carousel-indicator";
 // import LoadingSpinner from "~/components/utils/spinner"
 
 export default function ResearchDashboard() {
@@ -26,108 +28,114 @@ export default function ResearchDashboard() {
       "(min-width: 768px)": { slidesToScroll: 2 },
       "(min-width: 1024px)": { slidesToScroll: 3 },
     },
-  }
+  };
 
-  const [emblaRef, emblaApi] = useEmblaCarousel(options)
-  const [isLatestView, setIsLatestView] = useState(true)
-  const [categories, setCategories] = useState<CategoryWithConditions[]>([])
-  const [selectedConditions, setSelectedConditions] = useState<number[]>([])
-  const [articles, setArticles] = useState<RandomArticleItemProps[]>([])
-  const [conditionNames, setConditionNames] = useState<Record<number, string>>({})
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [currentSlide, setCurrentSlide] = useState(0)
+  const [emblaRef, emblaApi] = useEmblaCarousel(options);
+  const [isLatestView, setIsLatestView] = useState(true);
+  const [categories, setCategories] = useState<CategoryWithConditions[]>([]);
+  const [selectedConditions, setSelectedConditions] = useState<number[]>([]);
+  const [articles, setArticles] = useState<RandomArticleItemProps[]>([]);
+  const [conditionNames, setConditionNames] = useState<Record<number, string>>(
+    {},
+  );
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const handleConditionsSelect = useCallback((conditions: number[]) => {
-    setSelectedConditions(conditions)
-    setIsLatestView(conditions.length === 0)
-  }, [])
+    setSelectedConditions(conditions);
+    setIsLatestView(conditions.length === 0);
+  }, []);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const categoriesData = await getCategoryWithConditions()
+        const categoriesData = await getCategoryWithConditions();
         if (!categoriesData || categoriesData.length === 0) {
-          setError("No categories found")
-          return
+          setError("No categories found");
+          return;
         }
-        setCategories(categoriesData)
+        setCategories(categoriesData);
       } catch (error) {
-        console.error("Error fetching categories:", error)
-        setError("Failed to load categories")
+        console.error("Error fetching categories:", error);
+        setError("Failed to load categories");
       }
-    }
+    };
 
-    void fetchCategories()
-  }, [])
+    void fetchCategories();
+  }, []);
 
   useEffect(() => {
     const fetchConditionNames = async () => {
       try {
-        const names: Record<number, string> = {}
+        const names: Record<number, string> = {};
         for (const article of articles) {
           if (article.conditionId && !names[article.conditionId]) {
-            const conditionName = await getConditionData(article.conditionId)
-            names[article.conditionId] = conditionName
+            const conditionName = await getConditionData(article.conditionId);
+            names[article.conditionId] = conditionName;
           }
         }
-        setConditionNames(names)
+        setConditionNames(names);
       } catch (error) {
-        console.error("Error fetching condition names:", error)
+        console.error("Error fetching condition names:", error);
       }
-    }
+    };
 
-    void fetchConditionNames()
-  }, [articles])
+    void fetchConditionNames();
+  }, [articles]);
 
   useEffect(() => {
     const fetchArticles = async () => {
-      setIsLoading(true)
-      setError(null)
+      setIsLoading(true);
+      setError(null);
       try {
-        let fetchedArticles: RandomArticleItemProps[]
+        let fetchedArticles: RandomArticleItemProps[];
         if (selectedConditions.length > 0) {
-          fetchedArticles = await getLatestArticles(5, selectedConditions[0]?.toString() ?? "")
+          fetchedArticles = await getLatestArticles(
+            5,
+            selectedConditions[0]?.toString() ?? "",
+          );
         } else {
-          fetchedArticles = await getLatestArticles(5)
+          fetchedArticles = await getLatestArticles(5);
         }
-        setArticles(fetchedArticles)
-        setCurrentSlide(0)
+        setArticles(fetchedArticles);
+        setCurrentSlide(0);
         if (emblaApi) {
-          emblaApi.scrollTo(0)
+          emblaApi.scrollTo(0);
         }
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       } catch (e: any) {
-        setError(e.message || "An error occurred while fetching articles.")
-        setArticles([])
+        setError(e.message || "An error occurred while fetching articles.");
+        setArticles([]);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    void fetchArticles()
-  }, [selectedConditions, emblaApi])
+    void fetchArticles();
+  }, [selectedConditions, emblaApi]);
 
   useEffect(() => {
-    if (!emblaApi) return
+    if (!emblaApi) return;
 
     const onSelect = () => {
-      setCurrentSlide(emblaApi.selectedScrollSnap())
-    }
+      setCurrentSlide(emblaApi.selectedScrollSnap());
+    };
 
-    emblaApi.on("select", onSelect)
+    emblaApi.on("select", onSelect);
 
     return () => {
-      emblaApi.off("select", onSelect)
-    }
-  }, [emblaApi])
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi]);
 
   return (
     <section className="w-full">
-      <div className="pt-4 px-2 sm:px-16 pb-1">
-        <h2 className="font-['Raleway'] text-xl sm:text-2xl font-normal tracking-[0.5em] md:tracking-[0.3em] text-gray-700 text-center sm:text-left">
+      <div className="px-2 pb-1 pt-4 sm:px-16">
+        <h2 className="text-center font-['Raleway'] text-xl font-normal tracking-[0.5em] text-gray-700 sm:text-left sm:text-2xl md:tracking-[0.3em]">
           {isLatestView ? "LATEST RESEARCH" : "FILTERED RESEARCH"}
         </h2>
-        <h4 className="text-sm text-gray-500 text-center sm:text-left">
+        <h4 className="text-center text-sm text-gray-500 sm:text-left">
           {isLatestView
             ? "The latest research and studies on hyperbaric therapy"
             : "Filtered research based on selected conditions"}
@@ -141,22 +149,25 @@ export default function ResearchDashboard() {
         isLatestView={isLatestView}
       />
 
-      <div className="mx-auto max-w-[1400px] px-2 sm:px-4 py-2">
+      <div className="mx-auto max-w-[1400px] px-2 py-2 sm:px-4">
         {error ? (
           <div className="flex h-96 items-center justify-center">
             <p className="text-lg font-medium text-red-600">{error}</p>
           </div>
         ) : articles.length === 0 ? (
           <div className="flex h-96 flex-col items-center justify-center space-y-2">
-            <p className="text-lg font-medium text-gray-900">No articles found</p>
+            <p className="text-lg font-medium text-gray-900">
+              No articles found
+            </p>
             <p className="text-sm text-gray-500">
-              Try selecting a different condition or check back later for new research
+              Try selecting a different condition or check back later for new
+              research
             </p>
           </div>
         ) : (
           <div className="mb-12">
             {/* Desktop Layout */}
-            <div className="hidden md:grid grid-cols-10">
+            <div className="hidden grid-cols-10 md:grid">
               {articles.length > 0 && articles[0] && (
                 <div className="col-span-5">
                   <div className="h-[600px] rounded-[2rem] border border-gray-100 bg-white shadow-sm transition duration-200 hover:shadow-md">
@@ -165,10 +176,17 @@ export default function ResearchDashboard() {
                       heading={articles[0].heading ?? ""}
                       summary={articles[0].summary ?? ""}
                       pressure_used={articles[0].pressure_used ?? ""}
-                      number_of_treatments={articles[0].number_of_treatments ?? 0}
-                      published_date={new Date(articles[0].published_date ?? "")}
+                      number_of_treatments={
+                        articles[0].number_of_treatments ?? 0
+                      }
+                      published_date={
+                        new Date(articles[0].published_date ?? "")
+                      }
                       outcome_rating={articles[0].outcome_rating ?? ""}
-                      conditionName={conditionNames[articles[0]?.conditionId ?? 0] ?? "Unknown"}
+                      conditionName={
+                        conditionNames[articles[0]?.conditionId ?? 0] ??
+                        "Unknown"
+                      }
                       authors={articles[0].authors}
                       peer_reviewed={articles[0].peer_reviewed}
                       public_data={articles[0].public_data}
@@ -189,7 +207,9 @@ export default function ResearchDashboard() {
                         id={article.id ?? 0}
                         heading={article.heading ?? ""}
                         conditionId={article.conditionId ?? 0}
-                        conditionName={conditionNames[article.conditionId ?? 0] ?? "Unknown"}
+                        conditionName={
+                          conditionNames[article.conditionId ?? 0] ?? "Unknown"
+                        }
                         summary={article.summary ?? ""}
                         pressure_used={article.pressure_used ?? ""}
                         number_of_treatments={article.number_of_treatments ?? 0}
@@ -209,17 +229,27 @@ export default function ResearchDashboard() {
                 <div className="overflow-hidden" ref={emblaRef}>
                   <div className="flex">
                     {articles.map((article) => (
-                      <div key={article.id} className="min-w-[90vw] flex-none px-1 sm:min-w-[50%] lg:min-w-[33.333%]">
+                      <div
+                        key={article.id}
+                        className="min-w-[90vw] flex-none px-1 sm:min-w-[50%] lg:min-w-[33.333%]"
+                      >
                         <div className="w-full overflow-hidden rounded-[2rem] bg-white shadow-sm transition duration-200 hover:shadow-md">
                           <FeaturedArticleCard
                             id={article.id ?? 0}
                             heading={article.heading ?? ""}
                             summary={article.summary ?? ""}
                             pressure_used={article.pressure_used ?? ""}
-                            number_of_treatments={article.number_of_treatments ?? 0}
-                            published_date={new Date(article.published_date ?? "")}
+                            number_of_treatments={
+                              article.number_of_treatments ?? 0
+                            }
+                            published_date={
+                              new Date(article.published_date ?? "")
+                            }
                             outcome_rating={article.outcome_rating ?? ""}
-                            conditionName={conditionNames[article.conditionId ?? 0] ?? "Unknown"}
+                            conditionName={
+                              conditionNames[article.conditionId ?? 0] ??
+                              "Unknown"
+                            }
                             authors={article.authors}
                             peer_reviewed={article.peer_reviewed}
                             public_data={article.public_data}
@@ -234,7 +264,10 @@ export default function ResearchDashboard() {
 
                 {/* Add Carousel Indicator */}
                 <div className="md:hidden">
-                  <CarouselIndicator total={articles.length} current={currentSlide} />
+                  <CarouselIndicator
+                    total={articles.length}
+                    current={currentSlide}
+                  />
                 </div>
               </div>
             </div>
@@ -242,6 +275,5 @@ export default function ResearchDashboard() {
         )}
       </div>
     </section>
-  )
+  );
 }
-

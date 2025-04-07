@@ -1,6 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
-import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
+import { createClient } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 // Define the valid business types to match your database
 const validBusinessTypes = [
@@ -13,89 +13,118 @@ const validBusinessTypes = [
   "other",
 ] as const;
 
+const validChamberTypes = ["hard_shell", "soft_shell"] as const;
+
 export async function POST(request: Request) {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
     );
 
-    const body = await request.json()
+    const body = await request.json();
 
     // Debug log to see what data is being received
-    console.log('Received body:', body);
+    console.log("Received body:", body);
 
     // Validate all required fields
     const requiredFields = [
-      "businessType",
-      "businessName",
-      "legalName",
-      "userRole",
-      "firstName",
-      "lastName",
+      "business_type",
+      "business_name",
+      "legal_business_name",
+      "your_role",
+      "first_name",
+      "last_name",
       "email",
       "phone",
-    ]
-    const missingFields = requiredFields.filter(field => !body[field]);
+      "address",
+      "chamber_type",
+      "pressure_capacity",
+    ];
+    const missingFields = requiredFields.filter((field) => !body[field]);
     if (missingFields.length > 0) {
-      console.log('Missing required fields:', missingFields);
+      console.log("Missing required fields:", missingFields);
       return NextResponse.json(
-        { error: `Missing required fields: ${missingFields.join(', ')}` },
-        { status: 400 }
+        { error: `Missing required fields: ${missingFields.join(", ")}` },
+        { status: 400 },
       );
     }
 
     // Validate business type
-    if (!validBusinessTypes.includes(body.businessType)) {
-      console.log('Invalid business type:', body.businessType);
+    if (!validBusinessTypes.includes(body.business_type)) {
+      console.log("Invalid business type:", body.business_type);
       return NextResponse.json(
-        { error: `Invalid business type: ${body.businessType}. Valid types are: ${validBusinessTypes.join(', ')}` },
-        { status: 400 }
+        {
+          error: `Invalid business type: ${body.business_type}. Valid types are: ${validBusinessTypes.join(", ")}`,
+        },
+        { status: 400 },
+      );
+    }
+
+    // Validate chamber type
+    if (!validChamberTypes.includes(body.chamber_type)) {
+      console.log("Invalid chamber type:", body.chamber_type);
+      return NextResponse.json(
+        {
+          error: `Invalid chamber type: ${body.chamber_type}. Valid types are: ${validChamberTypes.join(", ")}`,
+        },
+        { status: 400 },
       );
     }
 
     // Get IP address and user agent from request
-    const ip_address = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip")
-    const user_agent = request.headers.get("user-agent")
+    const ip_address =
+      request.headers.get("x-forwarded-for") ??
+      request.headers.get("x-real-ip");
+    const user_agent = request.headers.get("user-agent");
 
     // Map form field names to database column names
     const providerData = {
-      business_type: body.businessType,
-      business_name: body.businessName,
-      legal_business_name: body.legalName,
-      role: body.userRole,
-      first_name: body.firstName,
-      last_name: body.lastName,
+      business_type: body.business_type,
+      business_name: body.business_name,
+      legal_business_name: body.legal_business_name,
+      your_role: body.your_role,
+      first_name: body.first_name,
+      last_name: body.last_name,
       email: body.email,
       phone: body.phone,
-      is_authorized: body.isAuthorized || false,
-      status: "pending",
-      ip_address,
-      user_agent,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      address: body.address,
       website: body.website || null,
-      assessment_score: null,
-      assessment_date: null,
-      assessment_notes: null,
-      verification_documents: null,
-    }
+      booking_link: body.booking_link || null,
+      chamber_type: body.chamber_type,
+      pressure_capacity: body.pressure_capacity,
+      hours: body.hours,
+      approved: body.approved ?? false,
+      created_at: new Date().toISOString(),
+    };
 
     // Debug log to see what data is being sent to Supabase
-    console.log('Provider data to insert:', providerData);
+    console.log("Provider data to insert:", providerData);
 
     // Insert the provider data
-    const { data, error } = await supabase.from("providers").insert([providerData]).select().single()
+    const { data, error } = await supabase
+      .from("providers")
+      .insert([providerData])
+      .select()
+      .single();
 
     if (error) {
-      console.error("Error submitting provider:", error)
-      return NextResponse.json({ error: "Failed to submit provider", details: error.message }, { status: 500 })
+      console.error("Error submitting provider:", error);
+      return NextResponse.json(
+        { error: "Failed to submit provider", details: error.message },
+        { status: 500 },
+      );
     }
 
-    return NextResponse.json({ message: "Provider submitted successfully", provider: data }, { status: 201 })
+    return NextResponse.json(
+      { message: "Provider submitted successfully", provider: data },
+      { status: 201 },
+    );
   } catch (error) {
-    console.error("Error in submit-provider route:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Error in submit-provider route:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }
-
