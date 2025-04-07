@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { geocodeAddress } from "~/actions/geocode-address";
 
 // Define the valid business types to match your database
 const validBusinessTypes = [
@@ -13,7 +14,12 @@ const validBusinessTypes = [
   "other",
 ] as const;
 
-const validChamberTypes = ["hard_shell", "soft_shell"] as const;
+const validChamberTypes = [
+  "Hard Shell",
+  "Soft Shell",
+  "Monoplace",
+  "Multiplace",
+];
 
 export async function POST(request: Request) {
   try {
@@ -72,6 +78,22 @@ export async function POST(request: Request) {
       );
     }
 
+    // Geocode the address to get coordinates
+    let latitude = null;
+    let longitude = null;
+    if (body.address) {
+      const coordinates = await geocodeAddress(body.address);
+      if (coordinates) {
+        latitude = coordinates.lat;
+        longitude = coordinates.lng;
+        console.log(
+          `Geocoded address: ${body.address} to coordinates: ${latitude}, ${longitude}`,
+        );
+      } else {
+        console.log(`Unable to geocode address: ${body.address}`);
+      }
+    }
+
     // Get IP address and user agent from request
     const ip_address =
       request.headers.get("x-forwarded-for") ??
@@ -96,6 +118,8 @@ export async function POST(request: Request) {
       hours: body.hours,
       approved: body.approved ?? false,
       created_at: new Date().toISOString(),
+      latitude,
+      longitude,
     };
 
     // Debug log to see what data is being sent to Supabase
@@ -121,9 +145,12 @@ export async function POST(request: Request) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("Error in submit-provider route:", error);
+    console.error("Error processing provider submission:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Server error processing submission",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 },
     );
   }

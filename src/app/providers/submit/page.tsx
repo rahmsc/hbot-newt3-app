@@ -38,11 +38,18 @@ const businessTypeLabels: Record<(typeof businessTypes)[number], string> = {
   other: "Other",
 };
 
-const chamberTypes = ["hard_shell", "soft_shell"] as const;
+const chamberTypes = [
+  "Hard Shell",
+  "Soft Shell",
+  "Monoplace",
+  "Multiplace",
+] as const;
 
 const chamberTypeLabels: Record<(typeof chamberTypes)[number], string> = {
-  hard_shell: "Hard Shell",
-  soft_shell: "Soft Shell",
+  "Hard Shell": "Hard Shell",
+  "Soft Shell": "Soft Shell",
+  Monoplace: "Monoplace",
+  Multiplace: "Multiplace",
 };
 
 const daysOfWeek = [
@@ -63,14 +70,16 @@ const formSchema = z.object({
   firstName: z.string().min(2, "First name is required"),
   lastName: z.string().min(2, "Last name is required"),
   email: z.string().email("Invalid email address"),
-  website: z.string().url("Invalid website URL").optional().or(z.literal("")),
+  website: z
+    .union([z.string().url("Invalid website URL"), z.string().max(0)])
+    .optional()
+    .transform((val) => (val === "" ? undefined : val)),
   phone: z.string().min(10, "Phone number is required"),
   address: z.string().min(5, "Address is required"),
   bookingLink: z
-    .string()
-    .url("Invalid booking URL")
+    .union([z.string().url("Invalid booking URL"), z.string().max(0)])
     .optional()
-    .or(z.literal("")),
+    .transform((val) => (val === "" ? undefined : val)),
   chamberType: z.enum(chamberTypes),
   pressureCapacity: z.string().min(1, "Pressure capacity is required"),
   hours: z
@@ -97,6 +106,7 @@ export default function SubmitPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       authorization: false,
+      role: "owner",
       hours: {
         monday: { isOpen: false },
         tuesday: { isOpen: false },
@@ -114,6 +124,20 @@ export default function SubmitPage() {
     setIsSubmitting(true);
 
     try {
+      for (const day of daysOfWeek) {
+        if (data.hours?.[day]?.isOpen) {
+          if (!data.hours[day].openTime || !data.hours[day].closeTime) {
+            toast({
+              title: "Invalid Hours",
+              description: `Please set both open and close time for ${day}.`,
+              variant: "destructive",
+            });
+            setIsSubmitting(false);
+            return;
+          }
+        }
+      }
+
       console.log("Sending request to API...");
       const response = await fetch("/api/providers/submit-provider", {
         method: "POST",
@@ -141,14 +165,25 @@ export default function SubmitPage() {
       });
 
       console.log("Response received:", response.status);
-      const responseData = await response.json();
-      console.log("Response data:", responseData);
+      let responseData: {
+        error?: string;
+        message?: string;
+        provider?: Record<string, unknown>;
+      } = {};
+
+      try {
+        responseData = await response.json();
+        console.log("Response data:", responseData);
+      } catch (parseError) {
+        console.error("Error parsing response:", parseError);
+        throw new Error("Failed to parse server response");
+      }
 
       if (!response.ok) {
         throw new Error(
-          responseData.error ||
-            responseData.message ||
-            "Failed to submit provider",
+          responseData?.error ??
+            responseData?.message ??
+            `Failed to submit provider (Status: ${response.status})`,
         );
       }
 
@@ -229,6 +264,7 @@ export default function SubmitPage() {
                   id="businessType"
                   {...form.register("businessType")}
                   className="w-full rounded-md border border-gray-200 p-2"
+                  aria-invalid={!!form.formState.errors.businessType}
                 >
                   <option value="">Select a business type</option>
                   {businessTypes.map((type) => (
@@ -239,7 +275,7 @@ export default function SubmitPage() {
                 </select>
                 {form.formState.errors.businessType && (
                   <p className="text-sm text-red-500">
-                    {form.formState.errors.businessType.message}
+                    Please select a business type
                   </p>
                 )}
               </div>
@@ -423,6 +459,7 @@ export default function SubmitPage() {
                   id="chamberType"
                   {...form.register("chamberType")}
                   className="w-full rounded-md border border-gray-200 p-2"
+                  aria-invalid={!!form.formState.errors.chamberType}
                 >
                   <option value="">Select chamber type</option>
                   {chamberTypes.map((type) => (
@@ -433,7 +470,7 @@ export default function SubmitPage() {
                 </select>
                 {form.formState.errors.chamberType && (
                   <p className="text-sm text-red-500">
-                    {form.formState.errors.chamberType.message}
+                    Please select a chamber type
                   </p>
                 )}
               </div>
@@ -495,8 +532,15 @@ export default function SubmitPage() {
                       {form.watch(`hours.${day}.isOpen`) && (
                         <div className="grid grid-cols-2 gap-2">
                           <select
-                            {...form.register(`hours.${day}.openTime`)}
-                            className="w-full rounded-md border border-gray-200 p-2"
+                            {...form.register(`hours.${day}.openTime`, {
+                              required: form.watch(`hours.${day}.isOpen`),
+                            })}
+                            className={`w-full rounded-md border ${
+                              form.watch(`hours.${day}.isOpen`) &&
+                              !form.watch(`hours.${day}.openTime`)
+                                ? "border-red-300"
+                                : "border-gray-200"
+                            } p-2`}
                           >
                             <option value="">Open time</option>
                             {Array.from({ length: 48 }).map((_, i) => {
@@ -511,8 +555,15 @@ export default function SubmitPage() {
                             })}
                           </select>
                           <select
-                            {...form.register(`hours.${day}.closeTime`)}
-                            className="w-full rounded-md border border-gray-200 p-2"
+                            {...form.register(`hours.${day}.closeTime`, {
+                              required: form.watch(`hours.${day}.isOpen`),
+                            })}
+                            className={`w-full rounded-md border ${
+                              form.watch(`hours.${day}.isOpen`) &&
+                              !form.watch(`hours.${day}.closeTime`)
+                                ? "border-red-300"
+                                : "border-gray-200"
+                            } p-2`}
                           >
                             <option value="">Close time</option>
                             {Array.from({ length: 48 }).map((_, i) => {

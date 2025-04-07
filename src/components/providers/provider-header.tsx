@@ -1,4 +1,4 @@
-import Image from "next/image"
+import Image from "next/image";
 
 export function ProviderHeader() {
   return (
@@ -20,6 +20,5 @@ export function ProviderHeader() {
         </p>
       </div>
     </div>
-  )
+  );
 }
-

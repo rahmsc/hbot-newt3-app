@@ -1,48 +1,71 @@
-"use client"
-import useEmblaCarousel from "embla-carousel-react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import Link from "next/link"
-import { useState, useEffect } from "react"
+"use client";
+import useEmblaCarousel from "embla-carousel-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { useState, useEffect } from "react";
 
-import { Button } from "~/components/ui/button"
-import { ProviderQuickView } from "~/components/providers/provider-quick-view"
-import { ProviderCard } from "~/components/providers/provider-card"
-import { CarouselIndicator } from "~/components/utils/carousel-indicator"
-import type { Provider } from "~/types/providers"
-import { SAMPLE_PROVIDERS } from "~/data/providers"
-import LoadingSpinner from "~/components/utils/spinner"
+import { Button } from "~/components/ui/button";
+import { ProviderQuickView } from "~/components/providers/provider-quick-view";
+import { ProviderCard } from "~/components/providers/provider-card";
+import { CarouselIndicator } from "~/components/utils/carousel-indicator";
+import type { Provider } from "~/types/providers";
+import LoadingSpinner from "~/components/utils/spinner";
 
 export default function ProvidersSection() {
-  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false)
-  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null)
-  const [providers] = useState<Provider[]>(SAMPLE_PROVIDERS)
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
+    null,
+  );
+  const [providers, setProviders] = useState<Provider[]>([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "center",
     containScroll: "trimSnaps",
-  })
+  });
 
   useEffect(() => {
-    // Set loading to false once providers are loaded
-    setIsLoading(false)
-  }, [])
+    // Fetch providers from API
+    const fetchProviders = async () => {
+      try {
+        // Get all approved providers
+        const response = await fetch("/api/providers");
+        if (!response.ok) {
+          throw new Error("Failed to fetch providers");
+        }
+
+        const data = (await response.json()) as Provider[];
+
+        // Limit to 6 providers for the carousel
+        const limitedProviders = data.slice(0, 6);
+        setProviders(limitedProviders);
+      } catch (error) {
+        console.error("Error fetching providers:", error);
+        // Set empty array in case of error
+        setProviders([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProviders();
+  }, []);
 
   useEffect(() => {
-    if (!emblaApi) return
+    if (!emblaApi) return;
 
     const onSelect = () => {
-      setCurrentSlide(emblaApi.selectedScrollSnap())
-    }
+      setCurrentSlide(emblaApi.selectedScrollSnap());
+    };
 
-    emblaApi.on('select', onSelect)
+    emblaApi.on("select", onSelect);
 
     return () => {
-      emblaApi.off('select', onSelect)
-    }
-  }, [emblaApi])
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi]);
 
   if (isLoading) {
     return (
@@ -51,7 +74,36 @@ export default function ProvidersSection() {
           <LoadingSpinner />
         </div>
       </section>
-    )
+    );
+  }
+
+  // If no providers are available, show a message
+  if (providers.length === 0 && !isLoading) {
+    return (
+      <section className="w-full py-12 sm:py-24">
+        <div className="h-px w-full bg-gray-600" />
+        <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-16">
+          <div className="w-full space-y-2 sm:w-auto">
+            <h2 className="text-center font-['Raleway'] text-lg font-normal tracking-[0.5em] text-gray-700 sm:text-left sm:text-2xl sm:tracking-[0.3em]">
+              VERIFIED PROVIDERS
+            </h2>
+          </div>
+          <Link href="/providers" className="w-full sm:w-auto">
+            <Button
+              variant="default"
+              className="w-full bg-[#2B5741] transition-all duration-200 hover:bg-emerald-800 sm:w-auto"
+            >
+              Search Providers
+            </Button>
+          </Link>
+        </div>
+        <div className="py-12 text-center">
+          <p className="text-lg text-gray-600">
+            No featured providers available at the moment.
+          </p>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -59,10 +111,10 @@ export default function ProvidersSection() {
       <div className="h-px w-full bg-gray-600" />
       <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-16">
         <div className="w-full space-y-2 sm:w-auto">
-          <h2 className="font-['Raleway'] text-lg sm:text-2xl font-normal tracking-[0.5em] sm:tracking-[0.3em] text-gray-700 text-center sm:text-left">
+          <h2 className="text-center font-['Raleway'] text-lg font-normal tracking-[0.5em] text-gray-700 sm:text-left sm:text-2xl sm:tracking-[0.3em]">
             VERIFIED PROVIDERS
           </h2>
-          <h4 className="text-sm text-gray-500 text-center sm:text-left">
+          <h4 className="text-center text-sm text-gray-500 sm:text-left">
             The best providers in the business. Guaranteed.
           </h4>
         </div>
@@ -79,12 +131,12 @@ export default function ProvidersSection() {
       <div className="relative px-4 pt-8 sm:px-8 sm:pt-12">
         {/* Carousel Container */}
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex -ml-4">
+          <div className="-ml-4 flex">
             {providers.map((provider, index) => (
               <div
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 key={index}
-                className="pl-4 flex-none min-w-0 w-[85%] sm:w-1/2 lg:w-1/3"
+                className="w-[85%] min-w-0 flex-none pl-4 sm:w-1/2 lg:w-1/3"
               >
                 <ProviderCard
                   name={provider.name ?? ""}
@@ -97,8 +149,8 @@ export default function ProvidersSection() {
                   longitude={provider.longitude ?? 0}
                   id={provider.id ?? ""}
                   onQuickView={() => {
-                    setSelectedProvider(provider)
-                    setIsQuickViewOpen(true)
+                    setSelectedProvider(provider);
+                    setIsQuickViewOpen(true);
                   }}
                 />
               </div>
@@ -108,10 +160,7 @@ export default function ProvidersSection() {
 
         {/* Updated Carousel Indicator for all screen sizes */}
         <div className="mt-4">
-          <CarouselIndicator 
-            total={providers.length} 
-            current={currentSlide} 
-          />
+          <CarouselIndicator total={providers.length} current={currentSlide} />
         </div>
 
         {/* Navigation Buttons - Hidden on mobile */}
@@ -139,13 +188,12 @@ export default function ProvidersSection() {
         <ProviderQuickView
           isOpen={isQuickViewOpen}
           onClose={() => {
-            setIsQuickViewOpen(false)
-            setSelectedProvider(null)
+            setIsQuickViewOpen(false);
+            setSelectedProvider(null);
           }}
           provider={selectedProvider}
         />
       )}
     </section>
-  )
+  );
 }
-

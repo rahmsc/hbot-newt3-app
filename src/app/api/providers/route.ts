@@ -1,7 +1,6 @@
-import { ProviderHeader } from "~/components/providers/provider-header";
-import HyperbaricLocator from "~/components/map/hyperbaric-locator";
-import type { Provider } from "~/types/providers";
+import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import type { Provider } from "~/types/providers";
 
 // Define the provider data structure from Supabase
 interface SupabaseProvider {
@@ -37,8 +36,10 @@ function parseCoordinate(value: unknown): number {
   return 0;
 }
 
-// Server component
-export default async function ProvidersPage() {
+/**
+ * API endpoint for fetching all approved providers
+ */
+export async function GET() {
   try {
     // Create Supabase client
     const supabase = createClient(
@@ -46,7 +47,7 @@ export default async function ProvidersPage() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
     );
 
-    // Fetch all approved providers directly from Supabase
+    // Fetch all approved providers
     const { data, error } = await supabase
       .from("providers")
       .select("*")
@@ -55,18 +56,9 @@ export default async function ProvidersPage() {
 
     if (error) {
       console.error("Error fetching providers:", error);
-      return (
-        <main className="min-h-screen w-full bg-[#FAF7F4]">
-          <ProviderHeader />
-          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h2 className="text-xl font-bold text-red-600">
-                Error loading providers
-              </h2>
-              <p className="mt-2 text-gray-600">Please try again later.</p>
-            </div>
-          </div>
-        </main>
+      return NextResponse.json(
+        { error: "Failed to fetch providers" },
+        { status: 500 },
       );
     }
 
@@ -110,30 +102,12 @@ export default async function ProvidersPage() {
       },
     );
 
-    console.log(`Loaded ${providers.length} providers for map display`);
-
-    return (
-      <main className="min-h-screen w-full bg-[#FAF7F4]">
-        <ProviderHeader />
-        <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
-          <HyperbaricLocator providers={providers} />
-        </div>
-      </main>
-    );
+    return NextResponse.json(providers);
   } catch (error) {
-    console.error("Error in providers page:", error);
-    return (
-      <main className="min-h-screen w-full bg-[#FAF7F4]">
-        <ProviderHeader />
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-xl font-bold text-red-600">
-              An error occurred
-            </h2>
-            <p className="mt-2 text-gray-600">Please try again later.</p>
-          </div>
-        </div>
-      </main>
+    console.error("Error in providers API:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }

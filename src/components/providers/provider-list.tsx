@@ -7,14 +7,9 @@ import Image from "next/image";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
-import type { ProviderCardProps } from "~/types/providers";
+import type { Provider } from "~/types/providers";
 
-import { SAMPLE_PROVIDERS } from "~/data/providers";
-
-// Export the providers array for use in other components
-export const providers = SAMPLE_PROVIDERS;
-
-export function ProviderCard({ provider }: { provider: (typeof SAMPLE_PROVIDERS)[0] }) {
+export function ProviderCard({ provider }: { provider: Provider }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -26,7 +21,7 @@ export function ProviderCard({ provider }: { provider: (typeof SAMPLE_PROVIDERS)
           {/* Image Section */}
           <div className="relative h-64">
             <Image
-              src={provider.image}
+              src={provider.image ?? "/images/providers/provider_1.png"}
               alt={provider.name}
               fill
               className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -42,9 +37,9 @@ export function ProviderCard({ provider }: { provider: (typeof SAMPLE_PROVIDERS)
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
                     <Star
-                      key={i}
+                      key={`star-${provider.id}-${i}`}
                       className={`h-5 w-5 ${
-                        i < Math.floor(provider.rating)
+                        i < Math.floor(provider.rating ?? 0)
                           ? "fill-yellow-400 text-yellow-400"
                           : "fill-gray-300 text-gray-300"
                       }`}
@@ -52,10 +47,10 @@ export function ProviderCard({ provider }: { provider: (typeof SAMPLE_PROVIDERS)
                   ))}
                 </div>
                 <span className="text-lg font-medium text-white">
-                  {provider.rating.toFixed(1)}
+                  {(provider.rating ?? 0).toFixed(1)}
                 </span>
                 <span className="text-sm text-gray-300">
-                  ({provider.reviewCount} reviews)
+                  ({provider.reviewCount ?? 0} reviews)
                 </span>
               </div>
               <div className="mt-2 flex items-center gap-2 text-gray-200">
@@ -69,7 +64,7 @@ export function ProviderCard({ provider }: { provider: (typeof SAMPLE_PROVIDERS)
           <div className="space-y-6 p-6">
             {/* Categories */}
             <div className="flex flex-wrap gap-2">
-              {provider.categories.map((category) => (
+              {provider.categories?.map((category) => (
                 <span
                   key={category}
                   className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-[#2B5741]"
@@ -126,12 +121,12 @@ export function ProviderCard({ provider }: { provider: (typeof SAMPLE_PROVIDERS)
   );
 }
 
-// Update ProviderList to accept providers as a prop
-export function ProviderList({ providers }: { providers: (typeof SAMPLE_PROVIDERS) }) {
+// Update ProviderList to accept Provider type
+export function ProviderList({ providers }: { providers: Provider[] }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {providers?.map((provider, index) => (
-        <ProviderCard key={index} provider={provider} />
+        <ProviderCard key={provider.id ?? index} provider={provider} />
       ))}
     </div>
   );
