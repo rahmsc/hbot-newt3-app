@@ -1,12 +1,17 @@
+"use client";
+
 import { InstagramLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 import logo from "../../../../public/logo/logo_resized.png";
 import TikTokIcon from "../../../../public/logo/tiktok";
+import { SpecialistContactForm } from "~/components/contact/specialist-contact-form";
 
 const Footer = () => {
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
+
   return (
     <footer className="bg-custom-bg mb-12 py-12 text-black">
       <div className="mb-8 border-t border-gray-300" />
@@ -27,14 +32,18 @@ const Footer = () => {
 
           {/* Column 2: Links */}
           <div className="flex flex-col space-y-2 pt-4">
-            <a href="/faqs" className="font-editors-note hover:underline">
+            <button
+              type="button"
+              onClick={() => setIsContactFormOpen(true)}
+              className="text-left font-editors-note hover:underline"
+            >
               Get in Touch With Us
-            </a>
+            </button>
           </div>
 
           {/* Column 3: Links */}
           <div className="flex flex-col space-y-2 pt-4">
-            <a href="/contact" className="font-editors-note hover:underline">
+            <a href="/join-hq" className="font-editors-note hover:underline">
               Join HQ
             </a>
             <a href="/chambers" className="font-editors-note hover:underline">
@@ -43,7 +52,7 @@ const Footer = () => {
             <a href="/research" className="font-editors-note hover:underline">
               Research
             </a>
-            <a href="/blog" className="font-editors-note hover:underline">
+            <a href="/trending" className="font-editors-note hover:underline">
               Blog
             </a>
           </div>
@@ -109,9 +118,13 @@ const Footer = () => {
               Home
             </Link>
             <span className="mx-2 text-gray-400">|</span>
-            <Link href="/privacy-policy" className="hover:underline">
-              Privacy Policy
-            </Link>
+            <button
+              type="button"
+              onClick={() => setIsContactFormOpen(true)}
+              className="hover:underline"
+            >
+              Contact Us
+            </button>
             <span className="mx-2 text-gray-400">|</span>
             <Link href="/terms-and-conditions" className="hover:underline">
               Terms & Conditions
@@ -124,6 +137,11 @@ const Footer = () => {
           </p>
         </div>
       </div>
+
+      <SpecialistContactForm
+        isOpen={isContactFormOpen}
+        onClose={() => setIsContactFormOpen(false)}
+      />
     </footer>
   );
 };
