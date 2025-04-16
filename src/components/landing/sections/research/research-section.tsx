@@ -149,7 +149,7 @@ export default function ResearchDashboard() {
         isLatestView={isLatestView}
       />
 
-      <div className="mx-auto max-w-[1400px] px-2 py-2 sm:px-4">
+      <div className="mx-auto max-w-[1400px] px-4 py-2 sm:px-4">
         {error ? (
           <div className="flex h-96 items-center justify-center">
             <p className="text-lg font-medium text-red-600">{error}</p>
@@ -196,8 +196,8 @@ export default function ResearchDashboard() {
                 </div>
               )}
 
-              <div className="col-span-5 flex h-[600px] flex-col gap-2">
-                <div className="grid flex-1 grid-cols-2 grid-rows-2 gap-2">
+              <div className="col-span-5 flex h-[600px] flex-col">
+                <div className="grid flex-1 grid-cols-2 grid-rows-2 py-2">
                   {articles.slice(1, 5).map((article) => (
                     <div
                       key={article.id}

@@ -2,6 +2,10 @@
 
 import { createClient } from "@supabase/supabase-js";
 import type { Provider } from "~/types/providers";
+import {
+  fetchPlacePhotos,
+  fetchPlaceDetails,
+} from "~/actions/fetch-place-photos";
 
 // Define the provider data structure from Supabase
 interface SupabaseProvider {
@@ -21,6 +25,7 @@ interface SupabaseProvider {
   chamber_type?: string;
   description?: string;
   business_type?: string;
+  booking_link?: string;
   approved: boolean | string; // Can be boolean or string
 }
 
@@ -161,7 +166,7 @@ export async function getMapProviders(): Promise<Provider[]> {
   );
 
   // Log which providers passed the approval check
-  approvedProviders.forEach((p) => {
+  for (const p of approvedProviders) {
     console.log(
       `Provider ${p.id} (${p.business_name}) passed approval check:`,
       {
@@ -169,7 +174,7 @@ export async function getMapProviders(): Promise<Provider[]> {
         approved_type: typeof p.approved,
       },
     );
-  });
+  }
 
   // Transform to Provider type and convert coordinates to numbers
   const providers = (approvedProviders as SupabaseProvider[]).map(
@@ -202,6 +207,7 @@ export async function getMapProviders(): Promise<Provider[]> {
           ? [provider.business_type]
           : ["Wellness"],
         directions: `https://maps.google.com/?q=${encodeURIComponent(provider.address ?? "")}`,
+        booking_link: provider.booking_link ?? "",
       };
     },
   );
@@ -236,5 +242,68 @@ export async function getMapProviders(): Promise<Provider[]> {
     );
   }
 
+  // Fetch place photos for a batch of providers (limit to avoid excessive API calls)
+  // In production, you might want to implement this differently
+  const PHOTO_BATCH_SIZE = 5; // Limit API calls during development
+
+  console.log(
+    `Fetching Google place photos for up to ${PHOTO_BATCH_SIZE} providers`,
+  );
+  const providersWithPhotos = await fetchBatchPlacePhotos(
+    validProviders.slice(0, PHOTO_BATCH_SIZE),
+  );
+
+  // Replace the first few providers with the ones that have photos
+  if (providersWithPhotos.length > 0) {
+    console.log(
+      `Added Google place details to ${providersWithPhotos.length} providers`,
+    );
+    return providersWithPhotos;
+  }
+
   return validProviders;
+}
+
+/**
+ * Fetches Google place photos for a batch of providers in parallel
+ * @param providers Array of providers to fetch photos for
+ * @returns Array of providers with photos added
+ */
+async function fetchBatchPlacePhotos(
+  providers: Provider[],
+): Promise<Provider[]> {
+  if (providers.length === 0) return [];
+
+  console.log(`Fetching Google details for ${providers.length} providers...`);
+
+  try {
+    // Use Promise.all to fetch details for multiple providers in parallel
+    const enhancedProviders = await Promise.all(
+      providers.map((provider) => fetchPlaceDetails(provider, 3)),
+    );
+
+    // Log summary of enhanced providers
+    let providersWithPhotos = 0;
+    let providersWithRatings = 0;
+
+    for (const provider of enhancedProviders) {
+      if (provider.googlePhotos && provider.googlePhotos.length > 0) {
+        providersWithPhotos++;
+      }
+      if (provider.googleRating !== undefined) {
+        providersWithRatings++;
+      }
+    }
+
+    console.log(`Google place details fetched successfully:
+      - ${providersWithPhotos} providers with photos
+      - ${providersWithRatings} providers with ratings
+    `);
+
+    // Return all providers with enhanced details
+    return enhancedProviders;
+  } catch (error) {
+    console.error("Error fetching batch place details:", error);
+    return providers;
+  }
 }

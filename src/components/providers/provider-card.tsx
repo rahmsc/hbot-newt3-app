@@ -1,74 +1,102 @@
-"use client"
+"use client";
 
-import { Star } from "lucide-react"
-import Image from "next/image"
-import type { ProviderCardProps } from "~/types/providers"
-import GlowingButton from "../utils/glowing-button"
+import { Star } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent } from "~/components/ui/card";
+import type { Provider } from "~/types/providers";
 
-export function ProviderCard({ name, rating, reviewCount, location, image, onQuickView }: ProviderCardProps) {
-  // Split name into two parts for the header
-  const [firstPart, ...rest] = name.split(" ")
-  const remainingPart = rest.join(" ")
+interface ProviderCardProps {
+  provider: Provider;
+  onQuickView?: () => void;
+}
+
+export default function ProviderCard({
+  provider,
+  onQuickView,
+}: ProviderCardProps) {
+  // Use Google Photos if available, otherwise fall back to the default image
+  const hasGooglePhotos =
+    provider.googlePhotos &&
+    Array.isArray(provider.googlePhotos) &&
+    provider.googlePhotos.length > 0;
 
   return (
-    <article className="relative h-[350px] sm:h-[400px] w-full overflow-hidden rounded-[24px] sm:rounded-[32px] shadow-sm transition-shadow hover:shadow-md">
-      {/* Background Image */}
-      <Image
-        src={image || "/placeholder.svg"}
-        alt={`${name} image`}
-        fill
-        className="object-cover"
-        sizes="(max-width: 640px) 85vw, (max-width: 1024px) 50vw, 33vw"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
+    <Card className="group relative h-full overflow-hidden bg-white transition-all hover:shadow-lg">
+      {/* Photo Display with Overlay */}
+      <div className="relative aspect-square w-full">
+        {hasGooglePhotos ? (
+          <div className="relative h-full w-full">
+            <img
+              src={provider.googlePhotos[0]}
+              alt={`${provider.name} photo`}
+              className="h-full w-full object-cover brightness-[0.85]"
+            />
+          </div>
+        ) : (
+          <div className="relative h-full w-full">
+            <img
+              src={provider.image}
+              alt={provider.name}
+              className="h-full w-full object-cover brightness-[0.85]"
+            />
+          </div>
+        )}
 
-      {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 text-white">
-        <div className="flex items-end justify-between">
-          {/* Text Content (Bottom Left) */}
+        {/* Content Overlay */}
+        <div className="absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-black/60 to-transparent p-4">
+          {/* Top Section */}
           <div>
-            {/* Provider Name Header */}
-            <h3 className="mb-2 font-['Raleway'] text-2xl sm:text-3xl font-light tracking-wide">
-              {firstPart}
-              {remainingPart && (
-                <>
-                  <br />
-                  {remainingPart}
-                </>
-              )}
-            </h3>
-
-            {/* Rating */}
-            <div className="mb-2 flex items-center gap-2">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <span className="font-semibold">{rating.toFixed(1)}</span>
-              <span className="text-xs sm:text-sm text-gray-300">{reviewCount} reviews</span>
-            </div>
-
-            {/* Location */}
-            <div className="flex items-center gap-2">
-              <span className="text-xs sm:text-sm">{location}</span>
-            </div>
+            <span className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-3 py-1 text-sm font-medium text-white backdrop-blur-sm">
+              VERIFIED
+            </span>
           </div>
 
-          {/* Action Button (Bottom Right) */}
-          <div>
-            <GlowingButton text="More Info" onClick={onQuickView} className="text-sm sm:text-base" />
+          {/* Bottom Section */}
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-3xl font-semibold text-white">
+                {provider.name}
+              </h3>
+              <div className="mt-2 flex items-center gap-2">
+                <div className="flex items-center">
+                  <div className="flex">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={`provider-${provider.id}-star-${i}`}
+                        className={`h-5 w-5 ${
+                          i < (provider.googleRating ?? provider.rating)
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "fill-gray-300 text-gray-300"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="ml-2 font-medium text-white">
+                    {provider.googleRating?.toFixed(1) ??
+                      provider.rating.toFixed(1)}
+                  </span>
+                  {provider.googleRatingsTotal && (
+                    <span className="ml-1 text-sm text-gray-200">
+                      ({provider.googleRatingsTotal} reviews)
+                    </span>
+                  )}
+                </div>
+              </div>
+              <p className="mt-1 text-lg text-white">{provider.location}</p>
+            </div>
+
+            {/* Action Button */}
+            <Button
+              onClick={onQuickView}
+              className="rounded-full bg-[#2B5741]/80 px-8 py-6 text-lg font-medium text-white backdrop-blur-sm transition-all hover:bg-[#2B5741]"
+            >
+              More Info
+            </Button>
           </div>
         </div>
       </div>
-
-      {/* Verified Badge */}
-      <div className="absolute left-4 sm:left-6 top-4 sm:top-6">
-        <span className="mb-2 inline-block rounded-full border border-[#2B5741] bg-gray-100 px-2 sm:px-3 py-1 font-mono text-[10px] sm:text-xs uppercase tracking-wide text-[#2B5741]">
-          Verified
-        </span>
-      </div>
-    </article>
-  )
+    </Card>
+  );
 }
-

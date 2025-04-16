@@ -6,15 +6,23 @@ import {
   LoadScript,
   Marker,
 } from "@react-google-maps/api";
-import { MapPin, Search, Star, Loader2 } from "lucide-react";
+import { MapPin, Search, Star, Loader2, Clock } from "lucide-react";
 import { useCallback, useState, useEffect } from "react";
-
+import Image from "next/image";
+import Link from "next/link";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "~/components/ui/carousel";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import type { Provider } from "~/types/providers";
-import Link from "next/link";
 import { defaultMapCenter } from "~/data/providers";
+import { fetchPlacePhotos } from "~/actions/fetch-place-photos";
 
 interface HyperbaricLocatorProps {
   providers?: Provider[];
@@ -31,6 +39,219 @@ function parseCoordinate(value: number | string | null | undefined): number {
     return Number.isNaN(parsed) ? 0 : parsed;
   }
   return 0;
+}
+
+/**
+ * Format provider hours in a readable way, handling both string and JSON object formats
+ */
+function formatHours(hours: unknown): string | null {
+  if (!hours) return null;
+
+  // If hours is already a string, return it
+  if (typeof hours === "string") {
+    // Try to parse as JSON in case it's a stringified object
+    try {
+      const parsedHours = JSON.parse(hours);
+      if (typeof parsedHours === "object" && parsedHours !== null) {
+        // Format the parsed object
+        return formatHoursObject(
+          parsedHours as Record<
+            string,
+            { isOpen?: boolean; openTime?: string; closeTime?: string }
+          >,
+        );
+      }
+      // If parsing succeeded but it's not an object we can format, return the original string
+      return hours;
+    } catch (e) {
+      // Not JSON, return the original string
+      return hours;
+    }
+  }
+
+  // If hours is an object, try to format it directly
+  if (typeof hours === "object" && hours !== null) {
+    return formatHoursObject(
+      hours as Record<
+        string,
+        { isOpen?: boolean; openTime?: string; closeTime?: string }
+      >,
+    );
+  }
+
+  return String(hours);
+}
+
+/**
+ * Format an hours object (with days) into a readable string
+ */
+function formatHoursObject(
+  hoursObj: Record<
+    string,
+    { isOpen?: boolean; openTime?: string; closeTime?: string }
+  >,
+): string {
+  const formattedHours: string[] = [];
+
+  // Days of week in order - weekdays first, then weekend days
+  const weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+  const weekendDays = ["saturday", "sunday"];
+
+  // Process weekdays (Monday-Friday)
+  let weekdayGroup: { days: string[]; hours: string } | null = null;
+
+  for (const day of weekdays) {
+    const dayInfo = hoursObj[day];
+
+    if (!dayInfo?.isOpen) {
+      // Handle day when closed
+      if (weekdayGroup) {
+        // Add the previous group to our results
+        formattedHours.push(formatDayGroup(weekdayGroup));
+        weekdayGroup = null;
+      }
+      continue;
+    }
+
+    const dayHours = `${dayInfo.openTime ?? "00:00"} - ${dayInfo.closeTime ?? "00:00"}`;
+
+    if (!weekdayGroup) {
+      // Start a new group
+      weekdayGroup = { days: [day], hours: dayHours };
+    } else if (weekdayGroup.hours === dayHours) {
+      // Same hours as current group, add to it
+      weekdayGroup.days.push(day);
+    } else {
+      // Different hours, finish current group and start a new one
+      formattedHours.push(formatDayGroup(weekdayGroup));
+      weekdayGroup = { days: [day], hours: dayHours };
+    }
+  }
+
+  // Add the last weekday group if it exists
+  if (weekdayGroup) {
+    formattedHours.push(formatDayGroup(weekdayGroup));
+  }
+
+  // Process weekend days (Saturday and Sunday) separately
+  for (const day of weekendDays) {
+    const dayInfo = hoursObj[day];
+
+    if (dayInfo?.isOpen) {
+      const dayHours = `${dayInfo.openTime ?? "00:00"} - ${dayInfo.closeTime ?? "00:00"}`;
+      formattedHours.push(formatDayGroup({ days: [day], hours: dayHours }));
+    }
+  }
+
+  // Join with line breaks instead of semicolons
+  return formattedHours.join("\n");
+}
+
+/**
+ * Format a group of days with the same hours
+ */
+function formatDayGroup(group: { days: string[]; hours: string }): string {
+  const { days, hours } = group;
+
+  // Capitalize first letter of day
+  const formattedDays = days.map(
+    (day) => day.charAt(0).toUpperCase() + day.slice(1),
+  );
+
+  // Format the day range
+  let dayRange: string;
+  if (days.length === 1) {
+    dayRange = formattedDays[0];
+  } else if (days.length === 7) {
+    dayRange = "Every day";
+  } else {
+    dayRange = `${formattedDays[0]} - ${formattedDays[formattedDays.length - 1]}`;
+  }
+
+  return `${dayRange}: ${hours}`;
+}
+
+/**
+ * Helper component for rendering provider images
+ */
+function ProviderImages({ provider }: { provider: Provider }) {
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    // Reset error state when provider changes
+    setImageError(false);
+  }, []);
+
+  // Log available image information
+  useEffect(() => {
+    console.log("ProviderImages component:", {
+      id: provider.id,
+      name: provider.name,
+      hasGooglePhotos:
+        provider.googlePhotos && provider.googlePhotos.length > 0,
+      photoCount: provider.googlePhotos?.length ?? 0,
+      fallbackImage: provider.image,
+    });
+  }, [provider.id, provider.name, provider.googlePhotos, provider.image]);
+
+  // Handle image load error
+  const handleImageError = () => {
+    console.error(`Image failed to load for provider ${provider.name}`);
+    setImageError(true);
+  };
+
+  // If we have Google photos, display them in a carousel
+  if (provider.googlePhotos && provider.googlePhotos.length > 0) {
+    return (
+      <Carousel className="w-full max-w-sm">
+        <CarouselContent>
+          {provider.googlePhotos.map((photo, index) => (
+            <CarouselItem key={`photo-${provider.id}-${index}`}>
+              <div className="p-1">
+                <Card className="overflow-hidden">
+                  <div className="relative h-48 w-full">
+                    <Image
+                      src={photo}
+                      alt={`${provider.name} photo ${index + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 300px"
+                      onError={handleImageError}
+                    />
+                  </div>
+                </Card>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-2" />
+        <CarouselNext className="right-2" />
+      </Carousel>
+    );
+  }
+
+  // No Google photos, try fallback image
+  return (
+    <div className="overflow-hidden rounded-md">
+      <div className="relative h-40 w-full">
+        {!imageError ? (
+          <Image
+            src={provider.image || "/images/providers/provider_1.png"}
+            alt={provider.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 300px"
+            onError={handleImageError}
+          />
+        ) : (
+          // Ultimate fallback if both Google photos and provider image fail
+          <div className="flex h-full w-full items-center justify-center bg-gray-100">
+            <span className="text-sm text-gray-500">No image available</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default function HyperbaricLocator({
@@ -132,6 +353,51 @@ export default function HyperbaricLocator({
       return undefined;
     }
   }, []);
+
+  useEffect(() => {
+    if (selectedProvider) {
+      console.log("Selected provider details:", {
+        id: selectedProvider.id,
+        name: selectedProvider.name,
+        image: selectedProvider.image,
+        photos: selectedProvider.googlePhotos?.length ?? 0,
+      });
+
+      // If no Google photos, but we have a provider, prefetch the image
+      if (
+        (!selectedProvider.googlePhotos ||
+          selectedProvider.googlePhotos.length === 0) &&
+        selectedProvider.image
+      ) {
+        // Create a new HTML image element to prefetch
+        const img = document.createElement("img");
+        img.src = selectedProvider.image;
+        console.log("Prefetching fallback image:", selectedProvider.image);
+      }
+
+      // Try to fetch Google place details for this provider
+      const fetchProviderDetails = async () => {
+        try {
+          if (!selectedProvider.googlePhotos) {
+            console.log(
+              "Fetching Google place details for selected provider...",
+            );
+            const result = await fetchPlacePhotos(selectedProvider);
+            if (result.googlePhotos?.length) {
+              console.log(
+                `Found ${result.googlePhotos.length} Google photos for provider`,
+              );
+              setSelectedProvider(result);
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching place details:", error);
+        }
+      };
+
+      fetchProviderDetails();
+    }
+  }, [selectedProvider]);
 
   return (
     <Card className="overflow-hidden">
@@ -283,6 +549,16 @@ export default function HyperbaricLocator({
                             </p>
                           </div>
 
+                          {/* Opening Hours - Added */}
+                          {provider.hours && (
+                            <div className="flex items-start gap-2">
+                              <Clock className="mt-0.5 h-4 w-4 text-gray-400" />
+                              <span className="whitespace-pre-line text-sm text-gray-600">
+                                {formatHours(provider.hours)}
+                              </span>
+                            </div>
+                          )}
+
                           {/* Action Buttons */}
                           <div className="flex gap-3">
                             {provider.website && (
@@ -431,30 +707,55 @@ export default function HyperbaricLocator({
                     }}
                     onCloseClick={() => setSelectedProvider(null)}
                   >
-                    <div className="max-w-xs space-y-3 p-1">
+                    <div className="max-w-sm space-y-3 p-1">
+                      {/* Use our custom component to display images with proper fallbacks */}
+                      <ProviderImages provider={selectedProvider} />
+
                       <h3 className="font-['Raleway'] text-lg font-medium tracking-wide text-gray-900">
                         {selectedProvider.name}
                       </h3>
                       <p className="text-sm text-gray-700">
-                        {selectedProvider.address}
+                        {selectedProvider.googleFormattedAddress ??
+                          selectedProvider.address}
                       </p>
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-gray-700">
-                          {selectedProvider.rating?.toFixed(1) ?? "N/A"}
+                          {selectedProvider.googleRating?.toFixed(1) ??
+                            selectedProvider.rating?.toFixed(1) ??
+                            "N/A"}
                         </span>
                         <div className="flex">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                               key={`selected-provider-${selectedProvider.id}-star-${i}`}
                               className={`h-3 w-3 ${
-                                i < (selectedProvider.rating ?? 0)
+                                i <
+                                (selectedProvider.googleRating ??
+                                  selectedProvider.rating ??
+                                  0)
                                   ? "fill-yellow-400 text-yellow-400"
                                   : "fill-gray-300 text-gray-300"
                               }`}
                             />
                           ))}
                         </div>
+                        {selectedProvider.googleRatingsTotal && (
+                          <span className="text-xs text-gray-500">
+                            ({selectedProvider.googleRatingsTotal})
+                          </span>
+                        )}
                       </div>
+
+                      {/* Opening Hours - Added for InfoWindow */}
+                      {selectedProvider.hours && (
+                        <div className="flex items-start gap-2">
+                          <Clock className="mt-0.5 h-4 w-4 text-gray-400" />
+                          <span className="whitespace-pre-line text-sm text-gray-600">
+                            {formatHours(selectedProvider.hours)}
+                          </span>
+                        </div>
+                      )}
+
                       <div className="flex gap-2">
                         {selectedProvider.website && (
                           <Button

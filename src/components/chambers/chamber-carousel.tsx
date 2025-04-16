@@ -29,11 +29,14 @@ export function ChamberCarousel({
   containerClassName = "",
 }: ChamberCarouselProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [slidesPerView, setSlidesPerView] = useState(1);
 
   const options: EmblaOptionsType = {
     loop: true,
     align: "start",
     slidesToScroll: 1,
+    dragFree: true,
+    containScroll: "trimSnaps",
     breakpoints: {
       "(min-width: 640px)": { slidesToScroll: 2 },
       "(min-width: 1024px)": { slidesToScroll: 3 },
@@ -49,17 +52,35 @@ export function ChamberCarousel({
       setCurrentSlide(emblaApi.selectedScrollSnap());
     };
 
+    const onResize = () => {
+      const width = window.innerWidth;
+      if (width >= 1024) {
+        setSlidesPerView(3);
+      } else if (width >= 640) {
+        setSlidesPerView(2);
+      } else {
+        setSlidesPerView(1);
+      }
+    };
+
+    onResize();
+    window.addEventListener("resize", onResize);
+
     emblaApi.on("select", onSelect);
 
     return () => {
       emblaApi.off("select", onSelect);
+      window.removeEventListener("resize", onResize);
     };
   }, [emblaApi]);
 
+  // Calculate the number of indicators based on total slides and slides per view
+  const totalIndicators = Math.ceil(chambers.length / slidesPerView);
+
   return (
     <div className={`relative px-4 ${containerClassName}`}>
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
+      <div className="touch-pan-x overflow-hidden" ref={emblaRef}>
+        <div className="flex cursor-grab active:cursor-grabbing">
           {chambers.map((chamber) => (
             <div
               key={chamber.id}
@@ -107,29 +128,27 @@ export function ChamberCarousel({
         </div>
       </div>
 
-      {/* Carousel Indicator */}
-      <div className="mt-4">
-        <CarouselIndicator total={chambers.length} current={currentSlide} />
-      </div>
-
-      {/* Navigation Buttons - Hidden on mobile */}
-      <div className="hidden sm:block">
-        <Button
-          variant="outline"
-          size="icon"
-          className="absolute -left-5 top-1/2 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+      {/* Carousel Controls */}
+      <div className="mt-4 flex items-center justify-center gap-4">
+        <button
+          type="button"
           onClick={() => emblaApi?.scrollPrev()}
+          className="text-[#2B5741] hover:text-emerald-800"
+          aria-label="Previous slide"
         >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className="absolute -right-5 top-1/2 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+
+        <CarouselIndicator total={totalIndicators} current={currentSlide} />
+
+        <button
+          type="button"
           onClick={() => emblaApi?.scrollNext()}
+          className="text-[#2B5741] hover:text-emerald-800"
+          aria-label="Next slide"
         >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
+          <ChevronRight className="h-6 w-6" />
+        </button>
       </div>
     </div>
   );

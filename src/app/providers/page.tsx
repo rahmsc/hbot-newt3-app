@@ -21,6 +21,7 @@ interface SupabaseProvider {
   chamber_type?: string;
   description?: string;
   business_type?: string;
+  booking_link?: string;
   approved: boolean | string;
 }
 
@@ -106,6 +107,7 @@ export default async function ProvidersPage() {
             ? [provider.business_type]
             : ["Wellness"],
           directions: `https://maps.google.com/?q=${encodeURIComponent(provider.address ?? "")}`,
+          booking_link: provider.booking_link ?? "",
         };
       },
     );

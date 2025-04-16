@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 "use client";
 
 import { useState, useEffect } from "react";
 import MapComponent from "./map";
-import { getGeocodedProviders } from "~/actions/geocode-providers";
+import { getMapProviders } from "~/actions/map-providers";
 import type { Provider } from "~/types/providers";
 import type { HyperbaricCenter } from "~/types/map";
 
@@ -17,11 +18,14 @@ export default function ProvidersMapContainer() {
     async function loadProviders() {
       try {
         setIsLoading(true);
-        const providers = await getGeocodedProviders();
+        const providers = await getMapProviders();
 
         // Convert Provider[] to HyperbaricCenter[]
         const mappedCenters = providers
-          .filter((p) => p.latitude && p.longitude) // Only include providers with valid coordinates
+          .filter(
+            (p: { latitude: number; longitude: number }) =>
+              p.latitude && p.longitude,
+          ) // Only include providers with valid coordinates
           .map(providerToCenter);
 
         setCenters(mappedCenters);

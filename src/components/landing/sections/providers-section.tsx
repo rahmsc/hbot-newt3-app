@@ -6,10 +6,11 @@ import { useState, useEffect } from "react";
 
 import { Button } from "~/components/ui/button";
 import { ProviderQuickView } from "~/components/providers/provider-quick-view";
-import { ProviderCard } from "~/components/providers/provider-card";
+import ProviderCard from "~/components/providers/provider-card";
 import { CarouselIndicator } from "~/components/utils/carousel-indicator";
 import type { Provider } from "~/types/providers";
 import LoadingSpinner from "~/components/utils/spinner";
+import { fetchPlaceDetails } from "~/actions/fetch-place-photos";
 
 export default function ProvidersSection() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
@@ -24,12 +25,14 @@ export default function ProvidersSection() {
     loop: true,
     align: "center",
     containScroll: "trimSnaps",
+    dragFree: true,
   });
 
   useEffect(() => {
     // Fetch providers from API
     const fetchProviders = async () => {
       try {
+        setIsLoading(true);
         // Get all approved providers
         const response = await fetch("/api/providers");
         if (!response.ok) {
@@ -40,7 +43,23 @@ export default function ProvidersSection() {
 
         // Limit to 6 providers for the carousel
         const limitedProviders = data.slice(0, 6);
-        setProviders(limitedProviders);
+
+        console.log(
+          `Fetched ${limitedProviders.length} providers for front page carousel`,
+        );
+        console.log("Raw provider data:", limitedProviders);
+
+        // Enhance providers with Google Photos
+        const enhancedProviders = await Promise.all(
+          limitedProviders.map((provider) => fetchPlaceDetails(provider)),
+        );
+
+        console.log(
+          `Enhanced ${enhancedProviders.length} providers with Google details`,
+        );
+        console.log("Enhanced provider data:", enhancedProviders);
+
+        setProviders(enhancedProviders);
       } catch (error) {
         console.error("Error fetching providers:", error);
         // Set empty array in case of error
@@ -130,8 +149,8 @@ export default function ProvidersSection() {
 
       <div className="relative px-4 pt-8 sm:px-8 sm:pt-12">
         {/* Carousel Container */}
-        <div className="overflow-hidden" ref={emblaRef}>
-          <div className="-ml-4 flex">
+        <div className="touch-pan-x overflow-hidden" ref={emblaRef}>
+          <div className="-ml-4 flex cursor-grab active:cursor-grabbing">
             {providers.map((provider, index) => (
               <div
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -139,15 +158,7 @@ export default function ProvidersSection() {
                 className="w-[85%] min-w-0 flex-none pl-4 sm:w-1/2 lg:w-1/3"
               >
                 <ProviderCard
-                  name={provider.name ?? ""}
-                  rating={provider.rating ?? 0}
-                  reviewCount={provider.reviewCount ?? 0}
-                  location={provider.location ?? ""}
-                  image={provider.image ?? ""}
-                  distance={provider.distance ?? 0}
-                  latitude={provider.latitude ?? 0}
-                  longitude={provider.longitude ?? 0}
-                  id={provider.id ?? ""}
+                  provider={provider}
                   onQuickView={() => {
                     setSelectedProvider(provider);
                     setIsQuickViewOpen(true);
@@ -158,29 +169,27 @@ export default function ProvidersSection() {
           </div>
         </div>
 
-        {/* Updated Carousel Indicator for all screen sizes */}
-        <div className="mt-4">
-          <CarouselIndicator total={providers.length} current={currentSlide} />
-        </div>
-
-        {/* Navigation Buttons - Hidden on mobile */}
-        <div className="hidden sm:block">
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute -left-5 top-1/2 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+        {/* Carousel Controls */}
+        <div className="mt-4 flex items-center justify-center gap-4">
+          <button
+            type="button"
             onClick={() => emblaApi?.scrollPrev()}
+            className="text-[#2B5741] hover:text-emerald-800"
+            aria-label="Previous slide"
           >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute -right-5 top-1/2 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+
+          <CarouselIndicator total={providers.length} current={currentSlide} />
+
+          <button
+            type="button"
             onClick={() => emblaApi?.scrollNext()}
+            className="text-[#2B5741] hover:text-emerald-800"
+            aria-label="Next slide"
           >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+            <ChevronRight className="h-6 w-6" />
+          </button>
         </div>
       </div>
 

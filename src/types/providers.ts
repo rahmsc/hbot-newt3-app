@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { Key } from "node:readline";
 
 export interface ProviderProps {
-  id: string; 
+  id: string;
   name: string;
   rating: number;
   location: string;
@@ -17,7 +17,7 @@ export interface ProviderProps {
   directions: string;
   latitude: number;
   longitude: number;
-  email: string;  
+  email: string;
   description: string;
   distance?: number;
 }
@@ -57,6 +57,13 @@ export interface Provider extends ProviderCardProps {
   pressure?: string;
   type?: string;
   directions?: string;
+  bookingLink?: string;
+  booking_link?: string;
+  googlePhotos?: string[]; // Array of photo URLs from Google Places API
+  placeId?: string; // Google Maps Place ID for the business
+  googleRating?: number; // Rating from Google (1.0-5.0)
+  googleRatingsTotal?: number; // Number of ratings on Google
+  googleFormattedAddress?: string; // Formatted address from Google
 }
 
 // Optional: Create a specific type for the quick view if needed
