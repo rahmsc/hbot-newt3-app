@@ -78,12 +78,15 @@ export function CTASubscriptionSection() {
             </button>
             <button
               type="button"
-              onClick={() => setIsChatOpen(true)}
-              className="group inline-flex w-full touch-none items-center justify-center gap-2 rounded-full border-2 border-[#2B5741] bg-white px-6 py-4 text-base font-semibold text-[#2B5741] transition-all hover:scale-105 hover:bg-gray-100 hover:shadow-lg active:scale-95 sm:w-auto sm:gap-3 sm:px-8 sm:text-lg"
+              disabled
+              className="group relative inline-flex w-full cursor-not-allowed touch-none items-center justify-center gap-2 rounded-full border-2 border-[#2B5741] bg-white px-6 py-4 text-base font-semibold text-[#2B5741] opacity-80 transition-all sm:w-auto sm:gap-3 sm:px-8 sm:text-lg"
             >
               <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6" />
               <span className="whitespace-nowrap">Chat with AI Assistant</span>
-              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1 sm:h-6 sm:w-6" />
+              <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span className="absolute -top-3 right-2 rounded-full bg-amber-500 px-2 py-1 text-xs font-bold text-white shadow-md">
+                Coming Soon
+              </span>
             </button>
           </motion.div>
         </motion.div>

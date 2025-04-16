@@ -148,7 +148,6 @@ export default function ResearchDashboard() {
         selectedConditions={selectedConditions}
         isLatestView={isLatestView}
       />
-
       <div className="mx-auto max-w-[1400px] px-4 py-2 sm:px-4">
         {error ? (
           <div className="flex h-96 items-center justify-center">
