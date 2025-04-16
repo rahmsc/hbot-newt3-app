@@ -105,6 +105,7 @@ export async function GET() {
           ? [provider.business_type]
           : ["Wellness"],
         directions: `https://maps.google.com/?q=${encodeURIComponent(provider.address ?? "")}`,
+        booking_link: provider.booking_link ?? "",
       };
     });
 

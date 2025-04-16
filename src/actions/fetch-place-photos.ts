@@ -96,13 +96,16 @@ export async function fetchPlaceDetails(
       };
     }
 
-    // Build the enhanced provider object
+    // Build the enhanced provider object - preserve booking_link and bookingLink from original provider
     const enhancedProvider = {
       ...provider,
       placeId,
       googleRating: detailsData.result?.rating,
       googleRatingsTotal: detailsData.result?.user_ratings_total,
       googleFormattedAddress: detailsData.result?.formatted_address,
+      // Explicitly preserve booking links from the original provider
+      booking_link: provider.booking_link,
+      bookingLink: provider.bookingLink,
     };
 
     // Skip photos if none found
