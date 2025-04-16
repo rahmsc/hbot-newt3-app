@@ -178,7 +178,13 @@ function formatDayGroup(group: { days: string[]; hours: string }): string {
 /**
  * Helper component for rendering provider images
  */
-function ProviderImages({ provider }: { provider: Provider }) {
+function ProviderImages({
+  provider,
+  compact = false,
+}: {
+  provider: Provider;
+  compact?: boolean;
+}) {
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
@@ -203,6 +209,35 @@ function ProviderImages({ provider }: { provider: Provider }) {
     console.error(`Image failed to load for provider ${provider.name}`);
     setImageError(true);
   };
+
+  // In compact mode, display only the first image regardless of source
+  if (compact) {
+    const imageSource = provider.googlePhotos?.length
+      ? provider.googlePhotos[0]
+      : provider.image || "/images/providers/provider_1.png";
+
+    return (
+      <div className="overflow-hidden rounded-md">
+        <div className="relative h-32 w-full">
+          {!imageError ? (
+            <Image
+              src={imageSource}
+              alt={provider.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 300px"
+              onError={handleImageError}
+            />
+          ) : (
+            // Ultimate fallback if image fails to load
+            <div className="flex h-full w-full items-center justify-center bg-gray-100">
+              <span className="text-sm text-gray-500">No image available</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   // If we have Google photos, display them in a carousel
   if (provider.googlePhotos && provider.googlePhotos.length > 0) {
@@ -309,6 +344,65 @@ export default function HyperbaricLocator({
       geocoderRef.current = new google.maps.Geocoder();
     }
   }, [providers]);
+
+  // Fetch Google photos for all providers in search results
+  useEffect(() => {
+    // Only run if we have search results and the map is loaded
+    if (searchResults.length > 0 && mapLoaded) {
+      const fetchPhotosForProviders = async () => {
+        // Create a new array to hold updated providers
+        const updatedResults = [...searchResults];
+        let hasUpdates = false;
+
+        // Process providers in batches to avoid too many simultaneous requests
+        const batchSize = 3;
+        for (
+          let i = 0;
+          i < Math.min(10, searchResults.length);
+          i += batchSize
+        ) {
+          const batch = searchResults.slice(i, i + batchSize);
+
+          // Process each provider in the batch
+          const batchPromises = batch.map(async (provider, batchIndex) => {
+            const index = i + batchIndex;
+
+            // Only fetch if provider has valid coordinates and no photos yet
+            const hasValidCoords =
+              Math.abs(parseCoordinate(provider.latitude)) > 0.001 ||
+              Math.abs(parseCoordinate(provider.longitude)) > 0.001;
+
+            if (hasValidCoords && !provider.googlePhotos) {
+              try {
+                const updatedProvider = await fetchPlacePhotos(provider);
+                if (updatedProvider.googlePhotos?.length) {
+                  updatedResults[index] = updatedProvider;
+                  hasUpdates = true;
+                  return true;
+                }
+              } catch (error) {
+                console.error(
+                  `Error fetching photos for ${provider.name}:`,
+                  error,
+                );
+              }
+            }
+            return false;
+          });
+
+          // Wait for batch to complete
+          await Promise.all(batchPromises);
+        }
+
+        // Update state only if we have changes
+        if (hasUpdates) {
+          setSearchResults(updatedResults);
+        }
+      };
+
+      fetchPhotosForProviders();
+    }
+  }, [searchResults, mapLoaded]);
 
   // Initialize geocoder when Maps API is fully loaded
   useEffect(() => {
@@ -751,6 +845,14 @@ export default function HyperbaricLocator({
                       >
                         <CardContent className="p-4">
                           <div className="space-y-4">
+                            {/* Provider Image */}
+                            <div className="mb-2">
+                              <ProviderImages
+                                provider={provider}
+                                compact={true}
+                              />
+                            </div>
+
                             {/* Provider Name and Rating */}
                             <div>
                               <h4 className="font-['Raleway'] text-xl font-medium tracking-wide text-gray-900">
@@ -800,7 +902,24 @@ export default function HyperbaricLocator({
                             )}
 
                             {/* Action Buttons */}
-                            <div className="flex gap-3">
+                            <div className="flex flex-wrap gap-3">
+                              {provider.booking_link && (
+                                <Button
+                                  variant="default"
+                                  size="sm"
+                                  asChild
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="bg-[#2B5741] text-white hover:bg-[#1e3d2d]"
+                                >
+                                  <a
+                                    href={provider.booking_link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    Book Appointment
+                                  </a>
+                                </Button>
+                              )}
                               {provider.website && (
                                 <Button
                                   variant="secondary"
@@ -815,22 +934,6 @@ export default function HyperbaricLocator({
                                     rel="noopener noreferrer"
                                   >
                                     Visit Website
-                                  </a>
-                                </Button>
-                              )}
-                              {provider.directions && (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  asChild
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <a
-                                    href={provider.directions}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    Directions
                                   </a>
                                 </Button>
                               )}
@@ -1100,22 +1203,6 @@ export default function HyperbaricLocator({
                               rel="noopener noreferrer"
                             >
                               Website
-                            </a>
-                          </Button>
-                        )}
-                        {selectedProvider.directions && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            asChild
-                            className="h-8 flex-1 text-xs"
-                          >
-                            <a
-                              href={selectedProvider.directions}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              Directions
                             </a>
                           </Button>
                         )}
