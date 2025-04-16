@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import type { Provider } from "~/types/providers";
+import GlowingButton from "../utils/glowing-button";
 
 interface ProviderCardProps {
   provider: Provider;
@@ -29,8 +30,8 @@ export default function ProviderCard({
         {hasGooglePhotos ? (
           <div className="relative h-full w-full">
             <img
-              src={provider.googlePhotos[0]}
-              alt={`${provider.name} photo`}
+              src={provider.googlePhotos?.[0]}
+              alt={`${provider.name}'s profile`}
               className="h-full w-full object-cover brightness-[0.85]"
             />
           </div>
@@ -88,12 +89,7 @@ export default function ProviderCard({
             </div>
 
             {/* Action Button */}
-            <Button
-              onClick={onQuickView}
-              className="rounded-full bg-[#2B5741]/80 px-8 py-6 text-lg font-medium text-white backdrop-blur-sm transition-all hover:bg-[#2B5741]"
-            >
-              More Info
-            </Button>
+            <GlowingButton text="More Info" onClick={onQuickView} />
           </div>
         </div>
       </div>

@@ -13,7 +13,12 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import type { Provider } from "~/types/providers";
-import { Dialog, DialogContent } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "~/components/ui/dialog";
 import GlowingButton from "../utils/glowing-button";
 import {
   Carousel,
@@ -21,6 +26,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "~/components/ui/carousel";
 import {
   Popover,
@@ -51,6 +57,13 @@ interface OpeningHoursData {
 }
 
 type OpeningHoursType = Record<DayOfWeek, OpeningHoursData>;
+
+function getProxiedImageUrl(originalUrl: string): string {
+  const proxiedUrl = `/api/proxy-image?url=${encodeURIComponent(originalUrl)}`;
+  console.log(`Proxying image URL: ${originalUrl}`);
+  console.log(`Proxied URL: ${proxiedUrl}`);
+  return proxiedUrl;
+}
 
 function OpeningHours({ hours }: { hours: string }) {
   const [openingHours, setOpeningHours] = useState<OpeningHoursType | null>(
@@ -129,6 +142,29 @@ export function ProviderQuickView({
 }: ProviderQuickViewProps) {
   const [enhancedProvider, setEnhancedProvider] = useState<Provider>(provider);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(1);
+
+  // Reference to the carousel API
+  const [api, setApi] = useState<CarouselApi | null>(null);
+
+  // Setup event listeners for the carousel to track current slide
+  useEffect(() => {
+    if (!api) return;
+
+    const onSelect = () => {
+      setCurrentSlideIndex(api.selectedScrollSnap() + 1);
+    };
+
+    api.on("select", onSelect);
+    api.on("reInit", onSelect);
+
+    // Initialize with first slide
+    onSelect();
+
+    return () => {
+      api.off("select", onSelect);
+    };
+  }, [api]);
 
   // Fetch Google place details when the QuickView opens
   useEffect(() => {
@@ -206,35 +242,41 @@ export function ProviderQuickView({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-h-[80vh] max-w-4xl overflow-hidden p-0">
+        <DialogTitle className="sr-only">
+          {enhancedProvider.name} Details
+        </DialogTitle>
+        <DialogDescription className="sr-only">
+          View details and book appointments with {enhancedProvider.name}
+        </DialogDescription>
         <div className="flex max-h-[80vh] flex-col md:flex-row">
-          {/* Image Section */}
-          <div className="relative flex h-[250px] w-full shrink-0 items-center justify-center overflow-hidden bg-gray-50 md:h-[80vh] md:max-h-[600px] md:w-[45%]">
+          {/* Image Section - Modified for landscape images */}
+          <div className="relative flex w-full shrink-0 items-center justify-center md:w-[50%]">
             {isLoading ? (
-              <div className="flex h-full w-full items-center justify-center">
+              <div className="flex h-[250px] w-full items-center justify-center md:h-[350px]">
                 <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900" />
               </div>
             ) : hasGooglePhotos ? (
-              <Carousel className="h-full w-full">
-                <CarouselContent className="h-full">
+              <Carousel className="w-full" setApi={setApi}>
+                <CarouselContent>
                   {enhancedProvider.googlePhotos?.map((photo, index) => (
-                    <CarouselItem
-                      key={`photo-${enhancedProvider.id}-${index}`}
-                      className="h-full"
-                    >
-                      <div className="relative h-full w-full">
+                    <CarouselItem key={`photo-${enhancedProvider.id}-${index}`}>
+                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl">
                         <Image
-                          src={photo}
+                          src={getProxiedImageUrl(photo)}
                           alt={`${enhancedProvider.name} photo ${index + 1}`}
                           fill
                           priority={index === 0}
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 45vw"
+                          className="scale-110 object-cover"
+                          sizes="(max-width: 768px) 100vw, 50vw"
                           onError={(e) => {
                             console.error(
                               `Failed to load image ${index}:`,
                               photo,
                             );
                             e.currentTarget.src = "/placeholder.svg";
+                          }}
+                          onLoad={() => {
+                            console.log(`Image ${index} loaded successfully`);
                           }}
                         />
                       </div>
@@ -243,15 +285,30 @@ export function ProviderQuickView({
                 </CarouselContent>
                 <CarouselPrevious className="left-2 z-10" />
                 <CarouselNext className="right-2 z-10" />
+                {/* Image Counter Indicator */}
+                {enhancedProvider.googlePhotos &&
+                  enhancedProvider.googlePhotos.length > 1 && (
+                    <div className="absolute bottom-2 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/60 px-2 py-1 text-xs text-white">
+                      <span className="flex items-center justify-center gap-1">
+                        <span className="text-xs font-medium">
+                          {currentSlideIndex}
+                        </span>
+                        <span>/</span>
+                        <span className="text-xs">
+                          {enhancedProvider.googlePhotos.length}
+                        </span>
+                      </span>
+                    </div>
+                  )}
               </Carousel>
             ) : (
-              <div className="relative h-full w-full">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl">
                 <Image
                   src={enhancedProvider.image || "/placeholder.svg"}
                   alt={`${enhancedProvider.name} image`}
                   fill
                   priority
-                  className="object-cover"
+                  className="scale-110 object-cover"
                   onError={(e) => {
                     console.error("Failed to load fallback image");
                     e.currentTarget.src = "/placeholder.svg";
@@ -261,8 +318,8 @@ export function ProviderQuickView({
             )}
           </div>
 
-          {/* Content Section - This is the scrollable area */}
-          <div className="flex h-[calc(80vh-256px)] w-full flex-1 flex-col overflow-y-auto md:h-[80vh]">
+          {/* Content Section - Improved layout */}
+          <div className="flex w-full flex-1 flex-col overflow-y-auto md:max-h-[80vh]">
             <div className="flex h-full flex-1 flex-col justify-between p-6">
               <div className="space-y-4">
                 {/* Header */}
@@ -447,7 +504,7 @@ export function ProviderQuickView({
               </div>
 
               {/* Booking Button - Fixed at bottom */}
-              <div className="mb-4 pt-4">
+              <div className="mt-6 pt-4">
                 <GlowingButton
                   text="Book Appointment"
                   onClick={() => {
