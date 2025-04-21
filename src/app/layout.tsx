@@ -9,7 +9,7 @@ import { MainNav } from "~/components/header/main-nav";
 import { TopNav } from "~/components/header/top-nav";
 import Footer from "~/components/landing/sections/footer";
 import { Toaster } from "~/components/ui/toaster";
-import Hotjar from "~/components/utils/hotjar";
+import Clarity from "~/components/utils/clarity";
 import { AuthProvider } from "~/contexts/auth-context";
 
 const roboto = Roboto({
@@ -54,7 +54,9 @@ export default function RootLayout({
           <Footer />
           <Toaster />
           <GoogleAnalytics gaId={"G-KZMJT45KDX"} />
-          <Hotjar />
+          <Clarity
+            projectId={process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID ?? ""}
+          />
         </AuthProvider>
       </body>
     </html>
