@@ -23,8 +23,8 @@ export default function ProvidersMapContainer() {
         // Convert Provider[] to HyperbaricCenter[]
         const mappedCenters = providers
           .filter(
-            (p: { latitude: number; longitude: number }) =>
-              p.latitude && p.longitude,
+            (p) =>
+              typeof p.latitude === "number" && typeof p.longitude === "number",
           ) // Only include providers with valid coordinates
           .map(providerToCenter);
 

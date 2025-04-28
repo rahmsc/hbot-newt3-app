@@ -2,24 +2,62 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
-
-import { providers } from "./provider-list";
+import type { Provider } from "~/types/providers";
+import LoadingSpinner from "~/components/utils/spinner";
+import { fetchPlaceDetails } from "~/actions/fetch-place-photos";
 
 export function FeaturedProviderCarousel() {
+  const [providers, setProviders] = useState<Provider[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const nextSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % providers.length);
+  // Fetch providers from API
+  useEffect(() => {
+    const fetchProviders = async () => {
+      try {
+        setIsLoading(true);
+        // Get all approved providers
+        const response = await fetch("/api/providers");
+        if (!response.ok) {
+          throw new Error("Failed to fetch providers");
+        }
+
+        const data = (await response.json()) as Provider[];
+
+        // Limit to 3 providers for the carousel
+        const limitedProviders = data.slice(0, 3);
+
+        // Enhance providers with Google Photos
+        const enhancedProviders = await Promise.all(
+          limitedProviders.map((provider) => fetchPlaceDetails(provider)),
+        );
+
+        setProviders(enhancedProviders);
+      } catch (error) {
+        console.error("Error fetching providers:", error);
+        // Set empty array in case of error
+        setProviders([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProviders();
   }, []);
 
+  const nextSlide = useCallback(() => {
+    if (providers.length === 0) return;
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % providers.length);
+  }, [providers.length]);
+
   const prevSlide = useCallback(() => {
+    if (providers.length === 0) return;
     setCurrentIndex(
       (prevIndex) => (prevIndex - 1 + providers.length) % providers.length,
     );
-  }, []);
+  }, [providers.length]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -28,6 +66,22 @@ export function FeaturedProviderCarousel() {
 
     return () => clearInterval(timer);
   }, [nextSlide]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-64 w-full items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (providers.length === 0) {
+    return (
+      <div className="flex h-64 w-full items-center justify-center">
+        <p className="text-gray-500">No providers available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full overflow-hidden">
@@ -44,8 +98,8 @@ export function FeaturedProviderCarousel() {
                 {Array.from({ length: 5 }).map((_, i) => (
                   // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
                   <svg
-                    key={i}
-                    className={`h-5 w-5 ${i < provider.rating ? "text-yellow-400" : "text-gray-300"}`}
+                    key={`star-${provider.id}-${i}`}
+                    className={`h-5 w-5 ${i < (provider.rating || 0) ? "text-yellow-400" : "text-gray-300"}`}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -53,14 +107,18 @@ export function FeaturedProviderCarousel() {
                   </svg>
                 ))}
                 <span className="ml-2 text-gray-600">
-                  {provider.rating.toFixed(1)}
+                  {provider.rating ? provider.rating.toFixed(1) : "0.0"}
                 </span>
               </div>
               <p className="mb-2 text-sm text-gray-600">{provider.type}</p>
               <p className="mb-4 text-sm text-gray-600">{provider.pressure}</p>
               <Button
                 className="w-full bg-[#2B5741] text-white hover:bg-[#1e3d2d]"
-                onClick={() => window.open(provider.website, "_blank")}
+                onClick={() => {
+                  if (provider.website) {
+                    window.open(provider.website, "_blank");
+                  }
+                }}
               >
                 Visit Website
               </Button>

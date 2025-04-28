@@ -23,24 +23,31 @@ export default function ProviderCard({
     Array.isArray(provider.googlePhotos) &&
     provider.googlePhotos.length > 0;
 
+  // Default image to use as fallback
+  const defaultImage = "/images/default-provider.jpg";
+
   return (
     <Card className="group relative h-full overflow-hidden bg-white transition-all hover:shadow-lg">
       {/* Photo Display with Overlay */}
       <div className="relative aspect-square w-full">
         {hasGooglePhotos ? (
           <div className="relative h-full w-full">
-            <img
-              src={provider.googlePhotos?.[0]}
+            <Image
+              src={provider.googlePhotos?.[0] ?? defaultImage}
               alt={`${provider.name}'s profile`}
-              className="h-full w-full object-cover brightness-[0.85]"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover brightness-[0.85]"
             />
           </div>
         ) : (
           <div className="relative h-full w-full">
-            <img
-              src={provider.image}
+            <Image
+              src={provider.image ?? defaultImage}
               alt={provider.name}
-              className="h-full w-full object-cover brightness-[0.85]"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover brightness-[0.85]"
             />
           </div>
         )}
