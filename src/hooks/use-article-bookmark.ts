@@ -95,8 +95,6 @@ export function useArticleBookmark(articleId: number, userId?: string) {
         throw updateError;
       }
 
-      console.log("Update response:", updateData);
-
       setIsBookmarked(!isBookmarked);
       toast({
         title: isBookmarked ? "Bookmark removed" : "Article bookmarked",

@@ -22,8 +22,6 @@ export default async function getArticlesByCondition(
   if (!conditionId) return [];
 
   const supabase = createClient();
-  // console.log("Fetching articles for condition ID:", conditionId);
-
   // First get the condition name
   const { data: conditionData, error: conditionError } = await supabase
     .from("conditions")
@@ -63,10 +61,7 @@ export default async function getArticlesByCondition(
     throw new Error(`Failed to fetch articles: ${articlesError.message}`);
   }
 
-  // console.log("Raw articles data:", articles);
-
   if (!articles || articles.length === 0) {
-    console.log("No articles found for condition:", conditionId);
     return [];
   }
 
@@ -76,6 +71,5 @@ export default async function getArticlesByCondition(
     condition_name: conditionData.condition_name,
   })) as ConditionIdArticlesProps[];
 
-  // console.log("Transformed articles:", transformedData);
   return transformedData;
 }

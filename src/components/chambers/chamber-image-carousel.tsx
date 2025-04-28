@@ -31,17 +31,6 @@ export function ChamberImageCarousel({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-  // Debug logging
-  useEffect(() => {
-    console.log("ChamberImageCarousel - Images:", images);
-    console.log("ChamberImageCarousel - BaseUrl:", baseUrl);
-
-    // Log the exact URLs being constructed
-    images.forEach((image, index) => {
-      console.log(`Image ${index} URL: ${baseUrl}${image}.png`);
-    });
-  }, [images, baseUrl]);
-
   // Skip rendering if no images
   if (!images || images.length === 0) return null;
 

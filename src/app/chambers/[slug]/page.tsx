@@ -31,7 +31,7 @@ export default async function ChamberProductPage({ params }: PageProps) {
     "https://hbothq-bucket.s3.ap-southeast-2.amazonaws.com/chambers/";
 
   if (!chamber) {
-    console.log("not found", chamber);
+    console.log("No chamber found");
   }
 
   const featureItems = chamber?.features
@@ -157,6 +157,7 @@ export default async function ChamberProductPage({ params }: PageProps) {
                       {featureItems.length > 0 &&
                         featureItems.map((feature, index) => (
                           <div
+                            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                             key={index}
                             className={`group relative overflow-hidden rounded-xl border border-gray-400 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-sm ${
                               // Apply special positioning for the last item when it would be alone in a row

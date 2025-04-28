@@ -30,9 +30,6 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    // Debug log to see what data is being received
-    console.log("Received body:", body);
-
     // Validate all required fields
     const requiredFields = [
       "business_type",
@@ -49,7 +46,6 @@ export async function POST(request: Request) {
     ];
     const missingFields = requiredFields.filter((field) => !body[field]);
     if (missingFields.length > 0) {
-      console.log("Missing required fields:", missingFields);
       return NextResponse.json(
         { error: `Missing required fields: ${missingFields.join(", ")}` },
         { status: 400 },
@@ -58,7 +54,6 @@ export async function POST(request: Request) {
 
     // Validate business type
     if (!validBusinessTypes.includes(body.business_type)) {
-      console.log("Invalid business type:", body.business_type);
       return NextResponse.json(
         {
           error: `Invalid business type: ${body.business_type}. Valid types are: ${validBusinessTypes.join(", ")}`,
@@ -69,7 +64,6 @@ export async function POST(request: Request) {
 
     // Validate chamber type
     if (!validChamberTypes.includes(body.chamber_type)) {
-      console.log("Invalid chamber type:", body.chamber_type);
       return NextResponse.json(
         {
           error: `Invalid chamber type: ${body.chamber_type}. Valid types are: ${validChamberTypes.join(", ")}`,
@@ -86,11 +80,6 @@ export async function POST(request: Request) {
       if (coordinates) {
         latitude = coordinates.lat;
         longitude = coordinates.lng;
-        console.log(
-          `Geocoded address: ${body.address} to coordinates: ${latitude}, ${longitude}`,
-        );
-      } else {
-        console.log(`Unable to geocode address: ${body.address}`);
       }
     }
 
@@ -122,9 +111,6 @@ export async function POST(request: Request) {
       longitude,
     };
 
-    // Debug log to see what data is being sent to Supabase
-    console.log("Provider data to insert:", providerData);
-
     // Insert the provider data
     const { data, error } = await supabase
       .from("providers")
@@ -133,7 +119,6 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
-      console.error("Error submitting provider:", error);
       return NextResponse.json(
         { error: "Failed to submit provider", details: error.message },
         { status: 500 },
@@ -145,7 +130,6 @@ export async function POST(request: Request) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("Error processing provider submission:", error);
     return NextResponse.json(
       {
         error: "Server error processing submission",

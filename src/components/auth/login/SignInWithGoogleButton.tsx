@@ -1,14 +1,11 @@
-"use client"
+"use client";
 
-import { Button } from "~/components/ui/button"
-import { ChromeIcon as GoogleIcon } from "lucide-react"
-import { signInWithGoogle } from "~/app/(auth)/auth/login/action"
+import { Button } from "~/components/ui/button";
+import { ChromeIcon as GoogleIcon } from "lucide-react";
+import { signInWithGoogle } from "~/app/(auth)/auth/login/action";
 
 export default function SignInWithGoogleButton() {
   const handleClick = async () => {
-    // Debug log to see environment variables
-    console.log('Site URL:', process.env.NEXT_PUBLIC_SITE_URL);
-    console.log('Vercel URL:', process.env.NEXT_PUBLIC_VERCEL_URL);
     await signInWithGoogle();
   };
 
@@ -22,6 +19,5 @@ export default function SignInWithGoogleButton() {
       <GoogleIcon className="mr-2 h-4 w-4" />
       Sign in with Google
     </Button>
-  )
+  );
 }
-

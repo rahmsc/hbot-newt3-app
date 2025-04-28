@@ -1,4 +1,5 @@
-import { getGeocodedProviders } from "~/actions/geocode-providers";
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { getGeocodedProviders } from "~/actions/geocode-address";
 import type { Provider } from "~/types/providers";
 
 /**
@@ -13,15 +14,11 @@ export async function getMapProviders(): Promise<Provider[]> {
 
     // Filter providers to only include those with valid coordinates
     const validProviders = providers.filter(
-      (provider) =>
-        provider.latitude &&
-        provider.longitude &&
+      (provider: Provider) =>
+        provider.latitude !== undefined &&
+        provider.longitude !== undefined &&
         provider.latitude !== 0 &&
         provider.longitude !== 0,
-    );
-
-    console.log(
-      `Map providers loaded: ${validProviders.length}/${providers.length}`,
     );
 
     return validProviders;

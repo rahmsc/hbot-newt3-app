@@ -192,21 +192,8 @@ function ProviderImages({
     setImageError(false);
   }, []);
 
-  // Log available image information
-  useEffect(() => {
-    console.log("ProviderImages component:", {
-      id: provider.id,
-      name: provider.name,
-      hasGooglePhotos:
-        provider.googlePhotos && provider.googlePhotos.length > 0,
-      photoCount: provider.googlePhotos?.length ?? 0,
-      fallbackImage: provider.image,
-    });
-  }, [provider.id, provider.name, provider.googlePhotos, provider.image]);
-
   // Handle image load error
   const handleImageError = () => {
-    console.error(`Image failed to load for provider ${provider.name}`);
     setImageError(true);
   };
 
@@ -317,26 +304,6 @@ export default function HyperbaricLocator({
 
   // Initialize search results with providers when component mounts
   useEffect(() => {
-    console.log("HyperbaricLocator received providers:", providers.length);
-
-    // Log each provider's coordinates
-    providers.forEach((provider, index) => {
-      // Ensure coordinates are parsed as numbers
-      const latitude = parseCoordinate(provider.latitude);
-      const longitude = parseCoordinate(provider.longitude);
-
-      console.log(`Provider ${index + 1} in component:`, {
-        id: provider.id,
-        name: provider.name,
-        raw_latitude: provider.latitude,
-        raw_longitude: provider.longitude,
-        parsed_latitude: latitude,
-        parsed_longitude: longitude,
-        hasValidCoords:
-          Math.abs(latitude) > 0.001 || Math.abs(longitude) > 0.001,
-      });
-    });
-
     setSearchResults(providers);
 
     // Initialize geocoder when Maps API is loaded
@@ -381,10 +348,7 @@ export default function HyperbaricLocator({
                   return true;
                 }
               } catch (error) {
-                console.error(
-                  `Error fetching photos for ${provider.name}:`,
-                  error,
-                );
+                // Error handling
               }
             }
             return false;
@@ -435,7 +399,6 @@ export default function HyperbaricLocator({
       if (typeof google !== "undefined" && google.maps) {
         geocoderRef.current = new google.maps.Geocoder();
       } else {
-        console.error("Google Maps API not loaded yet");
         return null;
       }
     }
@@ -451,7 +414,7 @@ export default function HyperbaricLocator({
         return { lat, lng };
       }
     } catch (error) {
-      console.error("Geocoding error:", error);
+      // Error handling
     }
 
     return null;
@@ -585,13 +548,9 @@ export default function HyperbaricLocator({
       } else {
         // If geocoding fails and no text matches, show all providers
         // This ensures we don't end up with an empty list
-        console.log(
-          "Geocoding failed and no text matches, showing all providers",
-        );
         setSearchResults(providers);
       }
     } catch (error) {
-      console.error("Search error:", error);
       // On error, show all providers to avoid empty results
       setSearchResults(providers);
     } finally {
@@ -613,15 +572,9 @@ export default function HyperbaricLocator({
     }
   }, []);
 
+  // Try to fetch Google place details for the selected provider
   useEffect(() => {
     if (selectedProvider) {
-      console.log("Selected provider details:", {
-        id: selectedProvider.id,
-        name: selectedProvider.name,
-        image: selectedProvider.image,
-        photos: selectedProvider.googlePhotos?.length ?? 0,
-      });
-
       // If no Google photos, but we have a provider, prefetch the image
       if (
         (!selectedProvider.googlePhotos ||
@@ -631,26 +584,19 @@ export default function HyperbaricLocator({
         // Create a new HTML image element to prefetch
         const img = document.createElement("img");
         img.src = selectedProvider.image;
-        console.log("Prefetching fallback image:", selectedProvider.image);
       }
 
       // Try to fetch Google place details for this provider
       const fetchProviderDetails = async () => {
         try {
           if (!selectedProvider.googlePhotos) {
-            console.log(
-              "Fetching Google place details for selected provider...",
-            );
-            const result = await fetchPlacePhotos(selectedProvider);
-            if (result.googlePhotos?.length) {
-              console.log(
-                `Found ${result.googlePhotos.length} Google photos for provider`,
-              );
-              setSelectedProvider(result);
+            const enhancedProvider = await fetchPlacePhotos(selectedProvider);
+            if (enhancedProvider.googlePhotos?.length) {
+              setSelectedProvider(enhancedProvider);
             }
           }
         } catch (error) {
-          console.error("Error fetching place details:", error);
+          // Error handling
         }
       };
 
@@ -666,7 +612,6 @@ export default function HyperbaricLocator({
           libraries={googleMapsLibraries}
           onLoad={() => {
             setMapLoaded(true);
-            console.log("Google Maps script loaded with Places library");
             if (typeof google !== "undefined" && google.maps) {
               geocoderRef.current = new google.maps.Geocoder();
             }
@@ -776,7 +721,7 @@ export default function HyperbaricLocator({
                             setIsLoading(false);
                           },
                           (error) => {
-                            console.error("Geolocation error:", error);
+                            // Geolocation error
                             setIsLoading(false);
                           },
                         );
@@ -996,16 +941,7 @@ export default function HyperbaricLocator({
                   },
                 }}
                 onLoad={() => {
-                  console.log("Map rendered with center:", currentLocation);
-                  console.log(
-                    `Ready to display ${
-                      searchResults.filter((p) => {
-                        const lat = parseCoordinate(p.latitude);
-                        const lng = parseCoordinate(p.longitude);
-                        return Math.abs(lat) > 0.001 || Math.abs(lng) > 0.001;
-                      }).length
-                    } providers with valid coordinates`,
-                  );
+                  // Map loaded
                 }}
               >
                 {/* Marker for searched location */}

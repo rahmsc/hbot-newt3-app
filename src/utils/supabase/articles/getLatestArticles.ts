@@ -37,10 +37,6 @@ export default async function getLatestArticles(
 ): Promise<RandomArticleItemProps[]> {
   const supabase = createClient();
 
-  // console.log(
-  //   `Fetching ${count} latest articles. Condition ID: ${conditionId || "None"}`,
-  // );
-
   let query = supabase
     .from("studies")
     .select(
@@ -69,7 +65,6 @@ export default async function getLatestArticles(
       .split(",")
       .map((id) => Number.parseInt(id.trim()));
     query = query.in("condition_id", conditionIds);
-    // console.log(`Filtering by condition IDs: ${conditionIds.join(", ")}`);
   }
 
   try {
@@ -81,11 +76,8 @@ export default async function getLatestArticles(
     }
 
     if (!data || data.length === 0) {
-      console.log("No articles found");
       return [];
     }
-
-    // console.log(`Found ${data.length} articles`);
 
     return data.map(
       (record: StudyRecord): RandomArticleItemProps => ({

@@ -5,9 +5,6 @@ export async function getArticleCountsByCondition(): Promise<
 > {
   const supabase = createClient();
 
-  // Add debug logging
-  // console.log("Fetching article counts...");
-
   const { data, error } = await supabase
     .from("studies")
     .select("condition_id")
@@ -18,9 +15,6 @@ export async function getArticleCountsByCondition(): Promise<
     throw new Error(`Failed to fetch article counts: ${error.message}`);
   }
 
-  // Debug log the raw data
-  // console.log("Raw studies data:", data);
-
   // Group articles by condition_id and count them
   const counts = data.reduce((acc: Record<number, number>, article) => {
     const conditionId = article.condition_id;
@@ -30,9 +24,6 @@ export async function getArticleCountsByCondition(): Promise<
     }
     return acc;
   }, {});
-
-  // Debug log the counts
-  // console.log("Calculated counts:", counts);
 
   return counts;
 }

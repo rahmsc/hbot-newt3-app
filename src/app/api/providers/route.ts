@@ -26,19 +26,6 @@ interface SupabaseProvider {
 }
 
 /**
- * Helper function to safely parse coordinates
- */
-function parseCoordinate(value: unknown): number {
-  if (value === null || value === undefined) return 0;
-  if (typeof value === "number") return value;
-  if (typeof value === "string") {
-    const parsed = Number.parseFloat(value);
-    return Number.isNaN(parsed) ? 0 : parsed;
-  }
-  return 0;
-}
-
-/**
  * GET handler for fetching providers with Google details
  */
 export async function GET() {
@@ -63,10 +50,6 @@ export async function GET() {
         { status: 500 },
       );
     }
-
-    console.log(
-      `Fetched ${data?.length ?? 0} approved providers from Supabase`,
-    );
 
     // Transform the data to match our Provider type
     const providers: Provider[] = data.map((provider: SupabaseProvider) => {
@@ -112,9 +95,6 @@ export async function GET() {
     // Enhance with Google details - only for the first 6 providers to avoid excessive API calls
     // In production, you might want to implement caching and more selective fetching
     const PROVIDER_LIMIT = 6;
-    console.log(
-      `Enhancing first ${PROVIDER_LIMIT} providers with Google details`,
-    );
 
     try {
       const enhancedProviders = await Promise.all(
@@ -122,11 +102,6 @@ export async function GET() {
           .slice(0, PROVIDER_LIMIT)
           .map((provider) => fetchPlaceDetails(provider)),
       );
-
-      console.log(
-        `Enhanced ${enhancedProviders.length} providers with Google details`,
-      );
-
       // Replace the first 6 providers with enhanced versions
       const finalProviders = [...providers];
       for (let i = 0; i < enhancedProviders.length; i++) {

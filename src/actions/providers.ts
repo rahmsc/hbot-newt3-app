@@ -26,29 +26,15 @@ interface SupabaseProvider {
 }
 
 export async function getProviders(): Promise<Provider[]> {
-  console.log("Fetching providers from Supabase...");
-
   // Create direct Supabase client without using the utility
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
   );
-
-  console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-  console.log("API Key exists:", !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-
   // Try without filter first
   const { data: allData, error: allError } = await supabase
     .from("providers")
     .select("*");
-
-  if (allError) {
-    console.error("Error fetching all providers:", allError);
-  } else {
-    console.log(
-      `Found ${allData?.length ?? 0} total providers before filtering`,
-    );
-  }
 
   // Now try with approved filter
   const { data, error } = await supabase
@@ -57,19 +43,10 @@ export async function getProviders(): Promise<Provider[]> {
     .eq("approved", true);
 
   if (error) {
-    console.error("Error fetching approved providers:", error);
     return [];
   }
 
-  console.log("Raw Supabase data:", JSON.stringify(data, null, 2));
-  console.log(
-    `Retrieved ${data?.length ?? 0} approved providers from Supabase`,
-  );
-
   if (!data || data.length === 0) {
-    console.log(
-      "No approved providers found. Check if the 'approved' column exists and is set to true.",
-    );
     return [];
   }
 

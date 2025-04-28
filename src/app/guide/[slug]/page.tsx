@@ -27,7 +27,6 @@ export default function GuidePage({ params }: PageProps) {
       if (fetchedGuide) {
         setGuide(fetchedGuide);
       } else {
-        console.log("not found", fetchedGuide);
       }
     };
     fetchGuide();

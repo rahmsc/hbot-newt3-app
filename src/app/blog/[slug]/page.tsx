@@ -27,7 +27,7 @@ export default function BlogPostPage({ params }: PageProps) {
       if (fetchedPost) {
         setPost(fetchedPost);
       } else {
-        console.log("not found", fetchedPost);
+        // Post not found
       }
     };
     fetchPost();

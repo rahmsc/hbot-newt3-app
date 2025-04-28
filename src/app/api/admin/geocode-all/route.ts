@@ -6,8 +6,6 @@ async function geocodeAddress(address: string) {
   try {
     if (!address) return null;
 
-    console.log(`Geocoding address: ${address}`);
-
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`,
       {
@@ -27,10 +25,6 @@ async function geocodeAddress(address: string) {
         latitude: Number.parseFloat(data[0].lat),
         longitude: Number.parseFloat(data[0].lon),
       };
-
-      console.log(
-        `Found coordinates: ${coordinates.latitude}, ${coordinates.longitude}`,
-      );
       return coordinates;
     }
 
@@ -58,8 +52,6 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    console.log(`Found ${data?.length ?? 0} providers total`);
-
     if (!data || data.length === 0) {
       return NextResponse.json(
         { message: "No providers found" },
@@ -73,7 +65,6 @@ export async function GET() {
     // Process each provider
     for (const provider of data) {
       if (!provider.address) {
-        console.log(`Provider ${provider.id} has no address, skipping`);
         results.push({
           id: provider.id,
           name: provider.business_name,
@@ -86,7 +77,6 @@ export async function GET() {
       const coordinates = await geocodeAddress(provider.address);
 
       if (!coordinates) {
-        console.log(`No coordinates found for provider ${provider.id}`);
         results.push({
           id: provider.id,
           name: provider.business_name,
@@ -112,7 +102,6 @@ export async function GET() {
           status: "error updating database",
         });
       } else {
-        console.log(`Updated coordinates for provider ${provider.id}`);
         results.push({
           id: provider.id,
           name: provider.business_name,

@@ -15,6 +15,7 @@ export function CarouselIndicator({
     <div className={cn("mt-4 flex justify-center gap-2 pb-4", className)}>
       {Array.from({ length: total }).map((_, index) => (
         <div
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           key={index}
           className={cn(
             "h-2 bg-gray-300 transition-all duration-300",

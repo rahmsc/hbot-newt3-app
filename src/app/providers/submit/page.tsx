@@ -120,7 +120,6 @@ export default function SubmitPage() {
   });
 
   const onSubmit = async (data: FormValues) => {
-    console.log("Form submitted with data:", data);
     setIsSubmitting(true);
 
     try {
@@ -138,7 +137,6 @@ export default function SubmitPage() {
         }
       }
 
-      console.log("Sending request to API...");
       const response = await fetch("/api/providers/submit-provider", {
         method: "POST",
         headers: {
@@ -164,7 +162,6 @@ export default function SubmitPage() {
         }),
       });
 
-      console.log("Response received:", response.status);
       let responseData: {
         error?: string;
         message?: string;
@@ -173,7 +170,6 @@ export default function SubmitPage() {
 
       try {
         responseData = await response.json();
-        console.log("Response data:", responseData);
       } catch (parseError) {
         console.error("Error parsing response:", parseError);
         throw new Error("Failed to parse server response");

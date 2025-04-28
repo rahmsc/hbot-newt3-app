@@ -34,10 +34,6 @@ export default async function getArticleById(
     }
 
     const supabase = createClient();
-
-    // Add logging to debug the connection and ID
-    // console.log("Fetching article with ID:", id);
-
     const { data, error } = await supabase
       .from("studies")
       .select(
@@ -74,13 +70,8 @@ export default async function getArticleById(
     }
 
     if (!data) {
-      // console.log("No data found for article ID:", id);
       throw new Error(`No article found with ID: ${id}`);
     }
-
-    // Log the raw data for debugging
-    // console.log("Raw data from database:", data);
-
     // Safely transform the data with null checks
     return {
       id: Number(data.id) || 0,

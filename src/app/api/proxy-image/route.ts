@@ -9,7 +9,6 @@ export async function GET(request: Request) {
   }
 
   try {
-    console.log(`Proxy-image: Fetching ${url}`);
     const response = await fetch(url, {
       headers: {
         "User-Agent":
@@ -27,12 +26,8 @@ export async function GET(request: Request) {
     }
 
     const contentType = response.headers.get("Content-Type");
-    console.log(
-      `Proxy-image: Successfully fetched image, content-type: ${contentType}`,
-    );
 
     const imageBuffer = await response.arrayBuffer();
-    console.log(`Proxy-image: Image size: ${imageBuffer.byteLength} bytes`);
 
     return new NextResponse(imageBuffer, {
       headers: {

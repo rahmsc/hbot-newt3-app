@@ -11,10 +11,6 @@ export async function updateProviderCoordinates(
   longitude: number,
 ): Promise<{ success: boolean; message: string }> {
   try {
-    console.log(
-      `Updating provider ${providerId} coordinates to: lat=${latitude}, lng=${longitude}`,
-    );
-
     // Create Supabase client
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
@@ -35,15 +31,6 @@ export async function updateProviderCoordinates(
         message: `Error fetching provider: ${beforeError.message}`,
       };
     }
-
-    console.log(`Before update - Provider ${providerId}:`, {
-      name: before.business_name,
-      latitude: before.latitude,
-      longitude: before.longitude,
-      latitude_type: typeof before.latitude,
-      longitude_type: typeof before.longitude,
-    });
-
     // Update the coordinates
     const { data, error } = await supabase
       .from("providers")
@@ -77,20 +64,12 @@ export async function updateProviderCoordinates(
       };
     }
 
-    console.log(`After update - Provider ${providerId}:`, {
-      name: after.business_name,
-      latitude: after.latitude,
-      longitude: after.longitude,
-      latitude_type: typeof after.latitude,
-      longitude_type: typeof after.longitude,
-    });
-
     return {
       success: true,
       message: `Successfully updated coordinates for ${after.business_name}`,
     };
   } catch (error) {
-    console.error(`Error in updateProviderCoordinates:`, error);
+    console.error("Error in updateProviderCoordinates:", error);
     return {
       success: false,
       message: `Server error: ${error instanceof Error ? error.message : String(error)}`,

@@ -44,20 +44,10 @@ export default function ProvidersSection() {
         // Limit to 6 providers for the carousel
         const limitedProviders = data.slice(0, 6);
 
-        console.log(
-          `Fetched ${limitedProviders.length} providers for front page carousel`,
-        );
-        console.log("Raw provider data:", limitedProviders);
-
         // Enhance providers with Google Photos
         const enhancedProviders = await Promise.all(
           limitedProviders.map((provider) => fetchPlaceDetails(provider)),
         );
-
-        console.log(
-          `Enhanced ${enhancedProviders.length} providers with Google details`,
-        );
-        console.log("Enhanced provider data:", enhancedProviders);
 
         setProviders(enhancedProviders);
       } catch (error) {

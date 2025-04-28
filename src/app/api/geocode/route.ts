@@ -1,4 +1,4 @@
-import { getGeocodedProviders } from "~/actions/geocode-providers";
+import { getGeocodedProviders } from "~/actions/geocode-address";
 import { NextResponse } from "next/server";
 
 export async function GET() {

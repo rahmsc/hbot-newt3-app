@@ -71,10 +71,6 @@ export default async function ProvidersPage() {
       );
     }
 
-    console.log(
-      `Fetched ${data?.length ?? 0} approved providers from Supabase`,
-    );
-
     // Transform the data to match our Provider type
     const providers: Provider[] = (data as SupabaseProvider[]).map(
       (provider) => {
@@ -111,8 +107,6 @@ export default async function ProvidersPage() {
         };
       },
     );
-
-    console.log(`Loaded ${providers.length} providers for map display`);
 
     return (
       <main className="min-h-screen w-full bg-[#FAF7F4]">

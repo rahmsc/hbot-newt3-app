@@ -69,8 +69,6 @@ function isApproved(value: unknown): boolean {
  * @returns Promise<Provider[]> Array of providers with coordinates
  */
 export async function getMapProviders(): Promise<Provider[]> {
-  console.log("Fetching map providers with coordinates...");
-
   // Create Supabase client
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
@@ -82,64 +80,12 @@ export async function getMapProviders(): Promise<Provider[]> {
     .from("providers")
     .select("*");
 
-  console.log("DETAILED DEBUG - All providers with full data:");
-  for (const provider of allProvidersFull || []) {
-    console.log(`Provider ID ${provider.id}: ${provider.business_name}`, {
-      approved: provider.approved,
-      approved_type: typeof provider.approved,
-      is_approved_result: isApproved(provider.approved),
-      latitude: provider.latitude,
-      longitude: provider.longitude,
-      lat_type: typeof provider.latitude,
-      lng_type: typeof provider.longitude,
-    });
-  }
-
   // First, let's get ALL providers to check if there are any in the database
   const { data: allProviders, error: allProvidersError } = await supabase
     .from("providers")
     .select("id, business_name, approved, latitude, longitude");
 
-  console.log("Total providers in database:", allProviders?.length ?? 0);
-  if (allProviders && allProviders.length > 0) {
-    console.log(
-      "Sample of ALL providers in database:",
-      allProviders.map((p) => ({
-        id: p.id,
-        name: p.business_name,
-        approved: p.approved,
-        approved_type: typeof p.approved,
-        is_approved: isApproved(p.approved),
-        lat: p.latitude,
-        lng: p.longitude,
-        raw_lat: p.latitude,
-        raw_lng: p.longitude,
-        lat_type: typeof p.latitude,
-        lng_type: typeof p.longitude,
-      })),
-    );
-  }
-
-  // Log details for provider ID 4 specifically
-  const provider4 = allProviders?.find((p) => p.id === 4);
-  if (provider4) {
-    console.log("IMPORTANT - Details for provider ID 4:", {
-      id: provider4.id,
-      name: provider4.business_name,
-      approved: provider4.approved,
-      approved_type: typeof provider4.approved,
-      is_approved: isApproved(provider4.approved),
-      lat: provider4.latitude,
-      lng: provider4.longitude,
-    });
-  } else {
-    console.log("⚠️ Provider ID 4 not found in the database");
-  }
-
   // FIXED QUERY: Don't use the approved filter first, just get providers with coordinates
-  console.log(
-    "Fetching all providers with coordinates (regardless of approval)",
-  );
   const { data, error } = await supabase
     .from("providers")
     .select("*")
@@ -147,13 +93,8 @@ export async function getMapProviders(): Promise<Provider[]> {
     .not("longitude", "is", null);
 
   if (error) {
-    console.error("Error fetching providers with coordinates:", error);
     return [];
   }
-
-  console.log(
-    `Found ${data?.length ?? 0} providers with coordinates (before approval filter)`,
-  );
 
   if (!data || data.length === 0) {
     return [];
@@ -161,20 +102,6 @@ export async function getMapProviders(): Promise<Provider[]> {
 
   // Filter for approval status in memory using our custom isApproved function
   const approvedProviders = data.filter((p) => isApproved(p.approved));
-  console.log(
-    `After filtering for approved: ${approvedProviders.length} providers`,
-  );
-
-  // Log which providers passed the approval check
-  for (const p of approvedProviders) {
-    console.log(
-      `Provider ${p.id} (${p.business_name}) passed approval check:`,
-      {
-        raw_approved: p.approved,
-        approved_type: typeof p.approved,
-      },
-    );
-  }
 
   // Transform to Provider type and convert coordinates to numbers
   const providers = (approvedProviders as SupabaseProvider[]).map(
@@ -212,19 +139,6 @@ export async function getMapProviders(): Promise<Provider[]> {
     },
   );
 
-  // Explicitly log the parsed coordinates
-  providers.forEach((provider, index) => {
-    console.log(`Parsed Provider ${index + 1}:`, {
-      id: provider.id,
-      name: provider.name,
-      latitude: provider.latitude,
-      longitude: provider.longitude,
-      isValid:
-        Math.abs(provider.latitude) > 0.001 ||
-        Math.abs(provider.longitude) > 0.001,
-    });
-  });
-
   // Filter out any providers with near-zero coordinates
   const validProviders = providers.filter(
     (provider) =>
@@ -232,32 +146,16 @@ export async function getMapProviders(): Promise<Provider[]> {
       Math.abs(provider.longitude) > 0.001,
   );
 
-  console.log(
-    `${validProviders.length} providers have valid non-zero coordinates`,
-  );
-
-  if (validProviders.length === 0 && providers.length > 0) {
-    console.log(
-      "⚠️ Providers exist but were filtered out due to near-zero coordinates!",
-    );
-  }
-
   // Fetch place photos for a batch of providers (limit to avoid excessive API calls)
   // In production, you might want to implement this differently
   const PHOTO_BATCH_SIZE = 5; // Limit API calls during development
 
-  console.log(
-    `Fetching Google place photos for up to ${PHOTO_BATCH_SIZE} providers`,
-  );
   const providersWithPhotos = await fetchBatchPlacePhotos(
     validProviders.slice(0, PHOTO_BATCH_SIZE),
   );
 
   // Replace the first few providers with the ones that have photos
   if (providersWithPhotos.length > 0) {
-    console.log(
-      `Added Google place details to ${providersWithPhotos.length} providers`,
-    );
     return providersWithPhotos;
   }
 
@@ -274,36 +172,15 @@ async function fetchBatchPlacePhotos(
 ): Promise<Provider[]> {
   if (providers.length === 0) return [];
 
-  console.log(`Fetching Google details for ${providers.length} providers...`);
-
   try {
     // Use Promise.all to fetch details for multiple providers in parallel
     const enhancedProviders = await Promise.all(
       providers.map((provider) => fetchPlaceDetails(provider, 3)),
     );
 
-    // Log summary of enhanced providers
-    let providersWithPhotos = 0;
-    let providersWithRatings = 0;
-
-    for (const provider of enhancedProviders) {
-      if (provider.googlePhotos && provider.googlePhotos.length > 0) {
-        providersWithPhotos++;
-      }
-      if (provider.googleRating !== undefined) {
-        providersWithRatings++;
-      }
-    }
-
-    console.log(`Google place details fetched successfully:
-      - ${providersWithPhotos} providers with photos
-      - ${providersWithRatings} providers with ratings
-    `);
-
     // Return all providers with enhanced details
     return enhancedProviders;
   } catch (error) {
-    console.error("Error fetching batch place details:", error);
     return providers;
   }
 }

@@ -25,7 +25,7 @@ export async function login(formData: FormData) {
   if (error) {
     redirect("/error");
   }
-  
+
   revalidatePath("/", "layout");
   redirect("/auth/profile");
 }
@@ -61,7 +61,6 @@ export async function signup(formData: FormData): Promise<void> {
     throw error;
   }
   if (data.user && data.session) {
-    console.log("DATA --------------------------", data);
     redirect("/auth/profile");
   }
 }
@@ -70,7 +69,7 @@ export async function signout() {
   const supabase = await createClient();
   const { error } = await supabase.auth.signOut();
   if (error) {
-    console.log(error);
+    console.error("Signout error:", error);
     redirect("/error");
   }
 
@@ -79,12 +78,13 @@ export async function signout() {
 
 export async function signInWithGoogle() {
   const supabase = await createClient();
-  
+
   // Get the site URL from environment, falling back to the default if needed
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 
-    (process.env.NEXT_PUBLIC_VERCEL_URL ? 
-      `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : 
-      'http://localhost:3000');
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.NEXT_PUBLIC_VERCEL_URL
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      : "http://localhost:3000");
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
@@ -103,7 +103,6 @@ export async function signInWithGoogle() {
   }
 
   if (data.url) {
-    console.log("Redirecting to:", data.url); // Debug log
     redirect(data.url);
   }
 }

@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { useChat } from 'ai/react';
-import { X } from 'lucide-react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+// Adjusted import for useChat to match the correct module resolution
+import { useChat } from "@ai-sdk/react";
+import { X } from "lucide-react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 interface ChatWindowProps {
   onClose: () => void;
@@ -32,7 +33,7 @@ function formatMessageContent(content: string) {
         className="text-emerald-600 hover:underline"
       >
         {match[1]}
-      </Link>
+      </Link>,
     );
 
     lastIndex = match.index + match[0].length;
@@ -47,27 +48,29 @@ function formatMessageContent(content: string) {
 }
 
 export default function ChatWindow({ onClose }: ChatWindowProps) {
-  const { messages, input, handleInputChange, handleSubmit, isLoading, error } = useChat({
-    api: '/api/chat',
-    id: 'hbot-chat',
-    initialMessages: [
-      {
-        id: 'welcome',
-        role: 'assistant',
-        content: 'Hello! I can help you find information about HBOT studies. What would you like to know?'
-      }
-    ],
-    onError: (error) => {
-      console.error('Chat error:', error);
-    },
-    onFinish: (message) => {
-      console.log('Chat finished:', message);
-    },
-  });
+  const { messages, input, handleInputChange, handleSubmit, isLoading, error } =
+    useChat({
+      api: "/api/chat",
+      id: "hbot-chat",
+      initialMessages: [
+        {
+          id: "welcome",
+          role: "assistant",
+          content:
+            "Hello! I can help you find information about HBOT studies. What would you like to know?",
+        },
+      ],
+      onError: (error) => {
+        console.error("Chat error:", error);
+      },
+      onFinish: (message) => {
+        console.log("Chat finished:", message);
+      },
+    });
 
   const onSubmitWrapper = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Submitting message:', input);
+    console.log("Submitting message:", input);
     handleSubmit(e);
   };
 
@@ -97,17 +100,19 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
             <div
               key={m.id}
               className={`flex items-start gap-2.5 ${
-                m.role === 'user' ? 'flex-row-reverse' : ''
+                m.role === "user" ? "flex-row-reverse" : ""
               }`}
             >
               <div
                 className={`rounded-lg p-3 ${
-                  m.role === 'user'
-                    ? 'bg-[#2B5741] text-white'
-                    : 'bg-gray-100 text-gray-900'
+                  m.role === "user"
+                    ? "bg-[#2B5741] text-white"
+                    : "bg-gray-100 text-gray-900"
                 }`}
               >
-                {m.role === 'user' ? m.content : formatMessageContent(m.content)}
+                {m.role === "user"
+                  ? m.content
+                  : formatMessageContent(m.content)}
               </div>
             </div>
           ))}
@@ -138,11 +143,7 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
           </button>
         </div>
       </form>
-      {error && (
-        <div className="p-4 text-red-500">
-          Error: {error.message}
-        </div>
-      )}
+      {error && <div className="p-4 text-red-500">Error: {error.message}</div>}
     </motion.div>
   );
-} 
+}

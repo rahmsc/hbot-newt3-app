@@ -60,8 +60,6 @@ type OpeningHoursType = Record<DayOfWeek, OpeningHoursData>;
 
 function getProxiedImageUrl(originalUrl: string): string {
   const proxiedUrl = `/api/proxy-image?url=${encodeURIComponent(originalUrl)}`;
-  console.log(`Proxying image URL: ${originalUrl}`);
-  console.log(`Proxied URL: ${proxiedUrl}`);
   return proxiedUrl;
 }
 
@@ -84,9 +82,7 @@ function OpeningHours({ hours }: { hours: string }) {
       const parsedHours = JSON.parse(hours) as OpeningHoursType;
       setOpeningHours(parsedHours);
     } catch (e) {
-      if (e instanceof Error) {
-        console.error("Failed to parse opening hours:", e.message);
-      }
+      // Failed to parse opening hours
     }
   }, [hours]);
 
@@ -172,50 +168,18 @@ export function ProviderQuickView({
       if (isOpen && provider) {
         setIsLoading(true);
         try {
-          console.log(`QuickView opened for provider: ${provider.name}`);
-          console.log(
-            "Complete provider data:",
-            JSON.stringify(provider, null, 2),
-          );
-          console.log("Provider data summary:", {
-            id: provider.id,
-            name: provider.name,
-            hasPhotos: !!provider.googlePhotos?.length,
-            image: provider.image,
-            booking_link: provider.booking_link,
-            bookingLink: provider.bookingLink,
-            website: provider.website,
-          });
-
           // Only fetch Google details if we don't already have them
           if (!provider.googlePhotos) {
-            console.log("Fetching Google place details for quick view...");
             const result = await fetchPlaceDetails(provider);
-            console.log("Raw result from fetchPlaceDetails:", result);
-
             if (result.googlePhotos?.length || result.googleRating) {
-              console.log(`Found Google details for provider: 
-                - Photos: ${result.googlePhotos?.length ?? 0}
-                - Rating: ${result.googleRating ?? "N/A"}
-                - Reviews: ${result.googleRatingsTotal ?? 0}
-                - First Photo URL: ${result.googlePhotos?.[0] ?? "None"}
-                - Booking Link: ${result.booking_link ?? "None"}
-              `);
               setEnhancedProvider(result);
             } else {
-              console.log(
-                "No Google details found, using original provider data",
-              );
               setEnhancedProvider(provider);
             }
           } else {
-            console.log(
-              `Provider already has Google photos: ${provider.googlePhotos.length}`,
-            );
             setEnhancedProvider(provider);
           }
         } catch (error) {
-          console.error("Error fetching place details:", error);
           setEnhancedProvider(provider);
         } finally {
           setIsLoading(false);
@@ -229,15 +193,6 @@ export function ProviderQuickView({
   // Check if we have Google photos available
   const hasGooglePhotos =
     enhancedProvider.googlePhotos && enhancedProvider.googlePhotos.length > 0;
-
-  console.log("Enhanced provider data:", {
-    hasGooglePhotos,
-    photosCount: enhancedProvider.googlePhotos?.length ?? 0,
-    fallbackImage: enhancedProvider.image || "/placeholder.svg",
-    booking_link: enhancedProvider.booking_link,
-    bookingLink: enhancedProvider.bookingLink,
-    website: enhancedProvider.website,
-  });
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -269,14 +224,7 @@ export function ProviderQuickView({
                           className="scale-110 object-cover"
                           sizes="(max-width: 768px) 100vw, 50vw"
                           onError={(e) => {
-                            console.error(
-                              `Failed to load image ${index}:`,
-                              photo,
-                            );
                             e.currentTarget.src = "/placeholder.svg";
-                          }}
-                          onLoad={() => {
-                            console.log(`Image ${index} loaded successfully`);
                           }}
                         />
                       </div>
@@ -310,7 +258,6 @@ export function ProviderQuickView({
                   priority
                   className="scale-110 object-cover"
                   onError={(e) => {
-                    console.error("Failed to load fallback image");
                     e.currentTarget.src = "/placeholder.svg";
                   }}
                 />
@@ -508,19 +455,11 @@ export function ProviderQuickView({
                 <GlowingButton
                   text="Book Appointment"
                   onClick={() => {
-                    // Add fallback chain for booking link with debugging
+                    // Add fallback chain for booking link
                     const bookingUrl =
                       enhancedProvider.booking_link ??
                       enhancedProvider.bookingLink ??
                       enhancedProvider.website;
-
-                    console.log(`Opening booking URL: ${bookingUrl}`);
-                    console.log("Booking sources:", {
-                      booking_link: enhancedProvider.booking_link,
-                      bookingLink: enhancedProvider.bookingLink,
-                      website: enhancedProvider.website,
-                      final: bookingUrl,
-                    });
 
                     window.open(bookingUrl, "_blank");
                   }}

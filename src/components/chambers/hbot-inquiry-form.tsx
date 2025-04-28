@@ -42,7 +42,7 @@ import {
   chamberModels,
   usageTypes,
   referralSources,
-  fieldsByStep
+  fieldsByStep,
 } from "~/types/form";
 
 export function HBOTInquiryForm() {
@@ -67,10 +67,8 @@ export function HBOTInquiryForm() {
   });
 
   function onSubmit(data: HBOTInquiryFormValues) {
-    // Here you would implement the API call to submit the form data
-    console.log("Form submitted:", data);
     setIsSubmitted(true);
-    
+
     // Reset form after submission
     setTimeout(() => {
       setIsSubmitted(false);
@@ -82,30 +80,37 @@ export function HBOTInquiryForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button 
+        <Button
           size="lg"
           className="flex-1 rounded-full bg-[#2B5741] text-lg font-medium text-white hover:bg-emerald-800"
         >
           Speak To An Expert
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[680px] md:max-w-[800px] max-h-[90vh] p-6">
+      <DialogContent className="max-h-[90vh] p-6 sm:max-w-[680px] md:max-w-[800px]">
         {!isSubmitted ? (
           <>
             <DialogHeader className="mb-6">
-              <DialogTitle className="text-2xl font-bold">HBOT Inquiry Form</DialogTitle>
-              <DialogDescription className="text-base mt-2">
+              <DialogTitle className="text-2xl font-bold">
+                HBOT Inquiry Form
+              </DialogTitle>
+              <DialogDescription className="mt-2 text-base">
                 Book a call with an expert - Get answers now.
               </DialogDescription>
             </DialogHeader>
-            
-            <div className="overflow-y-auto px-1 py-1 -mr-2 max-h-[calc(70vh-130px)]">
+
+            <div className="-mr-2 max-h-[calc(70vh-130px)] overflow-y-auto px-1 py-1">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 px-2">
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-10 px-2"
+                >
                   {/* Contact Information Section */}
                   <div className="space-y-6">
-                    <h3 className="text-lg font-medium border-b pb-2">Contact Information</h3>
-                    
+                    <h3 className="border-b pb-2 text-lg font-medium">
+                      Contact Information
+                    </h3>
+
                     <FormField
                       control={form.control}
                       name="email"
@@ -113,58 +118,80 @@ export function HBOTInquiryForm() {
                         <FormItem className="mb-6">
                           <FormLabel className="text-base">Email</FormLabel>
                           <FormControl>
-                            <Input placeholder="Your email" {...field} className="h-12 bg-white" />
+                            <Input
+                              placeholder="Your email"
+                              {...field}
+                              className="h-12 bg-white"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <FormField
                         control={form.control}
                         name="firstName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-base">First Name</FormLabel>
+                            <FormLabel className="text-base">
+                              First Name
+                            </FormLabel>
                             <FormControl>
-                              <Input placeholder="First name" {...field} className="h-12 bg-white" />
+                              <Input
+                                placeholder="First name"
+                                {...field}
+                                className="h-12 bg-white"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="lastName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-base">Last Name</FormLabel>
+                            <FormLabel className="text-base">
+                              Last Name
+                            </FormLabel>
                             <FormControl>
-                              <Input placeholder="Last name" {...field} className="h-12 bg-white" />
+                              <Input
+                                placeholder="Last name"
+                                {...field}
+                                className="h-12 bg-white"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                     </div>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+
+                    <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <FormField
                         control={form.control}
                         name="phoneNumber"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-base">Mobile Phone Number</FormLabel>
+                            <FormLabel className="text-base">
+                              Mobile Phone Number
+                            </FormLabel>
                             <FormControl>
-                              <Input placeholder="Your phone number" {...field} className="h-12 bg-white" />
+                              <Input
+                                placeholder="Your phone number"
+                                {...field}
+                                className="h-12 bg-white"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="country"
@@ -172,14 +199,18 @@ export function HBOTInquiryForm() {
                           <FormItem>
                             <FormLabel className="text-base">Country</FormLabel>
                             <FormControl>
-                              <Input placeholder="Your country" {...field} className="h-12 bg-white" />
+                              <Input
+                                placeholder="Your country"
+                                {...field}
+                                className="h-12 bg-white"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                     </div>
-                    
+
                     <FormField
                       control={form.control}
                       name="timezone"
@@ -207,7 +238,8 @@ export function HBOTInquiryForm() {
                             </SelectContent>
                           </Select>
                           <FormDescription className="mt-1.5">
-                            Please select your time zone so we know when to contact you
+                            Please select your time zone so we know when to
+                            contact you
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -217,19 +249,23 @@ export function HBOTInquiryForm() {
 
                   {/* Product Information Section */}
                   <div className="space-y-6">
-                    <h3 className="text-lg font-medium border-b pb-2">Product Information</h3>
-                    
+                    <h3 className="border-b pb-2 text-lg font-medium">
+                      Product Information
+                    </h3>
+
                     <FormField
                       control={form.control}
                       name="chamberModel"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel className="text-base">Please select the chamber model you are considering</FormLabel>
+                          <FormLabel className="text-base">
+                            Please select the chamber model you are considering
+                          </FormLabel>
                           <FormControl>
                             <RadioGroup
                               onValueChange={field.onChange}
                               defaultValue={field.value}
-                              className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                              className="grid grid-cols-1 gap-3 md:grid-cols-2"
                             >
                               {chamberModels.map((model) => (
                                 <FormItem
@@ -237,7 +273,10 @@ export function HBOTInquiryForm() {
                                   className="flex items-center space-x-3 space-y-0 p-2"
                                 >
                                   <FormControl>
-                                    <RadioGroupItem value={model.id} className="ml-1" />
+                                    <RadioGroupItem
+                                      value={model.id}
+                                      className="ml-1"
+                                    />
                                   </FormControl>
                                   <FormLabel className="font-normal">
                                     {model.label}
@@ -254,23 +293,30 @@ export function HBOTInquiryForm() {
 
                   {/* Usage Information Section */}
                   <div className="space-y-6">
-                    <h3 className="text-lg font-medium border-b pb-2">Usage Information</h3>
-                    
+                    <h3 className="border-b pb-2 text-lg font-medium">
+                      Usage Information
+                    </h3>
+
                     <FormField
                       control={form.control}
                       name="purpose"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel className="text-base">For what purpose are you interested in HBOT?</FormLabel>
+                          <FormLabel className="text-base">
+                            For what purpose are you interested in HBOT?
+                          </FormLabel>
                           <FormControl>
                             <RadioGroup
                               onValueChange={field.onChange}
                               defaultValue={field.value}
-                              className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                              className="grid grid-cols-1 gap-3 md:grid-cols-2"
                             >
                               <FormItem className="flex items-center space-x-3 space-y-0 p-2">
                                 <FormControl>
-                                  <RadioGroupItem value="personal" className="ml-1" />
+                                  <RadioGroupItem
+                                    value="personal"
+                                    className="ml-1"
+                                  />
                                 </FormControl>
                                 <FormLabel className="font-normal">
                                   Personal use
@@ -278,7 +324,10 @@ export function HBOTInquiryForm() {
                               </FormItem>
                               <FormItem className="flex items-center space-x-3 space-y-0 p-2">
                                 <FormControl>
-                                  <RadioGroupItem value="clinic" className="ml-1" />
+                                  <RadioGroupItem
+                                    value="clinic"
+                                    className="ml-1"
+                                  />
                                 </FormControl>
                                 <FormLabel className="font-normal">
                                   Clinic
@@ -290,7 +339,7 @@ export function HBOTInquiryForm() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="usageType"
@@ -304,7 +353,7 @@ export function HBOTInquiryForm() {
                               Select all that apply
                             </FormDescription>
                           </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                             {usageTypes.map((item) => (
                               <FormField
                                 key={item.id}
@@ -318,15 +367,21 @@ export function HBOTInquiryForm() {
                                     >
                                       <FormControl>
                                         <Checkbox
-                                          checked={field.value?.includes(item.id)}
+                                          checked={field.value?.includes(
+                                            item.id,
+                                          )}
                                           onCheckedChange={(checked) => {
                                             return checked
-                                              ? field.onChange([...field.value, item.id])
+                                              ? field.onChange([
+                                                  ...field.value,
+                                                  item.id,
+                                                ])
                                               : field.onChange(
                                                   field.value?.filter(
-                                                    (value) => value !== item.id
-                                                  )
-                                                )
+                                                    (value) =>
+                                                      value !== item.id,
+                                                  ),
+                                                );
                                           }}
                                           className="ml-1"
                                         />
@@ -335,7 +390,7 @@ export function HBOTInquiryForm() {
                                         {item.label}
                                       </FormLabel>
                                     </FormItem>
-                                  )
+                                  );
                                 }}
                               />
                             ))}
@@ -344,18 +399,20 @@ export function HBOTInquiryForm() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="referralSource"
                       render={({ field }) => (
-                        <FormItem className="space-y-3 mt-8">
-                          <FormLabel className="text-base">How did you hear about us?</FormLabel>
+                        <FormItem className="mt-8 space-y-3">
+                          <FormLabel className="text-base">
+                            How did you hear about us?
+                          </FormLabel>
                           <FormControl>
                             <RadioGroup
                               onValueChange={field.onChange}
                               defaultValue={field.value}
-                              className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                              className="grid grid-cols-1 gap-3 md:grid-cols-2"
                             >
                               {referralSources.map((source) => (
                                 <FormItem
@@ -363,7 +420,10 @@ export function HBOTInquiryForm() {
                                   className="flex items-center space-x-3 space-y-0 p-2"
                                 >
                                   <FormControl>
-                                    <RadioGroupItem value={source.id} className="ml-1" />
+                                    <RadioGroupItem
+                                      value={source.id}
+                                      className="ml-1"
+                                    />
                                   </FormControl>
                                   <FormLabel className="font-normal">
                                     {source.label}
@@ -376,17 +436,19 @@ export function HBOTInquiryForm() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="additionalInfo"
                       render={({ field }) => (
                         <FormItem className="mt-8">
-                          <FormLabel className="text-base">Would you like to add anything else?</FormLabel>
+                          <FormLabel className="text-base">
+                            Would you like to add anything else?
+                          </FormLabel>
                           <FormControl>
                             <Textarea
                               placeholder="Any additional information you'd like to share"
-                              className="resize-none min-h-[100px] bg-white"
+                              className="min-h-[100px] resize-none bg-white"
                               {...field}
                             />
                           </FormControl>
@@ -395,11 +457,11 @@ export function HBOTInquiryForm() {
                       )}
                     />
                   </div>
-                  
+
                   {/* Submit Button Inside Form */}
-                  <Button 
-                    type="submit" 
-                    className="bg-[#2B5741] hover:bg-emerald-800 h-12 w-full mt-8 rounded-md text-base"
+                  <Button
+                    type="submit"
+                    className="mt-8 h-12 w-full rounded-md bg-[#2B5741] text-base hover:bg-emerald-800"
                   >
                     Submit
                   </Button>
@@ -408,11 +470,11 @@ export function HBOTInquiryForm() {
             </div>
           </>
         ) : (
-          <div className="py-12 flex flex-col items-center justify-center space-y-4">
-            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
-              <Check className="w-8 h-8 text-emerald-600" />
+          <div className="flex flex-col items-center justify-center space-y-4 py-12">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+              <Check className="h-8 w-8 text-emerald-600" />
             </div>
-            <DialogTitle className="text-xl font-medium text-center">
+            <DialogTitle className="text-center text-xl font-medium">
               Thank you for your inquiry about HBOT
             </DialogTitle>
             <DialogDescription className="text-center">
@@ -423,4 +485,4 @@ export function HBOTInquiryForm() {
       </DialogContent>
     </Dialog>
   );
-} 
+}

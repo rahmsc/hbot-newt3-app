@@ -23,32 +23,10 @@ export function ProviderList({ providers }: { providers: Provider[] }) {
   const testGooglePhotos = async (provider: Provider) => {
     setTestingProvider(provider.id);
     try {
-      console.log(`Testing Google Photos API for: ${provider.name}`);
-      console.log(`Provider address: ${provider.address}`);
-
-      const updatedProvider = await fetchPlacePhotos(provider);
-
-      console.log("Google Place ID:", updatedProvider.placeId ?? "Not found");
-      console.log(
-        "Google Photos found:",
-        updatedProvider.googlePhotos?.length ?? 0,
-      );
-
-      if (updatedProvider.googlePhotos?.length) {
-        console.log("First photo URL:", updatedProvider.googlePhotos[0]);
-        console.log("All photo URLs:", updatedProvider.googlePhotos);
-      } else {
-        console.log("No photos found for this provider");
-      }
-
-      // Check if we got any meaningful data back from the API
-      if (updatedProvider.placeId) {
-        console.log("✅ Successfully found the business in Google Places API");
-      } else {
-        console.log("❌ Could not match this business in Google Places API");
-      }
+      await fetchPlacePhotos(provider);
+      // Processing completed
     } catch (error) {
-      console.error("Error testing Google Photos:", error);
+      // Error handling
     } finally {
       setTestingProvider(null);
     }

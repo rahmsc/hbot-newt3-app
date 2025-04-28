@@ -47,18 +47,8 @@ export async function fetchPlaceDetails(
     );
     const findPlaceUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${searchQuery}&inputtype=textquery&fields=place_id,photos&key=${apiKey}`;
 
-    console.log(
-      `🔍 Searching for place: "${provider.name}" at "${provider.address}"`,
-    );
-    console.log(`📝 Encoded search query: ${searchQuery}`);
-
     const findPlaceResponse = await fetch(findPlaceUrl);
     const findPlaceData = await findPlaceResponse.json();
-
-    console.log(
-      `🔎 Google Places API findplacefromtext response for ${provider.name}:`,
-      findPlaceData,
-    );
 
     if (
       findPlaceData.status !== "OK" ||
@@ -75,18 +65,12 @@ export async function fetchPlaceDetails(
     }
 
     const placeId = findPlaceData.candidates[0].place_id;
-    console.log(`✅ Found place ID: ${placeId} for ${provider.name}`);
 
     // Step 2: Get place details including photos, rating, reviews count, and address
     const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=photos,rating,user_ratings_total,formatted_address&key=${apiKey}`;
 
     const detailsResponse = await fetch(detailsUrl);
     const detailsData = await detailsResponse.json();
-
-    console.log(
-      `📊 Google Places API details response for place ID ${placeId}:`,
-      detailsData,
-    );
 
     if (detailsData.status !== "OK") {
       console.warn(`⚠️ No details found for place ID ${placeId}`);
@@ -119,18 +103,10 @@ export async function fetchPlaceDetails(
       .slice(0, maxPhotos)
       .map((photo) => photo.photo_reference);
 
-    console.log(
-      `📸 Found ${photoRefs.length} photo references out of ${detailsData.result.photos.length} total photos`,
-    );
-    console.log("Photo references:", photoRefs);
-
     const photoUrls = photoRefs.map(
       (ref) =>
         `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${ref}&key=${apiKey}`,
     );
-
-    console.log(`🖼️ Generated ${photoUrls.length} photo URLs`);
-    console.log("First photo URL:", photoUrls[0]);
 
     // Return provider with all Google details
     return {
@@ -150,8 +126,5 @@ export async function fetchPlacePhotos(
   provider: Provider,
   maxPhotos = 5,
 ): Promise<Provider & GooglePlaceDetails> {
-  console.log(
-    "Using deprecated fetchPlacePhotos - please update to fetchPlaceDetails",
-  );
   return fetchPlaceDetails(provider, maxPhotos);
 }
