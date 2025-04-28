@@ -94,7 +94,7 @@ export function TrendingSectionClient({
       <div className="h-px w-full bg-gray-600" />
       <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-16">
         <div className="w-full space-y-2 sm:w-auto">
-          <h2 className="text-center font-['Raleway'] text-xl font-normal tracking-[0.5em] text-gray-700 sm:text-left sm:text-2xl sm:tracking-[0.3em]">
+          <h2 className="text-center font-['Raleway'] text-xl font-normal tracking-[0.3em] text-gray-700 sm:text-left sm:text-2xl">
             TRENDING
           </h2>
           <h4 className="text-center text-sm text-gray-500 sm:text-left">
@@ -109,19 +109,19 @@ export function TrendingSectionClient({
       {/* Mobile View */}
       <div className="block sm:hidden">
         {filteredArticles.length > 0 ? (
-          <div className="relative px-4">
+          <div className="relative">
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="-ml-4 flex">
                 {filteredArticles.map((article) => (
                   <div
                     key={article.url_slug}
-                    className="pl-4"
+                    className="min-w-[90vw] flex-none px-1 sm:min-w-[50%] lg:min-w-[33.333%]"
                     style={{
                       flex: "0 0 85%",
                       minWidth: 0,
                     }}
                   >
-                    <div className="h-[380px]">
+                    <div className="h-[380px] overflow-hidden rounded-[2rem] bg-white shadow-sm transition duration-200 hover:shadow-md">
                       <TrendingCard article={article} size="small" />
                     </div>
                   </div>
@@ -129,27 +129,31 @@ export function TrendingSectionClient({
               </div>
             </div>
 
-            <CarouselIndicator
-              total={filteredArticles.length}
-              current={currentSlide}
-            />
+            {/* Carousel Controls */}
+            <div className="mt-4 flex items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={() => emblaApi?.scrollPrev()}
+                className="text-[#2B5741] hover:text-emerald-800"
+                aria-label="Previous slide"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
 
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute -left-2 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
-              onClick={() => emblaApi?.scrollPrev()}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute -right-2 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full border-gray-200 bg-white/80 backdrop-blur-sm hover:bg-white"
-              onClick={() => emblaApi?.scrollNext()}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+              <CarouselIndicator
+                total={filteredArticles.length}
+                current={currentSlide}
+              />
+
+              <button
+                type="button"
+                onClick={() => emblaApi?.scrollNext()}
+                className="text-[#2B5741] hover:text-emerald-800"
+                aria-label="Next slide"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </div>
           </div>
         ) : (
           <div className="p-4 text-center">No articles available</div>

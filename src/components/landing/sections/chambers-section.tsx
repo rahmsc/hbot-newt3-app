@@ -89,7 +89,7 @@ export function ChambersSection() {
       <div className="h-px w-full bg-gray-600" />
       <div className="flex flex-col items-start justify-between gap-4 px-4 pt-2 sm:flex-row sm:items-center sm:px-16">
         <div className="w-full space-y-2 pt-2 sm:w-auto">
-          <h2 className="text-center font-['Raleway'] text-xl font-normal tracking-[0.5em] text-gray-700 sm:text-left sm:text-2xl sm:tracking-[0.3em]">
+          <h2 className="text-center font-['Raleway'] text-xl font-normal tracking-[0.3em] text-gray-700 sm:text-left sm:text-2xl">
             EXPLORE CHAMBERS
           </h2>
           <h4 className="text-center text-sm text-gray-500 sm:text-left">

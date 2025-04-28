@@ -32,7 +32,7 @@ export function CTASubscriptionSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="font-['Raleway'] text-2xl tracking-[0.2em] text-white sm:text-4xl md:text-5xl lg:text-6xl">
+          <h2 className="text-center font-['Raleway'] text-xl font-normal tracking-[0.3em] text-white sm:text-left sm:text-2xl md:text-4xl lg:text-5xl">
             GET STARTED WITH HBOT
           </h2>
           <div className="space-y-6 sm:space-y-8">

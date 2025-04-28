@@ -16,6 +16,7 @@ import getLatestArticles, {
 } from "~/utils/supabase/articles/getLatestArticles";
 // import { cn } from "~/lib/utils"
 import { CarouselIndicator } from "~/components/utils/carousel-indicator";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 // import LoadingSpinner from "~/components/utils/spinner"
 
 export default function ResearchDashboard() {
@@ -131,8 +132,8 @@ export default function ResearchDashboard() {
 
   return (
     <section className="w-full">
-      <div className="px-2 pb-1 pt-4 sm:px-16">
-        <h2 className="text-center font-['Raleway'] text-xl font-normal tracking-[0.5em] text-gray-700 sm:text-left sm:text-2xl md:tracking-[0.3em]">
+      <div className="px-2 pt-4 sm:px-16">
+        <h2 className="text-center font-['Raleway'] text-xl font-normal tracking-[0.3em] text-gray-700 sm:text-left sm:text-2xl">
           {isLatestView ? "LATEST RESEARCH" : "FILTERED RESEARCH"}
         </h2>
         <h4 className="text-center text-sm text-gray-500 sm:text-left">
@@ -164,7 +165,7 @@ export default function ResearchDashboard() {
             </p>
           </div>
         ) : (
-          <div className="mb-12">
+          <div className="mb-2 sm:mb-12">
             {/* Desktop Layout */}
             <div className="hidden grid-cols-10 md:grid">
               {articles.length > 0 && articles[0] && (
@@ -261,12 +262,30 @@ export default function ResearchDashboard() {
                   </div>
                 </div>
 
-                {/* Add Carousel Indicator */}
-                <div className="md:hidden">
+                {/* Carousel Controls */}
+                <div className="mt-4 flex items-center justify-center gap-4">
+                  <button
+                    type="button"
+                    onClick={() => emblaApi?.scrollPrev()}
+                    className="text-[#2B5741] hover:text-emerald-800"
+                    aria-label="Previous slide"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+
                   <CarouselIndicator
                     total={articles.length}
                     current={currentSlide}
                   />
+
+                  <button
+                    type="button"
+                    onClick={() => emblaApi?.scrollNext()}
+                    className="text-[#2B5741] hover:text-emerald-800"
+                    aria-label="Next slide"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
                 </div>
               </div>
             </div>
