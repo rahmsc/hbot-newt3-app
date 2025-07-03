@@ -6,14 +6,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      "hbothq-bucket.s3.ap-southeast-2.amazonaws.com",
-      "lh3.googleusercontent.com",
-      "fastly.picsum.photos",
-      "picsum.photos",
-      "d144dqt8e4woe2.cloudfront.net",
-      "maps.googleapis.com",
-    ],
     remotePatterns: [
       {
         protocol: "https",
@@ -26,6 +18,30 @@ const nextConfig = {
         hostname: "maps.googleapis.com",
         port: "",
         pathname: "/maps/api/place/photo/**",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "fastly.picsum.photos",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "d144dqt8e4woe2.cloudfront.net",
+        port: "",
+        pathname: "/**",
       },
     ],
   },

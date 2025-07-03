@@ -28,7 +28,7 @@ export async function fetchPlaceDetails(
   provider: Provider,
   maxPhotos = 5,
 ): Promise<Provider & GooglePlaceDetails> {
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const apiKey = process.env.GOOGLE_MAPS_SERVER_API_KEY;
 
   if (!apiKey) {
     console.error("Google Maps API key is missing");
