@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { sendGAEvent } from "@next/third-parties/google";
 
 import { cn } from "~/lib/utils";
 
@@ -35,6 +36,12 @@ export function MainNav() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  const handleNavClick = (item: string) => {
+    sendGAEvent("event", "navigation_click", {
+      value: item.toLowerCase(),
+    });
+  };
+
   return (
     <nav
       className={cn(
@@ -54,6 +61,7 @@ export function MainNav() {
                 <li key={item} className="flex items-center">
                   <Link
                     href={`/${item.toLowerCase()}`}
+                    onClick={() => handleNavClick(item)}
                     className={cn(
                       "group flex h-12 items-center justify-center px-4 font-['Raleway'] text-xs tracking-[0.2em] transition-all hover:bg-gray-50 sm:text-sm",
                       isActive ? "text-gray-900" : "text-gray-600",
@@ -86,6 +94,7 @@ export function MainNav() {
               <li key={item} className="flex flex-1 items-center">
                 <Link
                   href={`/${item.toLowerCase()}`}
+                  onClick={() => handleNavClick(item)}
                   className={cn(
                     "group flex h-12 w-full items-center justify-center text-center font-['Raleway'] text-sm tracking-[0.2em] transition-all hover:bg-gray-50",
                     isActive ? "text-gray-900" : "text-gray-600",

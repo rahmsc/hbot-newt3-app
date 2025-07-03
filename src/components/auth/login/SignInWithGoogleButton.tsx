@@ -3,9 +3,11 @@
 import { Button } from "~/components/ui/button";
 import { ChromeIcon as GoogleIcon } from "lucide-react";
 import { signInWithGoogle } from "~/app/(auth)/auth/login/action";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default function SignInWithGoogleButton() {
   const handleClick = async () => {
+    sendGAEvent({ event: "sign_in", value: "google" });
     await signInWithGoogle();
   };
 

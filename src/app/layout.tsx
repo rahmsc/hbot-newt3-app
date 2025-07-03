@@ -53,7 +53,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <Toaster />
-          <GoogleAnalytics gaId={"G-KZMJT45KDX"} />
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID ?? ""} />
           <Clarity
             projectId={process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID ?? ""}
           />

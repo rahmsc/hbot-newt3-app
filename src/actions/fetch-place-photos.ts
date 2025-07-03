@@ -94,7 +94,6 @@ export async function fetchPlaceDetails(
 
     // Skip photos if none found
     if (!detailsData.result?.photos) {
-      console.warn(`⚠️ No photos found for place ID ${placeId}`);
       return enhancedProvider;
     }
 
