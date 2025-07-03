@@ -1,7 +1,4 @@
-/*
- * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
- * for Docker builds.
- */
+// To skip environment variable validation (e.g., in Docker builds), run `build` or `dev` with the `SKIP_ENV_VALIDATION` environment variable set.
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
